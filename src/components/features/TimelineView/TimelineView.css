@@ -1,0 +1,18 @@
+.timeline-view {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background-color: #e6dfdb;
+}
+
+.timeline-entry {
+  margin-bottom: 2.5rem;
+  position: relative;
+}

@@ -27,14 +27,3 @@ export interface SearchParams extends PaginationParams {
   tags?: string[];
   authorId?: string;
 }
-
-export const FeedType = {
-  Post: "post",
-  ForYou: "for-you",
-  Newest: "newest",
-  Trending: "trending",
-  Comment: "comment",
-  Notification: "notification"
-} as const;
-
-export type FeedType = typeof FeedType[keyof typeof FeedType];

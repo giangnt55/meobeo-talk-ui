@@ -1,10 +1,12 @@
 .timeline-page {
-  min-height: 100vh;
+  height: 100vh;
   background-color: #f8f6f6;
   padding: 2rem 0;
+  overflow: hidden;
 }
 
 .timeline-container {
+  height: 100%;
   max-width: 90rem;
   margin: 0 auto;
   padding: 0 2rem;
@@ -14,11 +16,31 @@
 }
 
 .timeline-sidebar {
-  /* Sidebar styles */
+  overflow-y: auto;
 }
 
 .timeline-main {
-  /* Main content styles */
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 1rem;
+  scrollbar-width: none;
+}
+
+.timeline-main::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.timeline-sidebar {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.timeline-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-main {
+  -webkit-overflow-scrolling: touch;
 }
 
 .timeline-header {
@@ -50,9 +72,5 @@
 @media (max-width: 1024px) {
   .timeline-container {
     grid-template-columns: 1fr;
-  }
-  
-  .timeline-sidebar {
-    position: static;
   }
 }

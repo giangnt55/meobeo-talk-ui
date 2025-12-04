@@ -1,0 +1,15 @@
+.decorations-page {
+  min-height: 100vh;
+  background-color: #faf8fc;
+  padding: 2rem 0;
+}
+
+.decorations-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.decorations-header {
+  margin-bottom: 2rem;
+}

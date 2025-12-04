@@ -1,0 +1,256 @@
+.decoration-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 60rem;
+}
+
+.decoration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.decoration-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #170d1b;
+  margin: 0 0 0.25rem;
+}
+
+.decoration-subtitle {
+  font-size: 0.875rem;
+  color: #804c9a;
+  margin: 0;
+}
+
+.decoration-tabs {
+  display: flex;
+  border-bottom: 3px solid #dfcfe7;
+  gap: 2rem;
+}
+
+.decoration-tab {
+  padding: 0.75rem 0;
+  border: none;
+  background: transparent;
+  color: #804c9a;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.decoration-tab:hover {
+  color: #ad2bee;
+}
+
+.decoration-tab.active {
+  color: #170d1b;
+}
+
+.decoration-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #ad2bee;
+}
+
+.decoration-search {
+  /* Search styles already defined in SearchBar component */
+}
+
+.decoration-categories {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.category-chip {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dfcfe7;
+  background-color: #efe7f3;
+  color: #170d1b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.category-chip:hover {
+  background-color: rgba(173, 43, 238, 0.1);
+}
+
+.category-chip.active {
+  background-color: rgba(173, 43, 238, 0.2);
+  border-color: #ad2bee;
+  color: #ad2bee;
+}
+
+.decoration-content {
+  min-height: 20rem;
+}
+
+/* Stickers Grid */
+.stickers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.sticker-button {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(173, 43, 238, 0.1);
+  border: 1px solid #dfcfe7;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0.5rem;
+}
+
+.sticker-button:hover {
+  background-color: rgba(173, 43, 238, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px #ad2bee;
+}
+
+.sticker-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+/* Frames Grid */
+.frames-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.frame-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #faf8fc;
+  border: 1px solid #dfcfe7;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.frame-button:hover {
+  background-color: rgba(173, 43, 238, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.frame-preview {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-width: 8px;
+  border-style: solid;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  background: white;
+}
+
+.frame-sample {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0.125rem;
+}
+
+.frame-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #170d1b;
+}
+
+/* Colors Grid */
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.color-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #dfcfe7;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.color-swatch {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #170d1b;
+}
+
+/* Empty State */
+.decoration-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.empty-text {
+  font-size: 1rem;
+  color: #804c9a;
+}
+
+@media (max-width: 768px) {
+  .decoration-title {
+    font-size: 1.5rem;
+  }
+
+  .stickers-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .sticker-emoji {
+    font-size: 2rem;
+  }
+
+  .frames-grid,
+  .colors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}

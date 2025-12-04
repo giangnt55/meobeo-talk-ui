@@ -1,14 +1,14 @@
-import type { Memory, MemoryTemplate } from "../types/memory";
+import type { Memory, MemoryTemplate } from '../types/memory';
 
 export const mockMemories: Memory[] = [
   {
     id: '1',
     title: 'Summer Vacation in Bali',
-    content: 'An unforgettable trip exploring the temples, beaches, and vibrant culture of Bali...',
+    content: 'An unforgettable trip exploring the temples, beaches, and vibrant culture of Bali. Every moment was a postcard.',
     date: '2023-08-15',
     mood: 'Joyful',
     tags: ['travel', 'beach'],
-    images: ['https://example.com/bali.jpg'],
+    images: ['https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800'],
     visibility: 'public',
     createdAt: '2023-08-15T10:00:00Z',
     updatedAt: '2023-08-15T10:00:00Z',
@@ -19,7 +19,7 @@ export const mockMemories: Memory[] = [
   {
     id: '2',
     title: 'Graduation Day',
-    content: 'The end of one chapter and the exciting beginning of another...',
+    content: 'The end of one chapter and the exciting beginning of another. So proud of this achievement and thankful for everyone who supported me.',
     date: '2023-05-20',
     mood: 'Proud',
     tags: ['milestone', 'family'],
@@ -30,6 +30,21 @@ export const mockMemories: Memory[] = [
     likes: 18,
     comments: 5,
   },
+  {
+    id: '3',
+    title: 'First Day at the New Job',
+    content: 'Nervous but excited to start this new career path. The team seems amazing and I cant wait to see what we build together.',
+    date: '2023-01-10',
+    mood: 'Excited',
+    tags: ['career'],
+    images: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800'],
+    visibility: 'public',
+    createdAt: '2023-01-10T10:00:00Z',
+    updatedAt: '2023-01-10T10:00:00Z',
+    userId: 'user1',
+    likes: 12,
+    comments: 2,
+  },
 ];
 
 export const mockTemplates: MemoryTemplate[] = [
@@ -37,12 +52,70 @@ export const mockTemplates: MemoryTemplate[] = [
     id: '1',
     name: 'Wanderlust Journey',
     category: 'Travel',
-    thumbnail: 'https://example.com/template1.jpg',
+    thumbnail: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400',
+    description: 'Perfect for documenting your travel adventures',
   },
   {
     id: '2',
     name: 'Golden Moments',
     category: 'Friendship',
-    thumbnail: 'https://example.com/template2.jpg',
+    thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400',
+    description: 'Capture precious moments with friends',
   },
-];
+  {
+    id: '3',
+    name: 'Festive Confetti',
+    category: 'Celebration',
+    thumbnail: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400',
+    description: 'Celebrate special occasions and milestones',
+  },
+  {
+    id: '4',
+    name: 'First Love',
+    category: 'Love',
+    thumbnail: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400',
+    description: 'Express your romantic memories',
+  },
+  {
+    id: '5',
+    name: 'Everyday Joys',
+    category: 'Daily Life',
+    thumbnail: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400',
+    description: 'Document your daily life and simple pleasures',
+  },
+  {
+    id: '6',
+    name: 'Road Trip Diary',
+    category: 'Travel',
+    thumbnail: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400',
+    description: 'Chronicle your road trip adventures',
+  },
+  {
+    id: '7',
+    name: 'Best Friends Forever',
+    category: 'Friendship',
+    thumbnail: 'https://images.unsplash.com/photo-1522621032211-ac0031dfbddc?w=400',
+    description: 'Celebrate your best friendships',
+  },
+  {
+    id: '8',
+    name: 'Anniversary Bliss',
+    category: 'Love',
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',
+    description: 'Remember your anniversary moments',
+  },
+  {
+    id: '9',
+    name: 'Quiet Reflections',
+    category: 'Reflections',
+    thumbnail: 'https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400',
+    description: 'Deep thoughts and personal reflections',
+  },
+  {
+    id: '10',
+    name: 'Natures Diary',
+    category: 'Daily Life',
+    thumbnail: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400',
+    description: 'Connect with nature and outdoor experiences',
+  },
+]; 

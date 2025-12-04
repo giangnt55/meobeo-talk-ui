@@ -1,34 +1,32 @@
 export interface User {
   id: string;
   email: string;
+  username: string;
   displayName: string;
   avatar?: string;
   bio?: string;
-  followerCount: number;
-  followingCount: number;
-  postCount: number;
+  interests: string[];
+  following: string[];
+  followers: string[];
   createdAt: string;
-  socialLinks?: {
-    twitter?: string;
-    github?: string;
-    linkedin?: string;
-  };
 }
 
 export interface LoginCredentials {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 
-export interface RegisterData {
+export interface SignupData {
   email: string;
+  username: string;
   password: string;
+  confirmPassword: string;
+}
+
+export interface OnboardingData {
   displayName: string;
-}
-
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+  bio: string;
+  avatar?: string;
+  interests: string[];
+  following: string[];
 }

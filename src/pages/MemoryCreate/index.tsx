@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../components/common/Button/Button';
 import { Input } from '../../components/common/Input/Input';
 import { Tag } from '../../components/common/Tag/Tag';
+import { RichTextEditor } from '../../components/common/RichTextEditor/RichTextEditor';
 import { Modal } from '../../components/common/Modal/Modal';
+import { useToast } from '../../hooks/useToast';
+import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
 import type { Memory } from '../../types/memory';
 import './MemoryCreate.css';
 
@@ -19,6 +22,7 @@ export const MemoryCreatePage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get('template');
+  const { toasts, success, error, warning, removeToast } = useToast();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -31,27 +35,24 @@ export const MemoryCreatePage: React.FC = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState('');
   const [images, setImages] = useState<string[]>([]);
-  const [showStickerModal, setShowStickerModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    if (templateId) {
-      // Load template data
-      console.log('Loading template:', templateId);
-    }
-  }, [templateId]);
-
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleContentChange = (content: string) => {
+    setFormData((prev) => ({ ...prev, content }));
   };
 
   const handleAddTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
       setNewTag('');
+      success('Tag added', `Added #${newTag.trim()}`);
     }
   };
 
@@ -59,19 +60,18 @@ export const MemoryCreatePage: React.FC = () => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      // In real app, upload to server and get URLs
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImages([...images, ...newImages]);
-    }
-  };
-
-  const handleRemoveImage = (imageToRemove: string) => {
-    setImages(images.filter((img) => img !== imageToRemove));
+  const handleImageUpload = async (file: File): Promise<string> => {
+    // In real app: Upload to server and get URL
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const url = e.target?.result as string;
+        setImages((prev) => [...prev, url]);
+        success('Image uploaded', 'Image added to your memory');
+        resolve(url);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleSave = async (isDraft: boolean = false) => {
@@ -79,18 +79,17 @@ export const MemoryCreatePage: React.FC = () => {
 
     // Validate
     if (!formData.title.trim()) {
-      alert('Please enter a title');
+      warning('Missing title', 'Please enter a title');
       setIsSaving(false);
       return;
     }
 
     if (!formData.content.trim()) {
-      alert('Please enter some content');
+      warning('Missing content', 'Please write some content');
       setIsSaving(false);
       return;
     }
 
-    // Create memory object
     const newMemory: Partial<Memory> = {
       id: Date.now().toString(),
       title: formData.title,
@@ -111,14 +110,21 @@ export const MemoryCreatePage: React.FC = () => {
     setTimeout(() => {
       console.log('Saving memory:', newMemory, 'isDraft:', isDraft);
       setIsSaving(false);
-      navigate('/timeline');
+      
+      if (isDraft) {
+        success('Draft saved', 'Your memory has been saved as a draft');
+      } else {
+        success('Memory published', 'Your memory is now live!');
+        navigate('/timeline');
+      }
     }, 1000);
   };
 
   return (
     <div className="memory-create-page">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
+      
       <div className="memory-create-container">
-        {/* Header */}
         <div className="create-header">
           <Button
             variant="ghost"
@@ -131,9 +137,7 @@ export const MemoryCreatePage: React.FC = () => {
         </div>
 
         <div className="create-content">
-          {/* Main Editor */}
           <div className="create-main">
-            {/* Title */}
             <div className="form-group">
               <Input
                 name="title"
@@ -145,72 +149,17 @@ export const MemoryCreatePage: React.FC = () => {
               />
             </div>
 
-            {/* Content Editor */}
             <div className="form-group">
               <label className="form-label">Your Story</label>
-              <div className="editor-container">
-                <textarea
-                  name="content"
-                  className="editor-textarea"
-                  placeholder="Start writing your story here..."
-                  value={formData.content}
-                  onChange={handleInputChange}
-                />
-                <div className="editor-toolbar">
-                  <div className="toolbar-left">
-                    <button className="toolbar-button" title="Bold">
-                      <span className="icon">B</span>
-                    </button>
-                    <button className="toolbar-button" title="Italic">
-                      <span className="icon">I</span>
-                    </button>
-                    <button className="toolbar-button" title="List">
-                      <span className="icon">≡</span>
-                    </button>
-                    <div className="toolbar-divider" />
-                    <label className="toolbar-button" title="Add Photo">
-                      <span className="icon">🖼️</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleImageUpload}
-                        hidden
-                      />
-                    </label>
-                    <button
-                      className="toolbar-button"
-                      title="Add Emoji"
-                      onClick={() => setShowStickerModal(true)}
-                    >
-                      <span className="icon">😊</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <RichTextEditor
+                value={formData.content}
+                onChange={handleContentChange}
+                placeholder="Start writing your story here..."
+                minHeight="20rem"
+                onImageUpload={handleImageUpload}
+              />
             </div>
 
-            {/* Image Preview */}
-            {images.length > 0 && (
-              <div className="form-group">
-                <label className="form-label">Images</label>
-                <div className="images-preview">
-                  {images.map((image, index) => (
-                    <div key={index} className="image-preview-item">
-                      <img src={image} alt={`Upload ${index + 1}`} />
-                      <button
-                        className="image-remove"
-                        onClick={() => handleRemoveImage(image)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Tags */}
             <div className="form-group">
               <label className="form-label">Tags</label>
               <div className="tags-container">
@@ -243,10 +192,8 @@ export const MemoryCreatePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Sidebar */}
           <aside className="create-sidebar">
             <div className="sidebar-card">
-              {/* Save Buttons */}
               <div className="sidebar-section">
                 <Button
                   variant="primary"
@@ -268,7 +215,6 @@ export const MemoryCreatePage: React.FC = () => {
 
               <div className="sidebar-divider" />
 
-              {/* Visibility */}
               <div className="sidebar-section">
                 <h3 className="sidebar-heading">Visibility</h3>
                 <div className="visibility-options">
@@ -299,7 +245,6 @@ export const MemoryCreatePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Mood */}
               <div className="sidebar-section">
                 <h3 className="sidebar-heading">Mood</h3>
                 <div className="mood-options">
@@ -319,7 +264,6 @@ export const MemoryCreatePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Date */}
               <div className="sidebar-section">
                 <h3 className="sidebar-heading">Date</h3>
                 <Input
@@ -331,7 +275,6 @@ export const MemoryCreatePage: React.FC = () => {
                 />
               </div>
 
-              {/* Template */}
               {!templateId && (
                 <div className="sidebar-section">
                   <Button
@@ -347,42 +290,6 @@ export const MemoryCreatePage: React.FC = () => {
           </aside>
         </div>
       </div>
-
-      {/* Sticker Modal */}
-      <Modal
-        isOpen={showStickerModal}
-        onClose={() => setShowStickerModal(false)}
-        title="Add Decorations"
-        size="lg"
-      >
-        <div className="stickers-content">
-          <div className="stickers-tabs">
-            <button className="sticker-tab active">Stickers</button>
-            <button className="sticker-tab">Frames</button>
-            <button className="sticker-tab">Colors</button>
-          </div>
-          <div className="stickers-grid">
-            {['🎉', '❤️', '⭐', '🌟', '🎨', '📸', '✈️', '🌺', '☕', '📚', '🎵', '🌈'].map(
-              (emoji, idx) => (
-                <button
-                  key={idx}
-                  className="sticker-item"
-                  onClick={() => {
-                    // Add emoji to content
-                    setFormData((prev) => ({
-                      ...prev,
-                      content: prev.content + emoji,
-                    }));
-                    setShowStickerModal(false);
-                  }}
-                >
-                  <span className="sticker-emoji">{emoji}</span>
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

@@ -1,33 +1,97 @@
-import { axiosInstance } from '../axiosInstance';
+import { ApiClient } from '../apiClient';
+import type { ApiResponse } from '../../types/api';
 import type { User, LoginCredentials, SignupData } from '../../types/auth';
 
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
 export const authApi = {
-  login: async (credentials: LoginCredentials): Promise<{ user: User; token: string }> => {
-    const response = await axiosInstance.post('/auth/login', credentials);
-    return response.data;
+  /**
+   * Login
+   */
+  login: async (credentials: LoginCredentials): Promise<ApiResponse<AuthResponse>> => {
+    const response = await ApiClient.post<AuthResponse>('/auth/login', credentials);
+    
+    // Store tokens
+    if (response.data) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
+    return response;
   },
 
-  signup: async (data: SignupData): Promise<{ user: User; token: string }> => {
-    const response = await axiosInstance.post('/auth/signup', data);
-    return response.data;
+  /**
+   * Signup
+   */
+  signup: async (data: SignupData): Promise<ApiResponse<AuthResponse>> => {
+    const response = await ApiClient.post<AuthResponse>('/auth/signup', data);
+    
+    if (response.data) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
+    return response;
   },
 
-  socialLogin: async (provider: string, token: string): Promise<{ user: User; token: string }> => {
-    const response = await axiosInstance.post(`/auth/${provider}`, { token });
-    return response.data;
+  /**
+   * Logout
+   */
+  logout: async (): Promise<ApiResponse<void>> => {
+    const response = await ApiClient.post<void>('/auth/logout');
+    
+    // Clear tokens
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    
+    return response;
   },
 
-  logout: async (): Promise<void> => {
-    await axiosInstance.post('/auth/logout');
+  /**
+   * Get current user
+   */
+  getCurrentUser: async (): Promise<ApiResponse<User>> => {
+    return ApiClient.get<User>('/auth/me');
   },
 
-  getCurrentUser: async (): Promise<User> => {
-    const response = await axiosInstance.get('/auth/me');
-    return response.data;
+  /**
+   * Update profile
+   */
+  updateProfile: async (data: Partial<User>): Promise<ApiResponse<User>> => {
+    return ApiClient.patch<User>('/auth/profile', data);
   },
 
-  updateProfile: async (data: Partial<User>): Promise<User> => {
-    const response = await axiosInstance.patch('/auth/profile', data);
-    return response.data;
+  /**
+   * Change password
+   */
+  changePassword: async (
+    oldPassword: string,
+    newPassword: string
+  ): Promise<ApiResponse<void>> => {
+    return ApiClient.post<void>('/auth/change-password', {
+      oldPassword,
+      newPassword,
+    });
+  },
+
+  /**
+   * Forgot password
+   */
+  forgotPassword: async (email: string): Promise<ApiResponse<void>> => {
+    return ApiClient.post<void>('/auth/forgot-password', { email });
+  },
+
+  /**
+   * Reset password
+   */
+  resetPassword: async (
+    token: string,
+    password: string
+  ): Promise<ApiResponse<void>> => {
+    return ApiClient.post<void>('/auth/reset-password', { token, password });
   },
 };

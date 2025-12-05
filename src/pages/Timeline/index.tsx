@@ -1,42 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMemories } from '../../hooks/useMemories';
+import { useApi } from '../../hooks/useApi';
+import { memoryApi } from '../../api/services/memoryApi';
 import { TimelineView } from '../../components/features/TimelineView/TimelineView';
 import { FilterSidebar } from '../../components/features/FilterSidebar/FilterSidebar';
 import { SearchBar } from '../../components/common/SearchBar/SearchBar';
 import { Button } from '../../components/common/Button/Button';
-import type { Memory, MemoryFilter } from '../../types/memory';
-import { mockMemories } from '../../mock/memoryData';
-import { filterMemories } from '../../utils/memoryHelpers';
+import type { MemoryFilter } from '../../types/memory';
 import './Timeline.css';
 
 export const TimelinePage: React.FC = () => {
   const navigate = useNavigate();
-  const [memories, setMemories] = useState<Memory[]>(mockMemories);
   const [filter, setFilter] = useState<MemoryFilter>({
     sortBy: 'newest',
   });
 
-  useEffect(() => {
-    const filtered = filterMemories(mockMemories, filter);
-    setMemories(filtered);
-  }, [filter]);
+  const { memories, isLoading, error, refresh } = useMemories(filter);
+  
+  const { execute: deleteMemory } = useApi(memoryApi.deleteMemory, {
+    showSuccessToast: true,
+    successMessage: 'Memory deleted successfully',
+  });
 
   const handleMemoryClick = (memoryId: string) => {
     navigate(`/memory/${memoryId}`);
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
     if (query) {
-      const filtered = mockMemories.filter(
-        (m) =>
-          m.title.toLowerCase().includes(query.toLowerCase()) ||
-          m.content.toLowerCase().includes(query.toLowerCase())
-      );
-      setMemories(filtered);
+      // Implement search
+      const response = await memoryApi.searchMemories(query);
+      // Handle search results
     } else {
-      setMemories(mockMemories);
+      refresh();
     }
   };
+
+  const handleDelete = async (memoryId: string) => {
+    try {
+      await deleteMemory(memoryId);
+      refresh(); // Reload memories
+    } catch (err) {
+      // Error handled by useApi
+    }
+  };
+
+  if (error) {
+    return (
+      <div className="timeline-error">
+        <p>Error loading memories: {error.message}</p>
+        <Button onClick={refresh}>Try Again</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="timeline-page">
@@ -68,10 +85,14 @@ export const TimelinePage: React.FC = () => {
             />
           </div>
 
-          <TimelineView
-            memories={memories}
-            onMemoryClick={handleMemoryClick}
-          />
+          {isLoading ? (
+            <div className="timeline-loading">Loading memories...</div>
+          ) : (
+            <TimelineView
+              memories={memories}
+              onMemoryClick={handleMemoryClick}
+            />
+          )}
         </main>
       </div>
     </div>

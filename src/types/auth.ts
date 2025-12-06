@@ -17,10 +17,9 @@ export interface LoginCredentials {
 }
 
 export interface SignupData {
+  name: string;
   email: string;
-  username: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface OnboardingData {
@@ -29,4 +28,29 @@ export interface OnboardingData {
   avatar?: string;
   interests: string[];
   following: string[];
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (user: User, accessToken: string, refreshToken: string) => void;
+  logout: () => void;
+  updateUser: (user: Partial<User>) => void;
 }

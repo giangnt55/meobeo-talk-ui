@@ -1,127 +1,178 @@
-import ky, { type KyInstance, type Options } from 'ky';
-import { toast } from 'react-hot-toast';
+import ky, { HTTPError } from 'ky';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+// Base URL configuration
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
-// Create ky instance with default config
-export const api: KyInstance = ky.create({
-  prefixUrl: API_BASE_URL,
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false;
+let refreshSubscribers: Array<(token: string) => void> = [];
+
+const onTokenRefreshed = (token: string) => {
+  refreshSubscribers.forEach((callback) => callback(token));
+  refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+  refreshSubscribers.push(callback);
+};
+
+export const api = ky.create({
+  prefixUrl: BASE_URL,
   timeout: 30000,
   retry: {
     limit: 2,
-    methods: ['get', 'put', 'head', 'delete', 'options', 'trace'],
+    methods: ['get', 'put', 'delete'],
     statusCodes: [408, 413, 429, 500, 502, 503, 504],
   },
   hooks: {
     beforeRequest: [
       (request) => {
-        // Add auth token
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-          request.headers.set('Authorization', `Bearer ${token}`);
-        }
-      },
-    ],
-    beforeRetry: [
-      async ({ request, options, error, retryCount }) => {
-        // Try to refresh token on 401
-        if (error instanceof Error && 'response' in error) {
-          const response = (error as any).response;
-          if (response?.status === 401 && retryCount === 0) {
-            const refreshed = await refreshAccessToken();
-            if (refreshed) {
-              request.headers.set('Authorization', `Bearer ${refreshed}`);
-            }
-          }
+        // Add access token
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+          request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
       },
     ],
     afterResponse: [
       async (request, options, response) => {
-        // Handle rate limiting with retry-after
-        if (response.status === 429) {
-          const retryAfter = response.headers.get('retry-after');
-          if (retryAfter) {
-            const delay = parseInt(retryAfter) * 1000;
-            await new Promise((resolve) => setTimeout(resolve, delay));
+        // Handle 401 Unauthorized - try to refresh token
+        if (response.status === 401 && !request.url.includes('/auth/refresh')) {
+          const refreshToken = localStorage.getItem('refreshToken');
+          
+          if (!refreshToken) {
+            // No refresh token, clear and redirect
+            localStorage.clear();
+            window.location.href = '/login';
+            return response;
+          }
+
+          // If already refreshing, wait for it
+          if (isRefreshing) {
+            return new Promise((resolve) => {
+              addRefreshSubscriber((newToken: string) => {
+                request.headers.set('Authorization', `Bearer ${newToken}`);
+                resolve(ky(request));
+              });
+            });
+          }
+
+          isRefreshing = true;
+
+          try {
+            // Try to refresh token
+            const refreshResponse = await ky.post(`${BASE_URL}/auth/refresh`, {
+              json: { refreshToken },
+            }).json<any>();
+            
+            if (refreshResponse.success && refreshResponse.data) {
+              const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+              
+              // Save new tokens
+              localStorage.setItem('accessToken', newAccessToken);
+              localStorage.setItem('refreshToken', newRefreshToken);
+              
+              // Notify all waiting requests
+              onTokenRefreshed(newAccessToken);
+              
+              // Retry original request with new token
+              request.headers.set('Authorization', `Bearer ${newAccessToken}`);
+              return ky(request);
+            }
+          } catch (error) {
+            // Refresh failed, clear tokens and redirect
+            localStorage.clear();
+            window.location.href = '/login';
+          } finally {
+            isRefreshing = false;
           }
         }
+        
+        // Log errors in development
+        if (!response.ok && import.meta.env.DEV) {
+          console.error('API Error:', {
+            url: request.url,
+            status: response.status,
+            statusText: response.statusText,
+          });
+        }
+        
         return response;
+      },
+    ],
+    beforeError: [
+      async (error) => {
+        const { response } = error;
+
+        if (response) {
+          try {
+            const body = (await response.json()) as {
+              message?: string;
+              errors?: Record<string, string[]> | unknown;
+            };
+
+            error.message = body.message || error.message;
+
+            if (body.errors) {
+              (error as any).errors = body.errors;
+            }
+          } catch {
+            // Response body is not JSON
+          }
+        }
+
+        return error;
       },
     ],
   },
 });
 
-// Refresh token function
-async function refreshAccessToken(): Promise<string | null> {
-  try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) return null;
+export const apiGet = async <T>(url: string, options: any = {}) => {
+  return api.get(url, options).json<T>();
+};
 
-    const response = await ky.post(`${API_BASE_URL}/auth/refresh`, {
-      json: { refreshToken },
-    }).json<{ accessToken: string }>();
+export const apiPost = async <T>(url: string, data?: any, options: any = {}) => {
+  const isForm = data instanceof FormData;
 
-    localStorage.setItem('accessToken', response.accessToken);
-    return response.accessToken;
-  } catch (error) {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    window.location.href = '/login';
-    return null;
-  }
-}
+  return api
+    .post(url, {
+      ...options,
+      ...(isForm ? { body: data } : { json: data })
+    })
+    .json<T>();
+};
 
-// Type-safe wrapper functions
-export async function apiGet<T>(url: string, options?: Options): Promise<T> {
-  try {
-    return await api.get(url, options).json<T>();
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-}
+export const apiPut = async <T>(url: string, data?: any, options: any = {}) => {
+  const isForm = data instanceof FormData;
 
-export async function apiPost<T>(url: string, data?: any, options?: Options): Promise<T> {
-  try {
-    return await api.post(url, { json: data, ...options }).json<T>();
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-}
+  return api
+    .put(url, {
+      ...options,
+      ...(isForm ? { body: data } : { json: data })
+    })
+    .json<T>();
+};
 
-export async function apiPut<T>(url: string, data?: any, options?: Options): Promise<T> {
-  try {
-    return await api.put(url, { json: data, ...options }).json<T>();
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-}
+export const apiPatch = async <T>(url: string, data?: any, options: any = {}) => {
+  const isForm = data instanceof FormData;
 
-export async function apiPatch<T>(url: string, data?: any, options?: Options): Promise<T> {
-  try {
-    return await api.patch(url, { json: data, ...options }).json<T>();
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-}
+  return api
+    .patch(url, {
+      ...options,
+      ...(isForm ? { body: data } : { json: data })
+    })
+    .json<T>();
+};
 
-export async function apiDelete<T>(url: string, options?: Options): Promise<T> {
-  try {
-    return await api.delete(url, options).json<T>();
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-}
+export const apiDelete = async <T>(url: string, options: any = {}) => {
+  return api.delete(url, options).json<T>();
+};
 
-// Error handler
-function handleApiError(error: unknown) {
-  if (error instanceof Error) {
-    const message = (error as any).response?.data?.message || error.message;
-    toast.error(message);
-  }
-}
+export const apiUpload = async <T>(url: string, formData: FormData, options: any = {}) => {
+  return api
+    .post(url, {
+      ...options,
+      body: formData
+    })
+    .json<T>();
+};

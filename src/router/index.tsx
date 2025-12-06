@@ -11,6 +11,7 @@ import { MemoryCreatePage } from '../pages/MemoryCreate';
 import { TemplatesPage } from '../pages/Templates';
 import { DecorationsPage } from '../pages/Decorations';
 import { NotFoundPage } from '../pages/NotFound';
+import { RegisterPage } from '@/pages/Register';
 
 export const router = createBrowserRouter([
   // Auth routes (no layout)
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/signup',
-    element: <LoginPage />, // Can create separate signup page
+    element: <RegisterPage />,
   },
   // Onboarding flow (no main layout)
   {

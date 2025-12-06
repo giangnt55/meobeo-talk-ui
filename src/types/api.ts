@@ -2,27 +2,26 @@ export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
   message?: string;
-  error?: ApiError;
-  meta?: PaginationMeta;
-}
-
-export interface ApiError {
-  code: string;
-  message: string;
-  details?: Record<string, any>;
-  field?: string;
+  errors?: Record<string, string[]>;
 }
 
 export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
+  currentPage: number;
   totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-  sort?: string;
-  order?: 'asc' | 'desc';
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  meta: PaginationMeta;
 }
+
+export interface ApiError {
+  message: string;
+  errors?: Record<string, string[]>;
+  statusCode?: number;
+}
+
+export type QueryParams = Record<string, string | number | boolean | undefined>;

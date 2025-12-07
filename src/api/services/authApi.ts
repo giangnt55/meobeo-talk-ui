@@ -8,7 +8,10 @@ export const authApi = {
    */
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
     const response = await api.post('auth/login', {
-      json: credentials,
+      json: {
+        email_or_username: credentials.emailOrUsername,
+        password: credentials.password,
+      },
     }).json<ApiResponse<AuthResponse>>();
     
     // Store tokens

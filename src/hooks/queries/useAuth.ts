@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import type { LoginCredentials, SignupData, AuthResponse } from '@/types/auth';
 
 export const useLogin = () => {
-  const { login: setAuth } = useAuth();
+  const { setAuth } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -17,7 +17,7 @@ export const useLogin = () => {
 };
 
 export const useSignup = () => {
-  const { login: setAuth } = useAuth();
+  const { setAuth } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -87,7 +87,7 @@ export const useResetPassword = () => {
 };
 
 export const useRefreshToken = () => {
-  const { login: setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
   return useMutation({
     mutationFn: authApi.refreshToken,

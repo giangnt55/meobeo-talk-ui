@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import type { User, AuthContextType } from '@/types/auth';
+import { authApi } from '@/api/services/authApi';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -13,61 +14,67 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize auth state from localStorage
+  // INIT AUTH
   useEffect(() => {
-    const initializeAuth = () => {
-      try {
-        const storedAccessToken = localStorage.getItem('accessToken');
-        const storedRefreshToken = localStorage.getItem('refreshToken');
-        const storedUser = localStorage.getItem('user');
+    try {
+      const storedAccessToken = localStorage.getItem('accessToken');
+      const storedRefreshToken = localStorage.getItem('refreshToken');
+      const storedUser = localStorage.getItem('user');
 
-        if (storedAccessToken && storedRefreshToken && storedUser) {
-          setAccessToken(storedAccessToken);
-          setRefreshToken(storedRefreshToken);
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Failed to initialize auth:', error);
-        // Clear invalid data
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-      } finally {
-        setIsLoading(false);
+      if (storedAccessToken && storedRefreshToken && storedUser) {
+        setUser(JSON.parse(storedUser));
+        setAccessToken(storedAccessToken);
+        setRefreshToken(storedRefreshToken);
       }
-    };
-
-    initializeAuth();
+    } catch (err) {
+      console.error('Failed to initialize auth:', err);
+      localStorage.clear();
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  const login = (userData: User, access: string, refresh: string) => {
-    setUser(userData);
-    setAccessToken(access);
-    setRefreshToken(refresh);
-    
-    // Persist to localStorage
-    localStorage.setItem('accessToken', access);
-    localStorage.setItem('refreshToken', refresh);
-    localStorage.setItem('user', JSON.stringify(userData));
+  // 🟩 LOGIN — GỌI API & LƯU VÀO CONTEXT
+  const login = async (emailOrUsername: string, password: string) => {
+    const res = await authApi.login({ emailOrUsername, password });
+
+    setUser(res.user);
+    setAccessToken(res.accessToken);
+    setRefreshToken(res.refreshToken);
+
+    localStorage.setItem('user', JSON.stringify(res.user));
+    localStorage.setItem('accessToken', res.accessToken);
+    localStorage.setItem('refreshToken', res.refreshToken);
+
+    return res;
   };
+
+  const setAuth = (user: User, accessToken: string, refreshToken: string) => {
+    setUser(user);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+  };
+
 
   const logout = () => {
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
-    
-    // Clear localStorage
+
+    localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
   };
 
   const updateUser = (updates: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-    }
+    if (!user) return;
+    const updatedUser = { ...user, ...updates };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
   const value: AuthContextType = {
@@ -76,9 +83,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     refreshToken,
     isAuthenticated: !!user && !!accessToken,
     isLoading,
-    login,
+    login,       // <--- giờ đúng
     logout,
     updateUser,
+    setAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

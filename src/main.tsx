@@ -9,6 +9,7 @@ import { router } from '@/router';
 import { AuthProvider } from '@/contexts/AuthContext';
 // import { ThemeProvider } from '@/contexts/ThemeContext';
 import '@/styles/global.css';
+import '@/styles/variables.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

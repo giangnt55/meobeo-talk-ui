@@ -4,7 +4,6 @@ import {
   type CreateMemoryInput,
   type UpdateMemoryInput,
   memorySchema,
-  apiResponseSchema,
   createMemorySchema,
   updateMemorySchema
 } from '../../schemas/memory.schema';

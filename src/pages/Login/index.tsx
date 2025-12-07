@@ -4,10 +4,12 @@ import { Input } from '../../components/common/Input/Input';
 import { Button } from '../../components/common/Button/Button';
 import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
+import { useAuth } from '@/hooks/useAuth'; 
 import './Login.css';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); 
   const { toasts, success, error, removeToast } = useToast();
   const [formData, setFormData] = useState({
     emailOrUsername: '',
@@ -20,26 +22,19 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validate
-    if (!formData.emailOrUsername || !formData.password) {
-      error('Error', 'Please fill in all fields');
-      setIsLoading(false);
-      return;
+    try {
+      await login(formData.emailOrUsername, formData.password);
+
+      success("Welcome back!", "Login successful");
+
+      setTimeout(() => {
+        navigate("/onboarding/profile");
+      }, 300);
+    } catch (err: any) {
+      error("Login Failed", err.message || "Invalid credentials");
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      // Mock login success
-      if (formData.emailOrUsername && formData.password.length >= 6) {
-        success('Welcome back!', 'Login successful');
-        setTimeout(() => {
-          navigate('/onboarding/profile');
-        }, 1000);
-      } else {
-        error('Login Failed', 'Invalid credentials. Please try again.');
-      }
-      setIsLoading(false);
-    }, 1500);
+    setIsLoading(false);
   };
 
   const handleSocialLogin = (provider: 'google' | 'facebook') => {
@@ -142,8 +137,7 @@ export const LoginPage: React.FC = () => {
                 <span>OR</span>
               </div>
 
-              <div className="social-buttons">
-                <button
+              <button
                   className="social-button"
                   onClick={() => handleSocialLogin('google')}
                 >
@@ -153,15 +147,7 @@ export const LoginPage: React.FC = () => {
                     className="social-icon"
                   />
                   <span>Sign in with Google</span>
-                </button>
-                <button
-                  className="social-button"
-                  onClick={() => handleSocialLogin('facebook')}
-                >
-                  <span className="social-icon">📘</span>
-                  <span>Sign in with Facebook</span>
-                </button>
-              </div>
+              </button>
 
               <p className="signup-link">
                 Don't have an account?{' '}

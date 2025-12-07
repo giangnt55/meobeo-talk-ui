@@ -327,7 +327,7 @@ export interface MemoryFilter {
 
 ### Color Palette
 ```css
---primary: #ee652b;
+--primary: #281c17ff;
 --background-light: #f8f6f6;
 --background-dark: #221610;
 --text-primary: #181311;

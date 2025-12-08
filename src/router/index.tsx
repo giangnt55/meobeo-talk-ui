@@ -12,6 +12,7 @@ import { TemplatesPage } from '../pages/Templates';
 import { DecorationsPage } from '../pages/Decorations';
 import { NotFoundPage } from '../pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
+import Landing from '@/pages/Landing';
 
 export const router = createBrowserRouter([
   // Auth routes (no layout)
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TimelinePage />,
+        element: <Landing />,
       },
       {
         path: 'timeline',

@@ -1,13 +1,17 @@
+/* ===========================
+   BASE CARD (giữ nguyên)
+=========================== */
 .card {
-  background: white;
-  border-radius: 1rem;
-  border: 1px solid #f4f2f0;
+  background: var(--background-white);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
   overflow: hidden;
-  transition: all 0.2s;
+  transition: var(--transition-base);
+  box-shadow: var(--shadow-none);
 }
 
 .card-hoverable:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
@@ -16,16 +20,71 @@
 }
 
 .card-header {
-  padding: 1.25rem;
-  border-bottom: 1px solid #f4f2f0;
+  padding: var(--spacing-5);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-body);
+  color: var(--text-primary);
 }
 
 .card-body {
-  padding: 1.25rem;
+  padding: var(--spacing-5);
+  font-family: var(--font-body);
+  color: var(--text-primary);
 }
 
 .card-footer {
-  padding: 1.25rem;
-  border-top: 1px solid #f4f2f0;
-  background-color: #fafafa;
+  padding: var(--spacing-5);
+  border-top: 1px solid var(--border);
+  background-color: var(--background-secondary);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+}
+
+
+
+/* ===========================
+   OUTLINE VARIANTS (THÊM MỚI)
+=========================== */
+
+/* subtle */
+.card-outline-subtle {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.card-outline-subtle:hover {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* strong */
+.card-outline-strong {
+  border: 2px solid var(--border-strong, #d0d0d0);
+}
+.card-outline-strong:hover {
+  border-color: var(--border-strong-hover, #999);
+}
+
+/* primary */
+.card-outline-primary {
+  border: 2px solid var(--primary);
+}
+.card-outline-primary:hover {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+}
+
+/* dashed */
+.card-outline-dashed {
+  border: 2px dashed var(--border);
+}
+.card-outline-dashed:hover {
+  border-color: var(--primary);
+}
+
+/* glow */
+.card-outline-glow {
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 0 rgba(var(--primary-rgb), 0.25);
+  transition: box-shadow 0.25s ease;
+}
+.card-outline-glow:hover {
+  box-shadow: 0 0 0 5px rgba(var(--primary-rgb), 0.25);
 }

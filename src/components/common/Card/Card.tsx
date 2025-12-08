@@ -1,22 +1,38 @@
-import React from 'react';
-import './Card.css';
+import React from "react";
+import "./Card.css";
+
+export type OutlineType =
+  | "none"
+  | "subtle"
+  | "strong"
+  | "primary"
+  | "dashed"
+  | "glow";
 
 export interface CardProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
   hoverable?: boolean;
+  outline?: OutlineType;
 }
 
 export const Card: React.FC<CardProps> = ({
   children,
-  className = '',
+  className = "",
   onClick,
   hoverable = false,
+  outline = "none",
 }) => {
   return (
     <div
-      className={`card ${hoverable ? 'card-hoverable' : ''} ${onClick ? 'card-clickable' : ''} ${className}`}
+      className={[
+        "card",
+        hoverable ? "card-hoverable" : "",
+        onClick ? "card-clickable" : "",
+        outline !== "none" ? `card-outline-${outline}` : "",
+        className,
+      ].join(" ")}
       onClick={onClick}
     >
       {children}
@@ -24,17 +40,26 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
-export const CardHeader: React.FC<{ children: React.ReactNode; className?: string }> = ({
+export const CardHeader = ({
   children,
-  className = '',
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
 }) => <div className={`card-header ${className}`}>{children}</div>;
 
-export const CardBody: React.FC<{ children: React.ReactNode; className?: string }> = ({
+export const CardBody = ({
   children,
-  className = '',
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
 }) => <div className={`card-body ${className}`}>{children}</div>;
 
-export const CardFooter: React.FC<{ children: React.ReactNode; className?: string }> = ({
+export const CardFooter = ({
   children,
-  className = '',
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
 }) => <div className={`card-footer ${className}`}>{children}</div>;

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Avatar } from '../../common/Avatar/Avatar';
 import { Button } from '../../common/Button/Button';
 import { SearchBar } from '../../common/SearchBar/SearchBar';
+import { FaBell, FaRegCommentDots, FaCameraRetro } from 'react-icons/fa';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
@@ -15,12 +16,12 @@ export const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        
+        {/* LEFT AREA */}
         <div className="navbar-left">
           <Link to="/" className="navbar-brand">
             <div className="brand-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" />
-              </svg>
+              <FaCameraRetro size={26} />
             </div>
             <span className="brand-name">Meobeo Talk</span>
           </Link>
@@ -47,23 +48,18 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
+        {/* RIGHT AREA */}
         <div className="navbar-right">
           <div className="desktop-only">
             <SearchBar placeholder="Search memories..." />
           </div>
 
-          <Link to="/memory/create">
-            <Button variant="primary" size="md">
-              New Memory
-            </Button>
-          </Link>
-
           <button className="icon-button desktop-only">
-            <span className="icon">🔔</span>
+            <FaBell size={20} />
           </button>
 
           <button className="icon-button desktop-only">
-            <span className="icon">💬</span>
+            <FaRegCommentDots size={20} />
           </button>
 
           <Avatar

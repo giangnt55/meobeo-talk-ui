@@ -1,0 +1,122 @@
+.trending-sidebar {
+    width: 20rem;
+    /* 320px */
+    flex-shrink: 0;
+    padding: var(--spacing-8) var(--spacing-6);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+/* Sidebar Card */
+.sidebar-card {
+    background-color: var(--background-white);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    padding: var(--spacing-4);
+}
+
+.sidebar-card-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-3);
+}
+
+/* Trending Topics */
+.trending-topics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.topic-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.topic-meta {
+    font-size: var(--font-size-sm);
+    color: var(--text-tertiary);
+}
+
+.topic-hashtag {
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+}
+
+.topic-posts {
+    font-size: var(--font-size-sm);
+    color: var(--text-tertiary);
+}
+
+/* Suggested Users */
+.suggested-users {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-item-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.user-item-avatar {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: var(--radius-full);
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+}
+
+.user-item-name {
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+}
+
+.user-item-handle {
+    font-size: var(--font-size-sm);
+    color: var(--text-tertiary);
+}
+
+/* Follow Button */
+.follow-btn {
+    border-radius: var(--radius-full);
+    background-color: var(--primary);
+    color: var(--text-inverse);
+    padding: 0.375rem var(--spacing-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.follow-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Responsive - Hide on smaller screens */
+@media (max-width: 1023px) {
+    .trending-sidebar {
+        display: none;
+    }
+}

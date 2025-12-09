@@ -51,4 +51,5 @@ vite-plugin-ssr/
 tmp/
 temp/
 
+# Test
 test.html

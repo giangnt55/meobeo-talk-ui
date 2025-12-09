@@ -13,6 +13,7 @@ import { DecorationsPage } from '@/pages/Decorations';
 import { NotFoundPage } from '@/pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
 import Landing from '@/pages/Landing';
+import Home from '@/pages/Home';
 
 export const router = createBrowserRouter([
   // Auth routes (no layout)
@@ -41,6 +42,11 @@ export const router = createBrowserRouter([
         element: <FollowUsersPage />,
       },
     ],
+  },
+  // Home feed page (no MainLayout - has its own sidebar)
+  {
+    path: '/home',
+    element: <Home />,
   },
   // Main app routes (with layout)
   {

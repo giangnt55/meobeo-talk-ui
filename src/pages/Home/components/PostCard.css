@@ -1,0 +1,86 @@
+.post-card {
+    break-inside: avoid;
+    cursor: pointer;
+    margin-bottom: var(--spacing-4);
+}
+
+.post-image-container {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.post-image {
+    border-radius: var(--radius-xl);
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Video Overlay (always visible for video posts) */
+.video-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-icon {
+    color: var(--text-inverse);
+    font-size: 3rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Post Info Overlay (shows on hover) */
+.post-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    border-radius: var(--radius-xl);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.post-card:hover .post-overlay {
+    opacity: 1;
+}
+
+.post-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: var(--spacing-3);
+}
+
+.post-title {
+    color: var(--text-inverse);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--spacing-1);
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: var(--spacing-1);
+}
+
+.author-avatar {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: var(--radius-full);
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+.author-name {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: var(--font-size-xs);
+}

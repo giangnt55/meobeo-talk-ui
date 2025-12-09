@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProgressBar } from '../../components/common/ProgressBar/ProgressBar';
-import { Input } from '../../components/common/Input/Input';
-import { Button } from '../../components/common/Button/Button';
-import { useToast } from '../../hooks/useToast';
-import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
+import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
+import { Input } from '@/components/common/Input/Input';
+import { Button } from '@/components/common/Button/Button';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import './Onboarding.css';
 
 export const ProfileSetupPage: React.FC = () => {
@@ -42,7 +42,7 @@ export const ProfileSetupPage: React.FC = () => {
   return (
     <div className="onboarding-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-      
+
       <main className="onboarding-main">
         <div className="onboarding-container">
           <div className="onboarding-card">

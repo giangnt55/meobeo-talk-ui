@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProgressBar } from '../../components/common/ProgressBar/ProgressBar';
-import { SearchBar } from '../../components/common/SearchBar/SearchBar';
-import { Button } from '../../components/common/Button/Button';
-import { useToast } from '../../hooks/useToast';
-import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
+import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
+import { SearchBar } from '@/components/common/SearchBar/SearchBar';
+import { Button } from '@/components/common/Button/Button';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import './Onboarding.css';
 
 interface Interest {
@@ -72,7 +72,7 @@ export const InterestsSelectionPage: React.FC = () => {
   return (
     <div className="onboarding-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-      
+
       <main className="onboarding-main">
         <div className="onboarding-wide-container">
           <div className="onboarding-content">

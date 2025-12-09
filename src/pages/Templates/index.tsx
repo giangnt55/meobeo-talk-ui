@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TemplateCard } from '../../components/features/TemplateCard/TemplateCard';
-import { SearchBar } from '../../components/common/SearchBar/SearchBar';
-import { Button } from '../../components/common/Button/Button';
-import type { MemoryTemplate } from '../../types/memory';
-import { mockTemplates } from '../../mock/memoryData';
+import { TemplateCard } from '@/components/features/TemplateCard/TemplateCard';
+import { SearchBar } from '@/components/common/SearchBar/SearchBar';
+import { Button } from '@/components/common/Button/Button';
+import type { MemoryTemplate } from '@/types/memory';
+import { mockTemplates } from '@/mock/memoryData';
 import './Templates.css';
 
 const categories = [
@@ -69,9 +69,8 @@ export const TemplatesPage: React.FC = () => {
           {categories.map((category) => (
             <button
               key={category}
-              className={`category-chip ${
-                selectedCategory === category ? 'active' : ''
-              }`}
+              className={`category-chip ${selectedCategory === category ? 'active' : ''
+                }`}
               onClick={() => setSelectedCategory(category)}
             >
               {category}

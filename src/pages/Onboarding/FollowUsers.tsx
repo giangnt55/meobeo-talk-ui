@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProgressBar } from '../../components/common/ProgressBar/ProgressBar';
-import { SearchBar } from '../../components/common/SearchBar/SearchBar';
-import { Button } from '../../components/common/Button/Button';
-import { Avatar } from '../../components/common/Avatar/Avatar';
-import { useToast } from '../../hooks/useToast';
-import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
+import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
+import { SearchBar } from '@/components/common/SearchBar/SearchBar';
+import { Button } from '@/components/common/Button/Button';
+import { Avatar } from '@/components/common/Avatar/Avatar';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import './Onboarding.css';
 
 interface User {
@@ -54,7 +54,7 @@ export const FollowUsersPage: React.FC = () => {
   return (
     <div className="onboarding-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-      
+
       <header className="onboarding-nav">
         <div className="nav-brand">
           <div className="brand-icon">

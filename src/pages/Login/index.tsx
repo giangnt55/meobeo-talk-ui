@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '../../components/common/Input/Input';
-import { Button } from '../../components/common/Button/Button';
-import { useToast } from '../../hooks/useToast';
-import { ToastContainer } from '../../components/common/ToastContainer/ToastContainer';
-import { useAuth } from '@/hooks/useAuth'; 
+import { Input } from '@/components/common/Input/Input';
+import { Button } from '@/components/common/Button/Button';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { useAuth } from '@/hooks/useAuth';
 import './Login.css';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const { toasts, success, error, removeToast } = useToast();
   const [formData, setFormData] = useState({
     emailOrUsername: '',
@@ -47,7 +47,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="login-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-      
+
       <header className="login-header">
         <div className="login-brand">
           <div className="brand-icon">
@@ -138,15 +138,15 @@ export const LoginPage: React.FC = () => {
               </div>
 
               <button
-                  className="social-button"
-                  onClick={() => handleSocialLogin('google')}
-                >
-                  <img
-                    src="https://www.google.com/favicon.ico"
-                    alt="Google"
-                    className="social-icon"
-                  />
-                  <span>Sign in with Google</span>
+                className="social-button"
+                onClick={() => handleSocialLogin('google')}
+              >
+                <img
+                  src="https://www.google.com/favicon.ico"
+                  alt="Google"
+                  className="social-icon"
+                />
+                <span>Sign in with Google</span>
               </button>
 
               <p className="signup-link">

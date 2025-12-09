@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GalleryView } from '../../components/features/GalleryView/GalleryView';
-import { Button } from '../../components/common/Button/Button';
-import { mockMemories } from '../../mock/memoryData';
+import { GalleryView } from '@/components/features/GalleryView/GalleryView';
+import { Button } from '@/components/common/Button/Button';
+import { mockMemories } from '@/mock/memoryData';
 import './Gallery.css';
 
 export const GalleryPage: React.FC = () => {

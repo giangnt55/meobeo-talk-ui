@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '../../components/common/Button/Button';
-import { Tag } from '../../components/common/Tag/Tag';
-import { Avatar } from '../../components/common/Avatar/Avatar';
-import { Input } from '../../components/common/Input/Input';
-import type { Memory } from '../../types/memory';
-import { mockMemories } from '../../mock/memoryData';
-import { formatMemoryDate } from '../../utils/memoryHelpers';
+import { Button } from '@/components/common/Button/Button';
+import { Tag } from '@/components/common/Tag/Tag';
+import { Avatar } from '@/components/common/Avatar/Avatar';
+import { Input } from '@/components/common/Input/Input';
+import type { Memory } from '@/types/memory';
+import { mockMemories } from '@/mock/memoryData';
+import { formatMemoryDate } from '@/utils/memoryHelpers';
 import './MemoryDetail.css';
 
 interface Comment {

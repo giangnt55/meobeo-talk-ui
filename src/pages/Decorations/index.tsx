@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { DecorationPicker } from '../../components/features/DecorationPicker/DecorationPicker';
-import { Button } from '../../components/common/Button/Button';
+import { DecorationPicker } from '@/components/features/DecorationPicker/DecorationPicker';
+import { Button } from '@/components/common/Button/Button';
 import './Decorations.css';
 
 export const DecorationsPage: React.FC = () => {
@@ -12,7 +12,7 @@ export const DecorationsPage: React.FC = () => {
   const handleDecorationSelect = (decoration: string) => {
     console.log('Selected decoration:', decoration);
     // In real app, apply decoration to memory
-    
+
     // For now, just log and optionally navigate back
     if (memoryId) {
       // Apply to existing memory

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 import './SearchBar.css';
 
 export interface SearchBarProps {
@@ -7,6 +8,7 @@ export interface SearchBarProps {
   onChange?: (value: string) => void;
   defaultValue?: string;
   className?: string;
+  showIcon?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -15,6 +17,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onChange,
   defaultValue = '',
   className = '',
+  showIcon = false,
 }) => {
   const [value, setValue] = useState(defaultValue);
 
@@ -37,7 +40,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <form className={`search-bar ${className}`} onSubmit={handleSubmit}>
-      <span className="search-icon">🔍</span>
+      {showIcon && <FaSearch className="search-icon" />}
       <input
         type="text"
         className="search-input"

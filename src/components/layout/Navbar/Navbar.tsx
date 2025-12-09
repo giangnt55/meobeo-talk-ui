@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
         {/* RIGHT AREA */}
         <div className="navbar-right">
           <div className="desktop-only">
-            <SearchBar placeholder="Search memories..." />
+            <SearchBar placeholder="Search memories..." showIcon={true} />
           </div>
 
           <button className="icon-button desktop-only">

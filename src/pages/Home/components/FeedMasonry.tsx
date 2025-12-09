@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaBullhorn } from 'react-icons/fa';
-import SearchBar from './SearchBar';
+import { SearchBar } from '@/components/common/SearchBar/SearchBar';
 import PostCard from './PostCard';
 import './FeedMasonry.css';
 
@@ -83,7 +83,7 @@ const FeedMasonry: React.FC = () => {
             <div className="feed-header">
                 <div className="feed-header-content">
                     <h2 className="feed-title">Home</h2>
-                    <SearchBar />
+                    <SearchBar showIcon placeholder="Search" className="feed-search" />
                 </div>
             </div>
 

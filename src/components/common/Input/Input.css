@@ -1,8 +1,8 @@
 .input-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  min-width: 10rem;
+  gap: var(--spacing-2);
+  min-width: var(--spacing-10);
 }
 
 .input-full {
@@ -10,9 +10,9 @@
 }
 
 .input-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #4a5568;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
 }
 
 .input-container {
@@ -23,57 +23,57 @@
 
 .input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  background-color: white;
-  transition: all 0.2s;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-white);
+  transition: all var(--transition-base);
 }
 
 .input:focus {
   outline: none;
-  border-color: #ee652b;
-  box-shadow: 0 0 0 3px rgba(238, 101, 43, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .input-with-start-icon {
-  padding-left: 2.5rem;
+  padding-left: var(--spacing-10);
 }
 
 .input-with-end-icon {
-  padding-right: 2.5rem;
+  padding-right: var(--spacing-10);
 }
 
 .input-icon {
   position: absolute;
   display: flex;
   align-items: center;
-  color: #a0aec0;
+  color: var(--text-tertiary);
 }
 
 .input-icon-start {
-  left: 0.75rem;
+  left: var(--spacing-3);
 }
 
 .input-icon-end {
-  right: 0.75rem;
+  right: var(--spacing-3);
 }
 
 .input-error .input {
-  border-color: #f56565;
+  border-color: var(--error);
 }
 
 .input-error .input:focus {
-  border-color: #f56565;
-  box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.1);
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px var(--error-light);
 }
 
 .input-helper {
-  font-size: 0.75rem;
-  color: #718096;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
 }
 
 .input-helper-error {
-  color: #f56565;
+  color: var(--error);
 }

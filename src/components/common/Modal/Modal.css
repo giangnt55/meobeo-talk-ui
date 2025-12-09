@@ -5,18 +5,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
+  z-index: var(--z-modal-backdrop);
+  padding: var(--spacing-4);
 }
 
 .modal {
-  background: white;
-  border-radius: 1rem;
+  background: var(--background-white);
+  border-radius: var(--radius-2xl);
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: modalSlideUp 0.2s ease-out;
+  animation: modalSlideUp var(--transition-base);
 }
 
 @keyframes modalSlideUp {
@@ -24,6 +24,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -32,35 +33,35 @@
 
 .modal-sm {
   width: 100%;
-  max-width: 24rem;
+  max-width: var(--container-sm);
 }
 
 .modal-md {
   width: 100%;
-  max-width: 32rem;
+  max-width: var(--container-lg);
 }
 
 .modal-lg {
   width: 100%;
-  max-width: 48rem;
+  max-width: var(--container-3xl);
 }
 
 .modal-xl {
   width: 100%;
-  max-width: 64rem;
+  max-width: var(--container-5xl);
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
-  border-bottom: 1px solid #f4f2f0;
+  padding: var(--spacing-6);
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   margin: 0;
 }
 
@@ -68,33 +69,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: var(--spacing-8);
+  height: var(--spacing-8);
   border: none;
   background: transparent;
-  color: #896f61;
+  color: var(--text-secondary);
   cursor: pointer;
-  font-size: 2rem;
+  font-size: var(--font-size-3xl);
   line-height: 1;
   padding: 0;
-  border-radius: 50%;
-  transition: background-color 0.2s;
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-base);
 }
 
 .modal-close:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: var(--background-secondary);
 }
 
 .modal-body {
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem;
+  padding: var(--spacing-6);
 }
 
 .modal-footer {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
   justify-content: flex-end;
-  padding: 1.5rem;
-  border-top: 1px solid #f4f2f0;
+  padding: var(--spacing-6);
+  border-top: 1px solid var(--border);
 }

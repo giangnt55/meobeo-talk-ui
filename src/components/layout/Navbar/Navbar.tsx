@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Avatar } from '../../common/Avatar/Avatar';
-import { Button } from '../../common/Button/Button';
-import { SearchBar } from '../../common/SearchBar/SearchBar';
+import { Avatar } from '@/components/common/Avatar/Avatar';
+import { Button } from '@/components/common/Button/Button';
+import { SearchBar } from '@/components/common/SearchBar/SearchBar';
 import { FaBell, FaRegCommentDots, FaCameraRetro } from 'react-icons/fa';
 import './Navbar.css';
 
@@ -16,7 +16,7 @@ export const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        
+
         {/* LEFT AREA */}
         <div className="navbar-left">
           <Link to="/" className="navbar-brand">

@@ -3,12 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/common/Button/Button';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { useAuth } from '@/hooks/useAuth';
 import './VerifyEmail.css';
 
 export const VerifyEmailPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { toasts, success, error, removeToast } = useToast();
+    const { setAuth } = useAuth();
 
     const email = location.state?.email || '';
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -84,11 +86,16 @@ export const VerifyEmailPage: React.FC = () => {
 
         try {
             const { authApi } = await import('@/api/services/authApi');
-            await authApi.verifyEmail(email, otpCode);
+            const authResponse = await authApi.verifyEmail(email, otpCode);
+
+            // Auto-login user with returned tokens
+            setAuth(authResponse.user, authResponse.accessToken, authResponse.refreshToken);
 
             success('Verified!', 'Email verified successfully');
+
             setTimeout(() => {
-                navigate('/login');
+                // Navigate to onboarding since user just signed up
+                navigate('/onboarding/profile');
             }, 1000);
         } catch (err: any) {
             error('Verification Failed', err.message || 'Invalid or expired code');

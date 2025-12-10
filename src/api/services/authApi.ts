@@ -97,14 +97,39 @@ export const authApi = {
   /**
    * Verify Email with OTP
    */
-  verifyEmail: async (email: string, code: string): Promise<void> => {
-    const response = await api.post('auth/verify-email', {
-      json: { email, code },
-    }).json<ApiResponse<void>>();
+  verifyEmail: async (email: string, code: string): Promise<AuthResponse> => {
+    const response = await api.post('auth/login', {
+      json: {
+        email_or_username: email,
+        password: code,
+      },
+    }).json<ApiResponse<LoginApiResponse>>();
 
-    if (!response.success) {
-      throw new Error(response.message || 'Email verification failed');
+    // Map snake_case API response to camelCase
+    if (response.success && response.data) {
+      const apiData = response.data;
+
+      const authResponse: AuthResponse = {
+        user: {
+          id: apiData.user_id,
+          email: apiData.email,
+          username: apiData.username,
+          displayName: apiData.display_name,
+          avatar: apiData.avatar,
+          bio: apiData.bio,
+          interests: apiData.interests || [],
+          following: apiData.following || [],
+          followers: apiData.followers || [],
+          createdAt: apiData.created_at || new Date().toISOString(),
+        },
+        accessToken: apiData.access_token,
+        refreshToken: apiData.refresh_token,
+      };
+
+      return authResponse;
     }
+
+    throw new Error(response.message || 'Verify email failed');
   },
 
   /**

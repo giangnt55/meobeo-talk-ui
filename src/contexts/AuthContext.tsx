@@ -18,13 +18,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     try {
       const storedAccessToken = localStorage.getItem('accessToken');
-      const storedRefreshToken = localStorage.getItem('refreshToken');
       const storedUser = localStorage.getItem('user');
 
-      if (storedAccessToken && storedRefreshToken && storedUser) {
+      // Refresh token is in HttpOnly cookie, so we only check access token and user
+      if (storedAccessToken && storedUser) {
         setUser(JSON.parse(storedUser));
         setAccessToken(storedAccessToken);
-        setRefreshToken(storedRefreshToken);
+        // refreshToken will be null in state since it's in HttpOnly cookie
       }
     } catch (err) {
       console.error('Failed to initialize auth:', err);
@@ -34,17 +34,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  // 🟩 LOGIN — GỌI API & LƯU VÀO CONTEXT
   const login = async (emailOrUsername: string, password: string) => {
     const res = await authApi.login({ emailOrUsername, password });
 
+    // Set state
     setUser(res.user);
     setAccessToken(res.accessToken);
-    setRefreshToken(res.refreshToken);
 
+    // Store to localStorage (only user and access token)
     localStorage.setItem('user', JSON.stringify(res.user));
     localStorage.setItem('accessToken', res.accessToken);
-    localStorage.setItem('refreshToken', res.refreshToken);
+    // DO NOT store refresh token - it's in HttpOnly cookie
 
     return res;
   };
@@ -52,22 +52,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const setAuth = (user: User, accessToken: string, refreshToken: string) => {
     setUser(user);
     setAccessToken(accessToken);
-    setRefreshToken(refreshToken);
 
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
   };
 
 
   const logout = () => {
     setUser(null);
     setAccessToken(null);
-    setRefreshToken(null);
-
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    // Refresh token is cleared by backend (HttpOnly cookie)
   };
 
   const updateUser = (updates: Partial<User>) => {
@@ -83,7 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     refreshToken,
     isAuthenticated: !!user && !!accessToken,
     isLoading,
-    login,       // <--- giờ đúng
+    login,
     logout,
     updateUser,
     setAuth,

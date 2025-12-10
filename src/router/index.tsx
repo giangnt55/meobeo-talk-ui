@@ -14,6 +14,7 @@ import { NotFoundPage } from '@/pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
+import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
 export const router = createBrowserRouter([
   // Auth routes (no layout)
@@ -43,10 +44,14 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Home feed page (no MainLayout - has its own sidebar)
+  // Home feed page (no MainLayout - has its own sidebar, requires auth)
   {
     path: '/home',
-    element: <Home />,
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
   },
   // Main app routes (with layout)
   {

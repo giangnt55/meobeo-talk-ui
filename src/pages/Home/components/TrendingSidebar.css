@@ -114,9 +114,16 @@
     background-color: var(--primary-hover);
 }
 
-/* Responsive - Hide on smaller screens */
+
+/* Responsive - Show only on large screens (desktop) */
 @media (max-width: 1023px) {
     .trending-sidebar {
         display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .trending-sidebar {
+        display: block;
     }
 }

@@ -28,7 +28,7 @@ export const LoginPage: React.FC = () => {
       success("Welcome back!", "Login successful");
 
       setTimeout(() => {
-        navigate("/onboarding/profile");
+        navigate("/home");
       }, 300);
     } catch (err: any) {
       error("Login Failed", err.message || "Invalid credentials");

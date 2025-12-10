@@ -48,7 +48,7 @@ export const FollowUsersPage: React.FC = () => {
 
   const handleFinish = () => {
     success('Setup Complete!', 'Welcome to Meobeo Talk');
-    setTimeout(() => navigate('/timeline'), 1000);
+    setTimeout(() => navigate('/home'), 1000);
   };
 
   return (
@@ -127,7 +127,7 @@ export const FollowUsersPage: React.FC = () => {
               >
                 Continue
               </Button>
-              <button className="skip-button" onClick={() => navigate('/timeline')}>
+              <button className="skip-button" onClick={() => navigate('/home')}>
                 Skip for now
               </button>
             </div>

@@ -65,14 +65,59 @@ export const authApi = {
   signup: async (data: SignupData): Promise<AuthResponse> => {
     const response = await api.post('auth/register', {
       json: data,
-    }).json<ApiResponse<AuthResponse>>();
+    }).json<ApiResponse<LoginApiResponse>>();
 
     if (response.success && response.data) {
-      // Return response - localStorage handled by calling context
-      return response.data;
+      const apiData = response.data;
+
+      const authResponse: AuthResponse = {
+        user: {
+          id: apiData.user_id,
+          email: apiData.email,
+          username: apiData.username,
+          displayName: apiData.display_name,
+          avatar: apiData.avatar,
+          bio: apiData.bio,
+          interests: apiData.interests || [],
+          following: apiData.following || [],
+          followers: apiData.followers || [],
+          createdAt: apiData.created_at || new Date().toISOString(),
+        },
+        accessToken: apiData.access_token,
+        refreshToken: apiData.refresh_token,
+      };
+
+      // Return response - AuthContext will handle storage if needed
+      return authResponse;
     }
 
     throw new Error(response.message || 'Signup failed');
+  },
+
+  /**
+   * Verify Email with OTP
+   */
+  verifyEmail: async (email: string, code: string): Promise<void> => {
+    const response = await api.post('auth/verify-email', {
+      json: { email, code },
+    }).json<ApiResponse<void>>();
+
+    if (!response.success) {
+      throw new Error(response.message || 'Email verification failed');
+    }
+  },
+
+  /**
+   * Resend Verification Code
+   */
+  resendVerificationCode: async (email: string): Promise<void> => {
+    const response = await api.post('auth/resend-otp', {
+      json: { email },
+    }).json<ApiResponse<void>>();
+
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to resend verification code');
+    }
   },
 
   /**

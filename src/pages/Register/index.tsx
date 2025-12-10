@@ -111,9 +111,12 @@ export const RegisterPage: React.FC = () => {
 
     signup(payload, {
       onSuccess: () => {
-        success('Success!', 'Account created successfully');
+        success('Success!', 'Account created! Please check your email for verification code.');
         setTimeout(() => {
-          navigate('/onboarding/profile');
+          // Navigate to verify email page with email in state
+          navigate('/verify-email', {
+            state: { email: formData.email }
+          });
         }, 1000);
       },
       onError: (err: unknown) => {
@@ -125,7 +128,7 @@ export const RegisterPage: React.FC = () => {
             ...serverErrors,
           }));
         }
-        
+
         // Show toast with error message
         const message = formatErrorForToast(err);
         error('Registration Failed', message);
@@ -137,67 +140,45 @@ export const RegisterPage: React.FC = () => {
     success('Redirecting...', 'Signing up with Google');
   };
 
-  const handleFacebookSignup = () => {
-    success('Redirecting...', 'Signing up with Facebook');
-  };
-
   return (
     <div className="register-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-      
+
       <div className="register-container">
+        {/* Left side - Illustration */}
         <div className="register-left">
-          <div className="register-decoration-top"></div>
-          <div className="register-decoration-bottom"></div>
-          
+          <div className="decoration-top"></div>
+          <div className="decoration-bottom"></div>
+
           <div className="register-illustration">
-            <div className="network-animation">
-              <svg viewBox="0 0 500 500" className="network-svg">
-                <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ff9a9e" />
-                    <stop offset="100%" stopColor="#fad0c4" />
-                  </linearGradient>
-                </defs>
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <circle
-                    key={i}
-                    cx={Math.random() * 450 + 25}
-                    cy={Math.random() * 450 + 25}
-                    r="8"
-                    fill="white"
-                    className="node"
-                    style={{
-                      animationDelay: `${Math.random() * 2}s`,
-                    }}
-                  />
-                ))}
-              </svg>
-            </div>
+            <div
+              className="illustration-image"
+              style={{
+                backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSXxi7pWfdxASYcPAFBWjp7kxUyuCBAoomPF0x-qs6TAT9DiO16XXO9SyFIXs4sKAb8xciFD7WWv90A38xHUgQVh-o0hKDWmsd_n4Px6t0MUVFwlQR0i3KvIkKZ3htbE2MFAHCRYghxMYNXH2Jk4GeOIJf0IMAwYXwBrLoPtvsPOpqhhaWdi80xi0fomGRawL5gjtAfM_ILHqaVIt2jxglGmFEGn0e70X1-ssv1Y93VOyJgUgax9MLkHtdXDQz38WttpvYay20s8zJ")`
+              }}
+            />
           </div>
 
           <div className="register-welcome">
             <h1>Welcome to Meobeo Talk</h1>
             <p>
               Share your ideas, connect with a vibrant community,
-              <br />
               and let your voice be heard.
             </p>
           </div>
         </div>
 
+        {/* Right side - Form */}
         <div className="register-right">
-          <div className="register-header">
-            <div className="register-logo">
-              <h2>Meobeo Talk</h2>
-            </div>
+          <header className="register-header">
+            <h2 className="register-logo">Meobeo Talk</h2>
             <div className="register-login-link">
               <span>Already have an account?</span>
               <Link to="/login">Log In</Link>
             </div>
-          </div>
+          </header>
 
-          <div className="register-form-container">
+          <main className="register-main">
             <h1>Create Your Account</h1>
 
             <div className="social-buttons">
@@ -209,15 +190,6 @@ export const RegisterPage: React.FC = () => {
               >
                 <span className="social-icon google">G</span>
                 Sign up with Google
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleFacebookSignup}
-                disabled={isPending}
-                className="social-btn"
-              >
-                <span className="social-icon facebook">f</span>
-                Sign up with Facebook
               </Button>
             </div>
 
@@ -298,7 +270,7 @@ export const RegisterPage: React.FC = () => {
                 <Link to="/privacy">Privacy Policy</Link>.
               </p>
             </form>
-          </div>
+          </main>
         </div>
       </div>
     </div>

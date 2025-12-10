@@ -12,6 +12,7 @@ import { TemplatesPage } from '@/pages/Templates';
 import { DecorationsPage } from '@/pages/Decorations';
 import { NotFoundPage } from '@/pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
+import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
   {
     path: '/signup',
     element: <RegisterPage />,
+  },
+  {
+    path: '/verify-email',
+    element: <VerifyEmailPage />,
   },
   // Onboarding flow (no main layout)
   {

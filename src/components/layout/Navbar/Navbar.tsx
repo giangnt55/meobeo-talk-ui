@@ -52,17 +52,17 @@ export const Navbar: React.FC = () => {
               <nav className="navbar-links">
                 {isAuthenticated ? (
                   <>
-                    <Link to="/home" className="nav-link">Home</Link>
-                    <Link to="/timeline" className="nav-link">Timeline</Link>
-                    <Link to="/gallery" className="nav-link">Gallery</Link>
+                    <Link to="/home" className="nav-link">Main Feed</Link>
+                    <Link to="/blog" className="nav-link">Blog</Link>
+                    <Link to="/memories" className="nav-link">Memories</Link>
                     <Link to="/about" className="nav-link">About Us</Link>
                   </>
                 ) : (
                   <>
                     <Link to="/blog" className="nav-link">Blog</Link>
-                    <Link to="/community" className="nav-link">Community</Link>
+                    <Link to="/memories" className="nav-link">Memories</Link>
                     <Link to="/about" className="nav-link">About Us</Link>
-                    <Link to="/contact" className="nav-link">Contact</Link>
+                    {/* <Link to="/contact" className="nav-link">Contact</Link> */}
                   </>
                 )}
               </nav>

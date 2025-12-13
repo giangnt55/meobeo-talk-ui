@@ -24,18 +24,10 @@ import { PublicLayout } from '@/layouts/PublicLayout';
 
 export const router = createBrowserRouter([
   // Auth routes (no layout)
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/signup',
-    element: <RegisterPage />,
-  },
-  {
-    path: '/verify-email',
-    element: <VerifyEmailPage />,
-  },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/signup', element: <RegisterPage /> },
+  { path: '/verify-email', element: <VerifyEmailPage /> },
+
   {
     path: '/about',
     element: (
@@ -44,40 +36,20 @@ export const router = createBrowserRouter([
       </PublicLayout>
     ),
   },
-  {
-    path: '/welcome',
-    element: <WelcomePage />,
-  },
 
+  { path: '/welcome', element: <WelcomePage /> },
 
   // Onboarding flow (no main layout)
   {
     path: '/onboarding',
     children: [
-      {
-        path: 'profile',
-        element: <ProfileSetupPage />,
-      },
-      {
-        path: 'interests',
-        element: <InterestsSelectionPage />,
-      },
-      {
-        path: 'follow',
-        element: <FollowUsersPage />,
-      },
+      { path: 'profile', element: <ProfileSetupPage /> },
+      { path: 'interests', element: <InterestsSelectionPage /> },
+      { path: 'follow', element: <FollowUsersPage /> },
     ],
   },
-  // Home feed page (no MainLayout - has its own sidebar, requires auth)
-  {
-    path: '/home',
-    element: (
-      <ProtectedRoute>
-        <Home />
-      </ProtectedRoute>
-    ),
-  },
-  // Main app routes (with layout)
+
+  // Main app routes (WITH MainLayout)
   {
     path: '/',
     element: <MainLayout />,
@@ -86,6 +58,16 @@ export const router = createBrowserRouter([
         index: true,
         element: <Landing />,
       },
+
+      {
+        path: 'home',
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
+      },
+
       {
         path: 'timeline',
         element: <TimelinePage />,
@@ -116,6 +98,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: '*',
     element: (

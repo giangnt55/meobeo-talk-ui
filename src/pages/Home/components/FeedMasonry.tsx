@@ -79,14 +79,6 @@ const FeedMasonry: React.FC = () => {
 
     return (
         <main className="feed-main">
-            {/* Sticky Header */}
-            <div className="feed-header">
-                <div className="feed-header-content">
-                    <h2 className="feed-title">Home</h2>
-                    <SearchBar showIcon placeholder="Search" className="feed-search" />
-                </div>
-            </div>
-
             {/* Feed Content */}
             <div className="feed-content">
                 <div className="masonry-grid">

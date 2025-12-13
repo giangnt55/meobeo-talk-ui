@@ -8,7 +8,7 @@ const Home: React.FC = () => {
     return (
         <div className="home-container">
             <div className="home-wrapper">
-                <HomeSidebar />
+                {/* <HomeSidebar /> */}
                 <FeedMasonry />
                 <TrendingSidebar />
             </div>

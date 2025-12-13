@@ -2,12 +2,14 @@ import React from 'react';
 import './Button.css';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'success' | 'danger' | 'warning' | 'info';
   size?: 'sm' | 'md' | 'lg';
-  rounded?: 'none' | 'md' | 'lg' | 'full';
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
   isLoading?: boolean;
   fullWidth?: boolean;
-  icon?: React.ReactNode;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  loadingText?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -16,28 +18,35 @@ export const Button: React.FC<ButtonProps> = ({
   rounded = 'full',
   isLoading = false,
   fullWidth = false,
-  icon,
+  leftIcon,
+  rightIcon,
+  loadingText,
   children,
   className = '',
   disabled,
   ...props
 }) => {
-  const baseClass = 'btn';
-  const variantClass = `btn-${variant}`;
-  const sizeClass = `btn-${size}`;
-  const roundedClass = `btn-rounded-${rounded}`;
-  const fullWidthClass = fullWidth ? 'btn-full' : '';
-  const loadingClass = isLoading ? 'btn-loading' : '';
+  const classes = [
+    'btn',
+    `btn-${variant}`,
+    `btn-${size}`,
+    `btn-rounded-${rounded}`,
+    fullWidth && 'btn-full',
+    isLoading && 'btn-loading',
+    (isLoading && loadingText) && 'btn-loading-text',
+    className
+  ].filter(Boolean).join(' ');
 
   return (
     <button
-      className={`${baseClass} ${variantClass} ${sizeClass} ${roundedClass} ${fullWidthClass} ${loadingClass} ${className}`}
+      className={classes}
       disabled={disabled || isLoading}
       {...props}
     >
       {isLoading && <span className="btn-spinner"></span>}
-      {icon && <span className="btn-icon">{icon}</span>}
-      <span className="btn-content">{children}</span>
+      {!isLoading && leftIcon && <span className="btn-left-icon">{leftIcon}</span>}
+      <span className="btn-content">{loadingText && isLoading ? loadingText : children}</span>
+      {!isLoading && rightIcon && <span className="btn-right-icon">{rightIcon}</span>}
     </button>
   );
 };

@@ -1,4 +1,4 @@
-/* Base Button */
+/* Base Button Styles */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -6,37 +6,38 @@
   gap: var(--spacing-2);
   font-family: inherit;
   font-weight: var(--font-weight-bold);
-  /* Bold as per design */
   border: none;
-  border-radius: var(--radius-full);
-  /* Default to full, but overridable */
   cursor: pointer;
   transition: all var(--transition-base);
-  /* Animate all properties */
   white-space: nowrap;
-  color: var(--text-primary);
   position: relative;
   overflow: hidden;
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .btn:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
   background-color: var(--background-secondary) !important;
   color: var(--text-disabled) !important;
   box-shadow: none !important;
   transform: none !important;
+  pointer-events: none;
 }
 
-/* -----------------------------------
+/* ===================================
    VARIANTS
------------------------------------ */
+=================================== */
 
 /* PRIMARY */
 .btn-primary {
   background-color: var(--primary);
   color: var(--text-inverse);
-  /* White text */
   box-shadow: var(--shadow-soft);
 }
 
@@ -44,7 +45,6 @@
   background-color: var(--primary-hover);
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
-  /* Lift effect */
 }
 
 .btn-primary:active:not(:disabled) {
@@ -52,29 +52,35 @@
   transform: translateY(0);
 }
 
+/* SECONDARY */
 .btn-secondary {
-  background-color: var(--background-light);
-  color: var(--text-primary);
-  border: 2px solid transparent;
+  background-color: var(--secondary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-soft);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  border-color: rgba(236, 91, 19, 0.2);
-  /* primary/20 */
-  color: var(--primary);
+  background-color: var(--secondary-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-color: var(--secondary-dark);
+  transform: translateY(0);
 }
 
 /* OUTLINE */
 .btn-outline {
   background-color: transparent;
   border: 2px solid var(--border-medium);
-  /* border-gray-200 */
   color: var(--text-primary);
 }
 
 .btn-outline:hover:not(:disabled) {
   border-color: var(--primary);
   color: var(--primary);
+  background-color: var(--primary-light);
 }
 
 /* GHOST */
@@ -88,39 +94,88 @@
   color: var(--primary);
 }
 
-/* -----------------------------------
+/* SUCCESS */
+.btn-success {
+  background-color: var(--success);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: var(--success-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* DANGER */
+.btn-danger {
+  background-color: var(--error);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--error-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* WARNING */
+.btn-warning {
+  background-color: var(--warning);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background-color: var(--warning-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* INFO */
+.btn-info {
+  background-color: var(--info);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-info:hover:not(:disabled) {
+  background-color: var(--info-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ===================================
    SIZES
------------------------------------ */
+=================================== */
 .btn-sm {
   height: var(--height-button-sm);
-  /* 2.25rem ~ 36px */
   padding: 0 var(--spacing-5);
   font-size: var(--font-size-sm);
 }
 
 .btn-md {
   height: var(--height-button);
-  /* 3rem ~ 48px */
   padding: 0 var(--spacing-8);
   font-size: var(--font-size-base);
 }
 
 .btn-lg {
   height: var(--height-button-lg);
-  /* 3.5rem ~ 56px */
   padding: 0 var(--spacing-10);
   font-size: var(--font-size-lg);
 }
 
-.btn-full {
-  width: 100%;
-}
-
-/* -----------------------------------
-   BORDER RADIUS VARIANTS
------------------------------------ */
+/* ===================================
+   BORDER RADIUS
+=================================== */
 .btn-rounded-none {
   border-radius: var(--radius-none);
+}
+
+.btn-rounded-sm {
+  border-radius: var(--radius-sm);
 }
 
 .btn-rounded-md {
@@ -128,18 +183,38 @@
 }
 
 .btn-rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.btn-rounded-xl {
   border-radius: var(--radius-xl);
-  /* Use radius-xl for 'lg' feeling which is less than full */
+}
+
+.btn-rounded-2xl {
+  border-radius: var(--radius-2xl);
 }
 
 .btn-rounded-full {
   border-radius: var(--radius-full);
 }
 
-/* Loading spinner */
-.btn-loading {
-  color: transparent !important;
-  /* Hide text while loading */
+/* ===================================
+   FULL WIDTH
+=================================== */
+.btn-full {
+  width: 100%;
+}
+
+/* ===================================
+   LOADING STATE
+=================================== */
+.btn-loading .btn-content {
+  visibility: hidden;
+}
+
+.btn-loading .btn-left-icon,
+.btn-loading .btn-right-icon {
+  visibility: hidden;
 }
 
 .btn-spinner {
@@ -147,30 +222,54 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  color: var(--text-primary);
-  /* Default spinner color */
+  animation: btn-spin 0.6s linear infinite;
 }
 
-.btn-primary .btn-spinner {
-  color: var(--text-inverse);
-}
-
-@keyframes spin {
+@keyframes btn-spin {
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
-/* Icon adjustments */
-.btn-icon {
+/* Loading with Text State */
+.btn-loading-text .btn-content {
+  visibility: visible;
+  opacity: 0.8;
+}
+
+.btn-loading-text .btn-spinner {
+  position: static;
+  transform: none;
+  animation: btn-spin-static 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 0;
+  /* Gap is handled by parent flex/gap */
+}
+
+@keyframes btn-spin-static {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================================
+   ICONS
+=================================== */
+.btn-left-icon,
+.btn-right-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.btn-left-icon svg,
+.btn-right-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }

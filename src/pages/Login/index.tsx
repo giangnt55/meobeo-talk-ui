@@ -1,11 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/common/Input/Input';
 import { Button } from '@/components/common/Button/Button';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import { useAuth } from '@/hooks/useAuth';
+import { authApi } from '@/api/services/authApi';
 import './Login.css';
+
+// Google Icon Component
+const GoogleIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.9895 10.1871C19.9895 9.36767 19.9214 8.76973 19.7742 8.14966H10.1992V11.848H15.8195C15.7062 12.7671 15.0943 14.1512 13.7346 15.0813L13.7155 15.2051L16.7429 17.4969L16.9527 17.5174C18.8789 15.7789 19.9895 13.221 19.9895 10.1871Z" fill="#4285F4" />
+    <path d="M10.1993 19.9313C12.9527 19.9313 15.2643 19.0454 16.9527 17.5174L13.7346 15.0813C12.8734 15.6682 11.7176 16.0779 10.1993 16.0779C7.50243 16.0779 5.21352 14.3395 4.39759 11.9366L4.27799 11.9466L1.13003 14.3273L1.08887 14.4391C2.76588 17.6945 6.21061 19.9313 10.1993 19.9313Z" fill="#34A853" />
+    <path d="M4.39748 11.9366C4.18219 11.3166 4.05759 10.6521 4.05759 9.96565C4.05759 9.27909 4.18219 8.61473 4.38615 7.99466L4.38045 7.8626L1.19304 5.44366L1.08875 5.49214C0.397576 6.84305 0.000976562 8.36008 0.000976562 9.96565C0.000976562 11.5712 0.397576 13.0882 1.08875 14.4391L4.39748 11.9366Z" fill="#FBBC05" />
+    <path d="M10.1993 3.85336C12.1142 3.85336 13.406 4.66168 14.1425 5.33718L17.0207 2.59107C15.253 0.985496 12.9527 0 10.1993 0C6.2106 0 2.76588 2.23672 1.08887 5.49214L4.38626 7.99466C5.21352 5.59183 7.50242 3.85336 10.1993 3.85336Z" fill="#EB4335" />
+  </svg>
+);
+
+// Declare Google Identity Services types
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+            auto_select?: boolean;
+          }) => void;
+          prompt: () => void;
+        };
+      };
+    };
+  }
+}
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,14 +46,89 @@ export const LoginPage: React.FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Google Client ID from environment variable
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  // Load Google Identity Services script
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) {
+      console.error('Google Client ID not found in environment variables');
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (window.google) {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCallback,
+        });
+      }
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, [GOOGLE_CLIENT_ID]);
+
+  const handleGoogleCallback = async (response: { credential: string }) => {
+    setIsGoogleLoading(true);
+
+    try {
+      // Call your backend API to verify Google token
+      // const result = await authApi.googleLogin(response.credential);
+
+      // // Handle successful login (save token, update auth context, etc.)
+      // success('Success!', `Welcome ${result.user?.name || 'back'}!`);
+
+      // // Navigate to home or dashboard
+      // setTimeout(() => {
+      //   navigate('/home');
+      // }, 500);
+
+    } catch (err: any) {
+      console.error('Google login error:', err);
+      error('Login Failed', err.message || 'Google login failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    if (!GOOGLE_CLIENT_ID) {
+      error('Error', 'Google login is not configured');
+      return;
+    }
+
+    if (window.google) {
+      setIsGoogleLoading(true);
+      window.google.accounts.id.prompt();
+    } else {
+      error('Error', 'Google Sign-In is not available');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.emailOrUsername || !formData.password) {
+      error('Validation Error', 'Please fill in all fields');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       await login(formData.emailOrUsername, formData.password);
-
       success("Welcome back!", "Login successful");
 
       setTimeout(() => {
@@ -32,16 +136,9 @@ export const LoginPage: React.FC = () => {
       }, 300);
     } catch (err: any) {
       error("Login Failed", err.message || "Invalid credentials");
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
-  };
-
-  const handleSocialLogin = (provider: 'google' | 'facebook') => {
-    success('Redirecting...', `Signing in with ${provider}`);
-    setTimeout(() => {
-      navigate('/onboarding/profile');
-    }, 1500);
   };
 
   return (
@@ -51,8 +148,9 @@ export const LoginPage: React.FC = () => {
       <header className="login-header">
         <div className="login-brand">
           <div className="brand-icon">
-            <svg viewBox="0 0 48 48" fill="currentColor">
-              <path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" />
+            <svg className="w-full h-full fill-current" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path clipRule="evenodd" d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fillRule="evenodd"></path>
+              <path d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z"></path>
             </svg>
           </div>
           <h2 className="brand-name">Meobeo Talk</h2>
@@ -128,6 +226,7 @@ export const LoginPage: React.FC = () => {
                   variant="primary"
                   fullWidth
                   isLoading={isLoading}
+                  loadingText="Signing in..."
                   rounded="lg"
                 >
                   Sign In
@@ -138,17 +237,18 @@ export const LoginPage: React.FC = () => {
                 <span>OR</span>
               </div>
 
-              <button
-                className="social-button"
-                onClick={() => handleSocialLogin('google')}
+              <Button
+                type="button"
+                variant="outline"
+                rounded="lg"
+                fullWidth
+                isLoading={isGoogleLoading}
+                loadingText="Connecting..."
+                onClick={handleGoogleLogin}
+                leftIcon={!isGoogleLoading && <GoogleIcon />}
               >
-                <img
-                  src="https://www.google.com/favicon.ico"
-                  alt="Google"
-                  className="social-icon"
-                />
-                <span>Sign in with Google</span>
-              </button>
+                Sign in with Google
+              </Button>
 
               <p className="signup-link">
                 Don't have an account?{' '}

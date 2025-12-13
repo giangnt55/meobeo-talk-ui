@@ -133,6 +133,7 @@ export const ProfileSetupPage: React.FC = () => {
                 variant="primary"
                 fullWidth
                 onClick={handleContinue}
+                rounded="lg"
               >
                 Continue
               </Button>

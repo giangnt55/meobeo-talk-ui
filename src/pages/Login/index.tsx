@@ -128,6 +128,7 @@ export const LoginPage: React.FC = () => {
                   variant="primary"
                   fullWidth
                   isLoading={isLoading}
+                  rounded="lg"
                 >
                   Sign In
                 </Button>

@@ -169,6 +169,7 @@ export const VerifyEmailPage: React.FC = () => {
                             variant="outline"
                             onClick={handleBackToSignup}
                             disabled={isLoading}
+                            rounded="lg"
                         >
                             Back to Sign Up
                         </Button>
@@ -209,6 +210,7 @@ export const VerifyEmailPage: React.FC = () => {
                                 isLoading={isLoading}
                                 disabled={isLoading || otp.join('').length !== 6}
                                 className="verify-btn"
+                                rounded="lg"
                             >
                                 Verify Account
                             </Button>

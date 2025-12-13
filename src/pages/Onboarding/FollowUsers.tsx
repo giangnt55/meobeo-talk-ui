@@ -48,7 +48,7 @@ export const FollowUsersPage: React.FC = () => {
 
   const handleFinish = () => {
     success('Setup Complete!', 'Welcome to Meobeo Talk');
-    setTimeout(() => navigate('/home'), 1000);
+    setTimeout(() => navigate('/welcome'), 1000);
   };
 
   return (
@@ -111,6 +111,7 @@ export const FollowUsersPage: React.FC = () => {
                       variant={isFollowing ? 'primary' : 'secondary'}
                       size="sm"
                       onClick={() => handleToggleFollow(user.id)}
+                      rounded="lg"
                     >
                       {isFollowing ? 'Following' : 'Follow'}
                     </Button>
@@ -124,10 +125,11 @@ export const FollowUsersPage: React.FC = () => {
                 variant="primary"
                 fullWidth
                 onClick={handleFinish}
+                rounded="lg"
               >
                 Continue
               </Button>
-              <button className="skip-button" onClick={() => navigate('/home')}>
+              <button className="skip-button" onClick={() => navigate('/welcome')}>
                 Skip for now
               </button>
             </div>

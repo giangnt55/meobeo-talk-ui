@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: var(--spacing-2);
   min-width: var(--spacing-10);
+  width: 100%;
 }
 
 .input-full {
@@ -11,8 +12,12 @@
 
 .input-label {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--text-secondary);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: var(--spacing-4);
+  /* Align with input curve */
 }
 
 .input-container {
@@ -23,55 +28,84 @@
 
 .input {
   width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
+  height: var(--height-input);
+  /* 3.5rem */
+  padding: 0 var(--spacing-6);
+  /* pl-6 */
   font-size: var(--font-size-base);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  background-color: var(--background-white);
+  border: 2px solid var(--border-light);
+  /* border-2 */
+  border-radius: var(--radius-full);
+  /* rounded-full */
+  background-color: var(--background-surface);
+  color: var(--text-primary);
   transition: all var(--transition-base);
+  font-weight: var(--font-weight-normal);
+}
+
+.input::placeholder {
+  color: var(--text-disabled);
 }
 
 .input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  box-shadow: 0 0 0 4px var(--primary-light);
+  /* ring-4 */
 }
 
+/* Padding for icons */
 .input-with-start-icon {
-  padding-left: var(--spacing-10);
+  padding-left: 3rem;
+  /* pl-12 */
 }
 
 .input-with-end-icon {
-  padding-right: var(--spacing-10);
+  padding-right: 3rem;
+  /* pr-12 */
 }
 
 .input-icon {
   position: absolute;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: var(--text-tertiary);
+  pointer-events: none;
+  /* Let clicks pass through unless interactive */
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .input-icon-start {
-  left: var(--spacing-3);
+  left: var(--spacing-4);
 }
 
 .input-icon-end {
-  right: var(--spacing-3);
+  right: var(--spacing-4);
 }
 
+/* Error State */
 .input-error .input {
   border-color: var(--error);
+  background-color: rgba(239, 68, 68, 0.05);
+  /* redness */
 }
 
 .input-error .input:focus {
   border-color: var(--error);
-  box-shadow: 0 0 0 3px var(--error-light);
+  box-shadow: 0 0 0 4px var(--error-light);
+}
+
+.input-error .input-icon {
+  color: var(--error);
 }
 
 .input-helper {
   font-size: var(--font-size-xs);
   color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  margin-left: var(--spacing-4);
 }
 
 .input-helper-error {

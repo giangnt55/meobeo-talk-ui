@@ -33,7 +33,7 @@ const categories = ['Popular', 'Tech', 'Lifestyle', 'Arts', 'Gaming', 'Wellness'
 
 export const InterestsSelectionPage: React.FC = () => {
   const navigate = useNavigate();
-  const { toasts, success, info, warning, removeToast } = useToast();
+  const { toasts, success, warning, removeToast } = useToast();
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState('Popular');
   const [searchQuery, setSearchQuery] = useState('');
@@ -152,6 +152,7 @@ export const InterestsSelectionPage: React.FC = () => {
                   variant="primary"
                   onClick={handleContinue}
                   disabled={selectedInterests.length < 5}
+                  rounded="lg"
                 >
                   Continue
                 </Button>

@@ -14,6 +14,8 @@ import { NotFoundPage } from '@/pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
 import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import { AboutPage } from '@/pages/About';
+import { WelcomePage } from '@/pages/Welcome';
+import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
@@ -42,6 +44,12 @@ export const router = createBrowserRouter([
       </PublicLayout>
     ),
   },
+  {
+    path: '/welcome',
+    element: <WelcomePage />,
+  },
+
+
   // Onboarding flow (no main layout)
   {
     path: '/onboarding',
@@ -101,6 +109,10 @@ export const router = createBrowserRouter([
       {
         path: 'decorations',
         element: <DecorationsPage />,
+      },
+      {
+        path: 'settings/profile',
+        element: <ProfileSettingsPage />,
       },
     ],
   },

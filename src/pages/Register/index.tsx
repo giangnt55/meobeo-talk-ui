@@ -187,6 +187,7 @@ export const RegisterPage: React.FC = () => {
                 onClick={handleGoogleSignup}
                 disabled={isPending}
                 className="social-btn"
+                rounded="lg"
               >
                 <span className="social-icon google">G</span>
                 Sign up with Google
@@ -260,6 +261,7 @@ export const RegisterPage: React.FC = () => {
                 isLoading={isPending}
                 disabled={isPending}
                 className="submit-btn"
+                rounded="lg"
               >
                 Create Account
               </Button>

@@ -4,6 +4,7 @@ import './Button.css';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
+  rounded?: 'none' | 'md' | 'lg' | 'full';
   isLoading?: boolean;
   fullWidth?: boolean;
   icon?: React.ReactNode;
@@ -12,6 +13,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
+  rounded = 'full',
   isLoading = false,
   fullWidth = false,
   icon,
@@ -23,12 +25,13 @@ export const Button: React.FC<ButtonProps> = ({
   const baseClass = 'btn';
   const variantClass = `btn-${variant}`;
   const sizeClass = `btn-${size}`;
+  const roundedClass = `btn-rounded-${rounded}`;
   const fullWidthClass = fullWidth ? 'btn-full' : '';
   const loadingClass = isLoading ? 'btn-loading' : '';
 
   return (
     <button
-      className={`${baseClass} ${variantClass} ${sizeClass} ${fullWidthClass} ${loadingClass} ${className}`}
+      className={`${baseClass} ${variantClass} ${sizeClass} ${roundedClass} ${fullWidthClass} ${loadingClass} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

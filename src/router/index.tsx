@@ -14,6 +14,7 @@ import { NotFoundPage } from '@/pages/NotFound';
 import { RegisterPage } from '@/pages/Register';
 import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import { AboutPage } from '@/pages/About';
+import { MemoriesPage } from '@/pages/Memories';
 import { WelcomePage } from '@/pages/Welcome';
 import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 import Landing from '@/pages/Landing';
@@ -39,7 +40,6 @@ export const router = createBrowserRouter([
 
   { path: '/welcome', element: <WelcomePage /> },
 
-  // Onboarding flow (no main layout)
   {
     path: '/onboarding',
     children: [
@@ -48,8 +48,6 @@ export const router = createBrowserRouter([
       { path: 'follow', element: <FollowUsersPage /> },
     ],
   },
-
-  // Main app routes (WITH MainLayout)
   {
     path: '/',
     element: <MainLayout />,
@@ -91,6 +89,10 @@ export const router = createBrowserRouter([
       {
         path: 'decorations',
         element: <DecorationsPage />,
+      },
+      {
+        path: 'memories',
+        element: <MemoriesPage />,
       },
       {
         path: 'settings/profile',

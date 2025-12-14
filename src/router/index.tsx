@@ -7,7 +7,6 @@ import { FollowUsersPage } from '@/pages/Onboarding/FollowUsers';
 import { TimelinePage } from '@/pages/Timeline';
 import { GalleryPage } from '@/pages/Gallery';
 import { MemoryDetailPage } from '@/pages/MemoryDetail';
-import { MemoryCreatePage } from '@/pages/MemoryCreate';
 import { TemplatesPage } from '@/pages/Templates';
 import { DecorationsPage } from '@/pages/Decorations';
 import { NotFoundPage } from '@/pages/NotFound';
@@ -15,6 +14,7 @@ import { RegisterPage } from '@/pages/Register';
 import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import { AboutPage } from '@/pages/About';
 import { MemoriesPage } from '@/pages/Memories';
+import { CreateJourney } from '@/pages/CreateJourney';
 import { WelcomePage } from '@/pages/Welcome';
 import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 import Landing from '@/pages/Landing';
@@ -66,22 +66,23 @@ export const router = createBrowserRouter([
         ),
       },
 
+      // {
+      //   path: 'timeline',
+      //   element: <TimelinePage />,
+      // },
+      // {
+      //   path: 'gallery',
+      //   element: <GalleryPage />,
+      // },
+      // {
+      //   path: 'memory/:id',
+      //   element: <MemoryDetailPage />,
+      // },
       {
-        path: 'timeline',
-        element: <TimelinePage />,
+        path: 'memories/create',
+        element: <CreateJourney />,
       },
-      {
-        path: 'gallery',
-        element: <GalleryPage />,
-      },
-      {
-        path: 'memory/:id',
-        element: <MemoryDetailPage />,
-      },
-      {
-        path: 'memory/create',
-        element: <MemoryCreatePage />,
-      },
+      // { path: '/memories/create', element: <CreateJourney /> },
       {
         path: 'templates',
         element: <TemplatesPage />,

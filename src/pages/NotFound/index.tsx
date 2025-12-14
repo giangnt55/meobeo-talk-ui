@@ -35,14 +35,14 @@ export const NotFoundPage: React.FC = () => {
                 </div>
 
                 <div className="action-buttons">
-                    <div className="btn-home-wrapper">
+                    <div className="">
                         <Button
                             variant="primary"
                             size="lg"
                             rounded="full"
                             className="w-full sm:w-auto text-lg px-8 h-14"
                             onClick={() => navigate('/home')}
-                            icon={<span className="material-symbols-outlined">arrow_forward</span>}
+                        // icon={<span className="material-symbols-outlined">arrow_forward</span>}
                         >
                             Go to Home Feed
                         </Button>

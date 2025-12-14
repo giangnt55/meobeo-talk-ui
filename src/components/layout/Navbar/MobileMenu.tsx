@@ -67,45 +67,22 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                     )}
 
                     <nav className="mobile-nav">
-                        {isAuthenticated ? (
-                            <>
-                                <Link to="/home" className="mobile-nav-link" onClick={() => handleNavigation('/home')}>
-                                    <span className="material-symbols-outlined">home</span>
-                                    Home
-                                </Link>
-                                <Link to="/timeline" className="mobile-nav-link" onClick={() => handleNavigation('/timeline')}>
-                                    <span className="material-symbols-outlined">timeline</span>
-                                    Timeline
-                                </Link>
-                                <Link to="/gallery" className="mobile-nav-link" onClick={() => handleNavigation('/gallery')}>
-                                    <span className="material-symbols-outlined">photo_library</span>
-                                    Gallery
-                                </Link>
-                                <Link to="/about" className="mobile-nav-link" onClick={() => handleNavigation('/about')}>
-                                    <span className="material-symbols-outlined">info</span>
-                                    About Us
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/blog" className="mobile-nav-link" onClick={() => handleNavigation('/blog')}>
-                                    <span className="material-symbols-outlined">article</span>
-                                    Blog
-                                </Link>
-                                <Link to="/community" className="mobile-nav-link" onClick={() => handleNavigation('/community')}>
-                                    <span className="material-symbols-outlined">groups</span>
-                                    Community
-                                </Link>
-                                <Link to="/about" className="mobile-nav-link" onClick={() => handleNavigation('/about')}>
-                                    <span className="material-symbols-outlined">info</span>
-                                    About Us
-                                </Link>
-                                <Link to="/contact" className="mobile-nav-link" onClick={() => handleNavigation('/contact')}>
-                                    <span className="material-symbols-outlined">mail</span>
-                                    Contact
-                                </Link>
-                            </>
-                        )}
+                        <Link to="/home" className="mobile-nav-link" onClick={() => handleNavigation('/home')}>
+                            <span className="material-symbols-outlined">home</span>
+                            Main Feed
+                        </Link>
+                        <Link to="/blog" className="mobile-nav-link" onClick={() => handleNavigation('/blog')}>
+                            <span className="material-symbols-outlined">article</span>
+                            Blog
+                        </Link>
+                        <Link to="/memories" className="mobile-nav-link" onClick={() => handleNavigation('/memories')}>
+                            <span className="material-symbols-outlined">history</span>
+                            Memories
+                        </Link>
+                        <Link to="/about" className="mobile-nav-link" onClick={() => handleNavigation('/about')}>
+                            <span className="material-symbols-outlined">info</span>
+                            About Us
+                        </Link>
                     </nav>
 
                     <div className="mobile-menu-actions">

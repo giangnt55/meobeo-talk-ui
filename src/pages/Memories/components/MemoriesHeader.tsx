@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/common/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 export const MemoriesHeader: React.FC = () => {
+    const navigate = useNavigate();
     return (
         <div className="memories-header">
             <div className="memories-title-row">
@@ -13,7 +15,9 @@ export const MemoriesHeader: React.FC = () => {
                     <Button variant="outline" leftIcon={<span className="material-symbols-outlined">post_add</span>}>
                         New Entry
                     </Button>
-                    <Button variant="primary" leftIcon={<span className="material-symbols-outlined">add_circle</span>}>
+                    <Button variant="primary"
+                        onClick={() => navigate('/memories/create')}
+                        leftIcon={<span className="material-symbols-outlined">add_circle</span>}>
                         New Journey
                     </Button>
                 </div>

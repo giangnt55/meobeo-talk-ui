@@ -1,0 +1,255 @@
+.notification-dropdown {
+    position: absolute;
+    right: 0;
+    /* Aligned with container right edge, moving left from -10px */
+    top: 100%;
+    margin-top: 0.3rem;
+    margin-right: 7rem;
+    /* mt-2 */
+    width: 22rem;
+    /* w-88 between 80 and 96 */
+    max-width: 90vw;
+    /* Prevent overflow on mobile */
+    background-color: #ffffff;
+    /* Explicitly white as requested */
+    border-radius: 1rem;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    z-index: 100;
+    color: var(--text-primary);
+}
+
+@media (min-width: 768px) {
+    .notification-dropdown {
+        width: 24rem;
+        /* md:w-96 */
+        right: 0;
+        /* Standard alignment on desktop */
+    }
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    /* px-5 py-4 */
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notification-title {
+    font-size: 1rem;
+    /* text-base */
+    font-weight: 700;
+    /* font-bold */
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.mark-read-btn {
+    font-size: 0.75rem;
+    /* text-xs */
+    font-weight: 700;
+    color: var(--primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.mark-read-btn:hover {
+    opacity: 0.8;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+    overflow-y: auto;
+    /* Ensure no horizontal scroll */
+    overflow-x: hidden;
+}
+
+.notification-item {
+    display: flex;
+    gap: 0.75rem;
+    /* gap-3 */
+    padding: 1rem 1.25rem;
+    /* px-5 py-4 */
+    transition: background-color 0.2s;
+    cursor: pointer;
+    position: relative;
+    text-align: left;
+    align-items: flex-start;
+    /* Align top for long text */
+}
+
+.notification-item:hover {
+    background-color: var(--background-hover);
+}
+
+.notification-item.unread {
+    background-color: rgba(var(--primary-rgb), 0.05);
+    /* bg-primary/5 */
+}
+
+.unread-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0.25rem;
+    /* w-1 */
+    background-color: var(--primary);
+}
+
+.notification-avatar-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.notification-avatar {
+    width: 2.5rem;
+    /* size-10 */
+    height: 2.5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 700;
+    background-color: var(--input-bg);
+    /* fallback */
+    color: var(--text-secondary);
+}
+
+/* Hardcoded colors for now to match utility classes logic */
+.notification-avatar.bg-purple-100 {
+    background-color: #f3e8ff;
+    color: #9333ea;
+}
+
+.notification-avatar.bg-pink-100 {
+    background-color: #fce7f3;
+    color: #db2777;
+}
+
+.notification-avatar.bg-gray-100 {
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+}
+
+.notification-avatar.\!bg-primary\/10 {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+}
+
+
+.notification-badge {
+    position: absolute;
+    bottom: -0.25rem;
+    /* -bottom-1 */
+    right: -0.25rem;
+    /* -right-1 */
+    color: white;
+    border-radius: 9999px;
+    padding: 2px;
+    display: flex;
+    /* IMPORTANT for centering icon */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px var(--surface);
+    /* ring-2 ring-surface */
+    width: 1.25rem;
+    /* Fixed size for badge circle */
+    height: 1.25rem;
+}
+
+.notification-badge.bg-blue-500 {
+    background-color: #3b82f6;
+}
+
+.notification-badge.bg-pink-500 {
+    background-color: #ec4899;
+}
+
+.notification-badge.bg-gray-500 {
+    background-color: #6b7280;
+}
+
+.notification-badge.bg-primary {
+    background-color: var(--primary);
+}
+
+.notification-icon-symbol {
+    font-size: 12px;
+    /* Small icon for badge */
+    font-variation-settings: 'FILL' 1;
+    display: block;
+    line-height: 1;
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.25rem;
+    /* gap-1 */
+    min-width: 0;
+    /* Crucial for flex child wrapping */
+}
+
+.notification-text {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: var(--text-primary);
+    line-height: 1.375;
+    /* leading-snug */
+    margin: 0;
+    /* Force wrapping */
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.notification-actor {
+    font-weight: 700;
+}
+
+.notification-highlight {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: var(--text-secondary);
+    /* or primary for unread? design uses primary for one, secondary for others. logic in component needed if strict adherence */
+    margin-top: 0.125rem;
+}
+
+.notification-item.unread .notification-time {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.view-all-notifications {
+    display: block;
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 700;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.view-all-notifications:hover {
+    color: var(--primary);
+    background-color: var(--background-hover);
+}

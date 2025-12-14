@@ -3,13 +3,53 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/common/Button/Button';
 import { MobileMenu } from './MobileMenu';
+import { NotificationDropdown } from '@/components/features/Notification/NotificationDropdown';
+import { Notification } from '@/types/notification';
 import './Navbar.css';
+
+// Mock data (temporary)
+const MOCK_NOTIFICATIONS: Notification[] = [
+  {
+    id: '1',
+    type: 'comment',
+    actor: { name: 'Alex Smith', initials: 'AS' },
+    content: { target: 'Creative Coding' },
+    timestamp: '2 min ago',
+    isRead: false
+  },
+  {
+    id: '2',
+    type: 'like',
+    actor: { name: 'Mary Jane', initials: 'MJ' },
+    content: {},
+    timestamp: '1 hour ago',
+    isRead: true
+  },
+  {
+    id: '3',
+    type: 'mention',
+    actor: { name: 'Sarah Jenkins', initials: 'SJ' },
+    content: {},
+    timestamp: '3 hours ago',
+    isRead: true
+  },
+  {
+    id: '4',
+    type: 'system',
+    actor: { name: 'Meobeo Talk' },
+    content: { text: 'Welcome to the community! 🎉' },
+    timestamp: '1 day ago',
+    isRead: true
+  }
+];
 
 export const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [mockNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
 
   const handleLogout = async () => {
     await logout();
@@ -59,6 +99,7 @@ export const Navbar: React.FC = () => {
                   </>
                 ) : (
                   <>
+                    <Link to="/home" className="nav-link">Main Feed</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
                     <Link to="/memories" className="nav-link">Memories</Link>
                     <Link to="/about" className="nav-link">About Us</Link>
@@ -70,9 +111,29 @@ export const Navbar: React.FC = () => {
               <div className="navbar-actions">
                 {isAuthenticated ? (
                   <>
-                    <button className="notification-btn" aria-label="Notifications">
-                      <span className="material-symbols-outlined">notifications</span>
-                    </button>
+                    <div className="relative">
+                      <button
+                        className="notification-btn"
+                        aria-label="Notifications"
+                        onClick={() => setShowNotifications(!showNotifications)}
+                      >
+                        <span className="material-symbols-outlined icon-filled">notifications</span>
+                        {/* Unread indicator */}
+                        {mockNotifications.some(n => !n.isRead) && (
+                          <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-white"></span>
+                          </span>
+                        )}
+                      </button>
+                      <NotificationDropdown
+                        isOpen={showNotifications}
+                        onClose={() => setShowNotifications(false)}
+                        notifications={mockNotifications}
+                        onMarkAllRead={() => console.log('Mark all read')}
+                      />
+                    </div>
+
                     <div className="user-menu-wrapper">
                       <button
                         className="user-avatar-btn"

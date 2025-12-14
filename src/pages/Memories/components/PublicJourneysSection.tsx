@@ -35,9 +35,9 @@ const PUBLIC_JOURNEYS: PublicJourney[] = [
 export const PublicJourneysSection: React.FC = () => {
     return (
         <section className="public-journeys-container">
-            <div className="section-header">
+            <div className="memories-page-section-header">
                 <div className="memories-title-group">
-                    <h2 className="section-title">Discover Public Journeys</h2>
+                    <h2 className="memories-page-section-title">Discover Public Journeys</h2>
                     <p className="memories-subtitle">Explore stories shared by the community.</p>
                 </div>
                 <div className="memories-actions">

@@ -77,10 +77,10 @@ const HIGHLIGHTS: Highlight[] = [
 
 export const JournalHighlightsSection: React.FC = () => {
     return (
-        <section className="memories-section">
-            <div className="section-header">
+        <section className="memories-page-section">
+            <div className="memories-page-section-header">
                 <div className="memories-title-group">
-                    <h2 className="section-title">Journal Highlights</h2>
+                    <h2 className="memories-page-section-title">Journal Highlights</h2>
                     <p className="memories-subtitle">Recent moments from your personal timeline.</p>
                 </div>
                 <div className="memories-actions">

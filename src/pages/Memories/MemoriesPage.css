@@ -137,13 +137,14 @@
 }
 
 /* Section Common */
-.memories-section {
+.memories-page-section {
+    /* margin-top: 5rem; */
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
 }
 
-.section-header {
+.memories-page-section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -151,18 +152,18 @@
     padding-bottom: 0;
 }
 
-.section-title-group {
+.memories-page-section-title-group {
     display: flex;
     align-items: center;
     gap: var(--spacing-3);
 }
 
-.section-title {
+.memories-page-section-title {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
 }
 
-.section-count {
+.memories-page-section-count {
     background-color: var(--primary-light);
     color: var(--primary);
     font-size: var(--font-size-xs);

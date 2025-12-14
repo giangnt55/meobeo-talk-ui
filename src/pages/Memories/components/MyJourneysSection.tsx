@@ -42,11 +42,11 @@ const JOURNEYS: Journey[] = [
 
 export const MyJourneysSection: React.FC = () => {
     return (
-        <section className="memories-section">
-            <div className="section-header">
-                <div className="section-title-group">
-                    <h2 className="section-title">My Journeys</h2>
-                    <span className="section-count">3 Active</span>
+        <section className="memories-page-section">
+            <div className="memories-page-section-header">
+                <div className="memories-page-section-title-group">
+                    <h2 className="memories-page-section-title">My Journeys</h2>
+                    <span className="memories-page-section-count">3 Active</span>
                 </div>
                 <a href="#" className="view-all-link">
                     View All

@@ -4,8 +4,12 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #181311;
   background-color: #f8f6f6;
   line-height: 1.5;
@@ -14,4 +18,59 @@ body {
 
 button {
   font-family: inherit;
+}
+
+/* View Transitions API - Smooth page transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Fallback for browsers that don't support View Transitions */
+@supports not (view-transition-name: root) {
+
+  /* Page fade-in animation */
+  @keyframes pageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Apply to main content areas */
+  main,
+  .login-page,
+  .register-page,
+  .verify-email-page {
+    animation: pageEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Smooth transitions for all interactive elements */
+a,
+button,
+input,
+textarea,
+select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }

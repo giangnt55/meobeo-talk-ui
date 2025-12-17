@@ -9,6 +9,7 @@ export interface User {
   following: string[];
   followers: string[];
   createdAt: string;
+  onboardingCompleted?: boolean;
 }
 
 export interface LoginCredentials {

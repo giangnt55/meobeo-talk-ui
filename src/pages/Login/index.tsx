@@ -145,7 +145,7 @@ export const LoginPage: React.FC = () => {
     <div className="login-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
-      <header className="login-header">
+      {/* <header className="login-header">
         <div className="login-brand">
           <div className="brand-icon">
             <svg className="w-full h-full fill-current" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -155,7 +155,7 @@ export const LoginPage: React.FC = () => {
           </div>
           <h2 className="brand-name">Meobeo Talk</h2>
         </div>
-      </header>
+      </header> */}
 
       <main className="login-main">
         <div className="login-container">
@@ -210,15 +210,33 @@ export const LoginPage: React.FC = () => {
                         type="button"
                         className="password-toggle"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
                       >
-                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                        {showPassword ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5C5.63636 5 2 12 2 12C2 12 5.63636 19 12 19C18.3636 19 22 12 22 12C22 12 18.3636 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 3L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M10.584 10.587C10.2087 10.9624 9.99778 11.4708 9.99756 12.0013C9.99734 12.5317 10.2078 13.0403 10.5828 13.416C10.9578 13.7917 11.4662 14.0026 11.9966 14.0028C12.5271 14.003 13.0357 13.7925 13.4114 13.4175" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M9.363 5.365C10.2204 5.11972 11.1082 4.99684 12 5C18.364 5 22 12 22 12C21.3034 13.3356 20.4265 14.5684 19.393 15.667M17.357 17.349C15.726 18.449 13.942 19 12 19C5.636 19 2 12 2 12C2.90595 10.4214 4.07171 9.00409 5.447 7.807L17.357 17.349Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
                       </button>
                     }
                     fullWidth
+
                   />
-                  <a href="/forgot-password" className="forgot-link">
+                  <button
+                    type="button"
+                    className="forgot-link"
+                    onClick={() => navigate('/forgot-password')}
+                  >
                     Forgot Password?
-                  </a>
+                  </button>
+
                 </div>
 
                 <Button
@@ -252,7 +270,13 @@ export const LoginPage: React.FC = () => {
 
               <p className="signup-link">
                 Don't have an account?{' '}
-                <a href="/signup">Sign Up</a>
+                <button
+                  type="button"
+                  className="signup-button-link"
+                  onClick={() => navigate('/signup')}
+                >
+                  Sign Up
+                </button>
               </p>
             </div>
           </div>

@@ -94,8 +94,12 @@ export const VerifyEmailPage: React.FC = () => {
             success('Verified!', 'Email verified successfully');
 
             setTimeout(() => {
-                // Navigate to onboarding since user just signed up
-                navigate('/onboarding/profile');
+                // Navigate based on onboarding status
+                if (authResponse.user.onboardingCompleted) {
+                    navigate('/home');
+                } else {
+                    navigate('/onboarding/profile');
+                }
             }, 1000);
         } catch (err: any) {
             error('Verification Failed', err.message || 'Invalid or expired code');

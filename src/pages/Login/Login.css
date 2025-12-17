@@ -127,8 +127,21 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--font-size-xl);
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: color var(--transition-base);
+}
+
+.password-toggle:hover {
+  color: var(--primary);
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 .forgot-link {
@@ -231,4 +244,20 @@
   .social-buttons {
     grid-template-columns: 1fr;
   }
+}
+
+.forgot-link,
+.signup-button-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--primary);
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.forgot-link:hover,
+.signup-button-link:hover {
+  opacity: 0.85;
 }

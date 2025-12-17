@@ -47,6 +47,7 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
         refreshToken: apiData.refresh_token,
@@ -82,6 +83,7 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
         refreshToken: apiData.refresh_token,
@@ -98,10 +100,10 @@ export const authApi = {
    * Verify Email with OTP
    */
   verifyEmail: async (email: string, code: string): Promise<AuthResponse> => {
-    const response = await api.post('auth/login', {
+    const response = await api.post('auth/verify-email', {
       json: {
-        email_or_username: email,
-        password: code,
+        email: email,
+        otp_code: code,
       },
     }).json<ApiResponse<LoginApiResponse>>();
 
@@ -121,6 +123,7 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
         refreshToken: apiData.refresh_token,
@@ -248,6 +251,7 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
         refreshToken: apiData.refresh_token,

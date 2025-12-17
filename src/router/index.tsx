@@ -17,6 +17,7 @@ import { MemoriesPage } from '@/pages/Memories';
 import { CreateJourney } from '@/pages/CreateJourney';
 import { WelcomePage } from '@/pages/Welcome';
 import { ProfileSettingsPage } from '@/pages/Settings/Profile';
+import { ProfilePage } from '@/pages/Profile';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
@@ -94,6 +95,10 @@ export const router = createBrowserRouter([
       {
         path: 'memories',
         element: <MemoriesPage />,
+      },
+      {
+        path: 'profile/:username',
+        element: <ProfilePage />,
       },
       {
         path: 'settings/profile',

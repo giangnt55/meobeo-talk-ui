@@ -239,13 +239,13 @@
   gap: var(--spacing-5);
 }
 
-.form-group {
+.register-form .form-group {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
 }
 
-.form-group label {
+.register-form .form-group label {
   color: var(--text-primary);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);

@@ -83,6 +83,7 @@
 
 .input-icon-end {
   right: var(--spacing-4);
+  pointer-events: auto;
 }
 
 /* Error State */

@@ -2,12 +2,14 @@
   /* Primary Colors */
   /* Primary Colors */
   --primary: #ec5b13;
+  --primary-rgb: 236, 91, 19;
   --primary-hover: #d54e0f;
   --primary-light: rgba(236, 91, 19, 0.1);
   --primary-dark: #b33f0a;
 
   /* Secondary Colors */
   --secondary: #ad2bee;
+  --secondary-rgb: 173, 43, 238;
   --secondary-hover: #9524d4;
   --secondary-light: rgba(173, 43, 238, 0.1);
   --secondary-dark: #7d1faa;

@@ -117,6 +117,7 @@
 @media (min-width: 1024px) {
     .profile-grid {
         grid-template-columns: 1fr 2fr;
+        align-items: start;
     }
 }
 
@@ -622,6 +623,269 @@
     font-size: var(--font-size-base);
 }
 
+/* Memory Journal Grid */
+.memory-journal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+    padding-bottom: var(--spacing-4);
+    margin-top: var(--spacing-8);
+}
+
+@media (min-width: 768px) {
+    .memory-journal-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .memory-journal-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.journal-entry-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: var(--background-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.journal-entry-card:hover {
+    box-shadow: var(--shadow-xl);
+}
+
+.journal-entry-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.7s ease;
+}
+
+.journal-entry-card:hover .journal-entry-image {
+    transform: scale(1.1);
+}
+
+.journal-entry-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    opacity: 0.8;
+}
+
+.journal-entry-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-4);
+    transform: translateY(0.5rem);
+    transition: transform 0.3s ease;
+}
+
+.journal-entry-card:hover .journal-entry-content {
+    transform: translateY(0);
+}
+
+.journal-entry-tags {
+    display: flex;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.journal-entry-card:hover .journal-entry-tags {
+    opacity: 1;
+}
+
+.journal-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.journal-tag .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.journal-entry-title {
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--spacing-1);
+}
+
+.journal-entry-date {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Memory Journeys List */
+.memory-journeys-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+    padding-bottom: var(--spacing-12);
+    margin-top: var(--spacing-8);
+}
+
+.profile-journey-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    background: white;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+}
+
+@media (min-width: 768px) {
+    .profile-journey-card {
+        flex-direction: row;
+    }
+}
+
+.profile-journey-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.profile-journey-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .profile-journey-image-wrapper {
+        width: 40%;
+        aspect-ratio: auto;
+    }
+}
+
+.profile-journey-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.7s ease;
+}
+
+.profile-journey-card:hover .profile-journey-image {
+    transform: scale(1.05);
+}
+
+.profile-journey-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.1);
+    transition: background var(--transition-base);
+}
+
+.profile-journey-card:hover .profile-journey-image-overlay {
+    background: transparent;
+}
+
+.profile-journey-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--spacing-6);
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .profile-journey-content {
+        padding: var(--spacing-8);
+    }
+}
+
+.profile-journey-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+}
+
+.profile-journey-category {
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius);
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.profile-journey-entries {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-tertiary);
+}
+
+.profile-journey-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-3);
+    transition: color var(--transition-base);
+}
+
+.profile-journey-card:hover .profile-journey-title {
+    color: var(--primary);
+}
+
+.profile-journey-description {
+    color: var(--text-secondary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-6);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.profile-journey-view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    padding: 0;
+    margin-top: auto;
+    transition: color var(--transition-base);
+}
+
+.profile-journey-view-btn:hover {
+    color: var(--primary-hover);
+}
+
+.profile-journey-view-btn .material-symbols-outlined {
+    font-size: 18px;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
     .profile-avatar {
@@ -639,5 +903,9 @@
 
     .profile-avatar-wrapper {
         left: var(--spacing-4);
+    }
+
+    .memory-journal-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

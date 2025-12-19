@@ -38,15 +38,6 @@ export const api = ky.create({
       async (request, options, response) => {
         // Handle 401 Unauthorized - try to refresh token
         if (response.status === 401 && !request.url.includes('/auth/refresh')) {
-          const refreshToken = localStorage.getItem('refreshToken');
-          
-          if (!refreshToken) {
-            // No refresh token, clear and redirect
-            localStorage.clear();
-            window.location.href = '/login';
-            return response;
-          }
-
           // If already refreshing, wait for it
           if (isRefreshing) {
             return new Promise((resolve) => {
@@ -60,21 +51,18 @@ export const api = ky.create({
           isRefreshing = true;
 
           try {
-            // Try to refresh token
-            const refreshResponse = await ky.post(`${BASE_URL}/auth/refresh`, {
-              json: { refreshToken },
-            }).json<any>();
-            
+            // Try to refresh token - cookie is sent automatically
+            const refreshResponse = await ky.post(`${BASE_URL}/auth/refresh`).json<any>();
+
             if (refreshResponse.success && refreshResponse.data) {
-              const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;
-              
-              // Save new tokens
+              const { accessToken: newAccessToken } = refreshResponse.data;
+
+              // Save new access token
               localStorage.setItem('accessToken', newAccessToken);
-              localStorage.setItem('refreshToken', newRefreshToken);
-              
+
               // Notify all waiting requests
               onTokenRefreshed(newAccessToken);
-              
+
               // Retry original request with new token
               request.headers.set('Authorization', `Bearer ${newAccessToken}`);
               return ky(request);
@@ -87,7 +75,9 @@ export const api = ky.create({
             isRefreshing = false;
           }
         }
-        
+
+        // Log errors in development
+
         // Log errors in development
         if (!response.ok && import.meta.env.DEV) {
           console.error('API Error:', {
@@ -96,7 +86,7 @@ export const api = ky.create({
             statusText: response.statusText,
           });
         }
-        
+
         return response;
       },
     ],

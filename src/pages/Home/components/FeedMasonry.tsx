@@ -18,7 +18,8 @@ const FeedMasonry: React.FC = () => {
             imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTDOzti4Hb9LCo9WEX-cPALT8tQv30Yt_ibJbBixdB-DKzx3bma32teoY7fD5V09AlDqS4H_Az-i-FJGhjleg1ul42y4a-KZl8qjJ1qsMb8YNdL7MI_q8SLvWrV5Ix6fVi1JP20pfxWmU3Dny_CheXLSnudxnU_3v157D8K_UxqmFrO2-Z3bu8-8L7JvE2Ok2Zdud8rLI_6h10QhWDOtY_gPIMNCbHpFLQRhb0BqFmehNK9fuD2iPUxd-1WRNOfhGnxWm1jIiQ2ju0',
             title: 'Exploring Hidden Gems',
             authorName: 'Anna Lee',
-            authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDFUMjfSwzX07txFBkfWhaVTwMQU-vUoFY8T9yEMmvqG1ZPDzn6COUKxg2amTdHG8F-67yOIbWxfxuAzUw1uTogv3nbs2PUruyAmrkr_3dLOJrq2iNQYtmH3ksWKeu6sNISsjjMHUuTr8rtX_26_4ZunCacJX2Sr3211CT1QaoxLsxxDv73v50T4eL5FxQ-6qdCFSexbshZxPBW3aK04VTBJGfF_hKxGISasPgniGm8P7U9uYsm39Yxl1buOwd4iFhUHp5q3TVSwO'
+            authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDFUMjfSwzX07txFBkfWhaVTwMQU-vUoFY8T9yEMmvqG1ZPDzn6COUKxg2amTdHG8F-67yOIbWxfxuAzUw1uTogv3nbs2PUruyAmrkr_3dLOJrq2iNQYtmH3ksWKeu6sNISsjjMHUuTr8rtX_26_4ZunCacJX2Sr3211CT1QaoxLsxxDv73v50T4eL5FxQ-6qdCFSexbshZxPBW3aK04VTBJGfF_hKxGISasPgniGm8P7U9uYsm39Yxl1buOwd4iFhUHp5q3TVSwO',
+            postType: 'blog' as const
         },
         {
             id: 3,
@@ -32,7 +33,8 @@ const FeedMasonry: React.FC = () => {
             title: 'Golden Hour Hikes',
             authorName: 'Mark Evans',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCcZW-4KtcvI78j9b2CaBx_hRtR-nEepXpSPyahExExasimZSyliez2erKoiLuFhFa4lOb3R6MCCzylSFIlPrF_NQE_sBBxRPdb_bwplN8DSIKUEfySWPgtVvkzsGI2yeixMpvCRDepj7OB5AlocpKsnEsH93j1ZJvPKZmQyIA5n7D9o9-j-0nhaYblpV9WHaa-TvE6bSFpgfU2Uf0wlxPTd9vFyFrxR27W_s5MsYOr9mL3iWkRwSK91ZUHlGfEnANuojms-Ja7UyI9',
-            alt: 'Man in yellow jacket looking at a sunset over mountains'
+            alt: 'Man in yellow jacket looking at a sunset over mountains',
+            postType: 'memory' as const
         },
         {
             id: 5,
@@ -40,7 +42,8 @@ const FeedMasonry: React.FC = () => {
             title: 'Desert Daydreams',
             authorName: 'Sara Ahmed',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDFUMjfSwzX07txFBkfWhaVTwMQU-vUoFY8T9yEMmvqG1ZPDzn6COUKxg2amTdHG8F-67yOIbWxfxuAzUw1uTogv3nbs2PUruyAmrkr_3dLOJrq2iNQYtmH3ksWKeu6sNISsjjMHUuTr8rtX_26_4ZunCacJX2Sr3211CT1QaoxLsxxDv73v50T4eL5FxQ-6qdCFSexbshZxPBW3aK04VTBJGfF_hKxGISasPgniGm8P7U9uYsm39Yxl1buOwd4iFhUHp5q3TVSwO',
-            alt: 'A person walking through a minimal desert landscape'
+            alt: 'A person walking through a minimal desert landscape',
+            postType: 'memory' as const
         },
         {
             id: 6,
@@ -49,7 +52,8 @@ const FeedMasonry: React.FC = () => {
             authorName: 'GamerGeek',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuClkMJJCf4Y16hFu-8_hB6M6FhEHM8eA6EDbZwkVlEMKT1Y_5XVGpKeCFcQ3f8zgsel6idAMg6LRCyiYI7f85P_ENHtD0iEghKaTAYvbR_nHdoV2JEr0KTibVc09hHABXQOfRhbwJSn4b7ozEnVk_BHlU5oVdOK7tHipkudKbMDBCpNH2E9pJSOPu50xndqIQTV4nnewJRugUmductsr6R6BJQ_oLay_ni-Ltv0kdQegs-rQaf4aHrYhwl5_Fmm7JF72CeNfBeb9cau',
             isVideo: true,
-            alt: 'Neon play button sign on a brick wall'
+            alt: 'Neon play button sign on a brick wall',
+            postType: 'blog' as const
         },
         {
             id: 7,
@@ -57,7 +61,8 @@ const FeedMasonry: React.FC = () => {
             title: 'My latest design project is live!',
             authorName: 'Mark Evans',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCcZW-4KtcvI78j9b2CaBx_hRtR-nEepXpSPyahExExasimZSyliez2erKoiLuFhFa4lOb3R6MCCzylSFIlPrF_NQE_sBBxRPdb_bwplN8DSIKUEfySWPgtVvkzsGI2yeixMpvCRDepj7OB5AlocpKsnEsH93j1ZJvPKZmQyIA5n7D9o9-j-0nhaYblpV9WHaa-TvE6bSFpgfU2Uf0wlxPTd9vFyFrxR27W_s5MsYOr9mL3iWkRwSK91ZUHlGfEnANuojms-Ja7UyI9',
-            alt: 'Laptop on a desk with a blurred background'
+            alt: 'Laptop on a desk with a blurred background',
+            postType: 'blog' as const
         },
         {
             id: 8,
@@ -65,7 +70,8 @@ const FeedMasonry: React.FC = () => {
             title: 'Urban Canvases',
             authorName: 'Anna Lee',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDFUMjfSwzX07txFBkfWhaVTwMQU-vUoFY8T9yEMmvqG1ZPDzn6COUKxg2amTdHG8F-67yOIbWxfxuAzUw1uTogv3nbs2PUruyAmrkr_3dLOJrq2iNQYtmH3ksWKeu6sNISsjjMHUuTr8rtX_26_4ZunCacJX2Sr3211CT1QaoxLsxxDv73v50T4eL5FxQ-6qdCFSexbshZxPBW3aK04VTBJGfF_hKxGISasPgniGm8P7U9uYsm39Yxl1buOwd4iFhUHp5q3TVSwO',
-            alt: 'Colorful building with geometric patterns'
+            alt: 'Colorful building with geometric patterns',
+            postType: 'memory' as const
         },
         {
             id: 9,
@@ -73,7 +79,8 @@ const FeedMasonry: React.FC = () => {
             title: 'Summer memories',
             authorName: 'Kevin Hart',
             authorAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDFUMjfSwzX07txFBkfWhaVTwMQU-vUoFY8T9yEMmvqG1ZPDzn6COUKxg2amTdHG8F-67yOIbWxfxuAzUw1uTogv3nbs2PUruyAmrkr_3dLOJrq2iNQYtmH3ksWKeu6sNISsjjMHUuTr8rtX_26_4ZunCacJX2Sr3211CT1QaoxLsxxDv73v50T4eL5FxQ-6qdCFSexbshZxPBW3aK04VTBJGfF_hKxGISasPgniGm8P7U9uYsm39Yxl1buOwd4iFhUHp5q3TVSwO',
-            alt: 'View of a tropical beach with palm trees and clear blue water'
+            alt: 'View of a tropical beach with palm trees and clear blue water',
+            postType: 'memory' as const
         }
     ];
 
@@ -119,6 +126,7 @@ const FeedMasonry: React.FC = () => {
                                 authorAvatar={post.authorAvatar!}
                                 isVideo={post.isVideo}
                                 alt={post.alt}
+                                postType={post.postType}
                             />
                         );
                     })}

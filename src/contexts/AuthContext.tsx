@@ -11,7 +11,6 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // INIT AUTH
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (storedAccessToken && storedUser) {
         setUser(JSON.parse(storedUser));
         setAccessToken(storedAccessToken);
-        // refreshToken will be null in state since it's in HttpOnly cookie
       }
     } catch (err) {
       console.error('Failed to initialize auth:', err);
@@ -49,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-  const setAuth = (user: User, accessToken: string, refreshToken: string) => {
+  const setAuth = (user: User, accessToken: string) => {
     setUser(user);
     setAccessToken(accessToken);
 
@@ -58,12 +56,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
 
-  const logout = () => {
-    setUser(null);
-    setAccessToken(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('accessToken');
-    // Refresh token is cleared by backend (HttpOnly cookie)
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
+      // Refresh token is cleared by backend (HttpOnly cookie)
+    }
   };
 
   const updateUser = (updates: Partial<User>) => {
@@ -76,13 +80,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const value: AuthContextType = {
     user,
     accessToken,
-    refreshToken,
+    refreshToken: null, // Refresh token is handled by cookie
     isAuthenticated: !!user && !!accessToken,
     isLoading,
     login,
     logout,
     updateUser,
-    setAuth,
+    setAuth: (user, token) => setAuth(user, token),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

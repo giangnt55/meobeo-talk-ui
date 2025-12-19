@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaPencilAlt } from 'react-icons/fa';
 import './PostCard.css';
 
 interface PostCardProps {
@@ -9,6 +9,7 @@ interface PostCardProps {
     authorAvatar: string;
     isVideo?: boolean;
     alt?: string;
+    postType?: 'blog' | 'memory';
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -17,7 +18,8 @@ const PostCard: React.FC<PostCardProps> = ({
     authorName,
     authorAvatar,
     isVideo = false,
-    alt = 'Post image'
+    alt = 'Post image',
+    postType = 'blog'
 }) => {
     return (
         <div className="post-card">
@@ -27,6 +29,23 @@ const PostCard: React.FC<PostCardProps> = ({
                     className="post-image"
                     src={imageUrl}
                 />
+
+                {/* Type Badge */}
+                <div className="post-type-badge">
+                    <div className={`badge-content ${postType}`}>
+                        {postType === 'blog' ? (
+                            <>
+                                <FaPencilAlt className="badge-icon" />
+                                <span className="badge-label">Blog</span>
+                            </>
+                        ) : (
+                            <>
+                                <FaHeart className="badge-icon filled" />
+                                <span className="badge-label">Memory</span>
+                            </>
+                        )}
+                    </div>
+                </div>
 
                 {isVideo && (
                     <div className="video-overlay">

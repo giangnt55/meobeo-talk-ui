@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Avatar } from '@/components/common/Avatar/Avatar';
 import { Button } from '@/components/common/Button/Button';
 import { Input } from '@/components/common/Input/Input';
+import { Toggle } from '@/components/common/Toggle/Toggle';
 import './ProfileSettings.css';
 
 export const ProfileSettingsPage: React.FC = () => {
@@ -9,10 +10,6 @@ export const ProfileSettingsPage: React.FC = () => {
         profileVisibility: true,
         marketingEmails: false,
     });
-
-    const togglePreference = (key: keyof typeof preferences) => {
-        setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
-    };
 
     return (
         <div className="settings-page">
@@ -133,12 +130,11 @@ export const ProfileSettingsPage: React.FC = () => {
                                                     <p>Make your profile visible to search engines</p>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={`toggle-switch ${preferences.profileVisibility ? 'checked' : ''}`}
-                                                onClick={() => togglePreference('profileVisibility')}
-                                            >
-                                                <div className="toggle-thumb"></div>
-                                            </div>
+                                            <Toggle
+                                                checked={preferences.profileVisibility}
+                                                onChange={(checked) => setPreferences(prev => ({ ...prev, profileVisibility: checked }))}
+                                                aria-label="Profile Visibility"
+                                            />
                                         </div>
 
                                         <div className="pref-item">
@@ -151,12 +147,11 @@ export const ProfileSettingsPage: React.FC = () => {
                                                     <p>Receive news about product updates</p>
                                                 </div>
                                             </div>
-                                            <div
-                                                className={`toggle-switch ${preferences.marketingEmails ? 'checked' : ''}`}
-                                                onClick={() => togglePreference('marketingEmails')}
-                                            >
-                                                <div className="toggle-thumb"></div>
-                                            </div>
+                                            <Toggle
+                                                checked={preferences.marketingEmails}
+                                                onChange={(checked) => setPreferences(prev => ({ ...prev, marketingEmails: checked }))}
+                                                aria-label="Marketing Emails"
+                                            />
                                         </div>
 
                                         <div className="pref-item">

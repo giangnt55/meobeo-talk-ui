@@ -159,7 +159,7 @@ export const Navbar: React.FC = () => {
                             <span className="material-symbols-outlined">person</span>
                             Profile
                           </Link>
-                          <Link to="/settings" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                          <Link to="/settings/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
                             <span className="material-symbols-outlined">settings</span>
                             Settings
                           </Link>

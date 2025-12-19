@@ -92,7 +92,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                                     <span className="material-symbols-outlined">person</span>
                                     Profile
                                 </Link>
-                                <Link to="/settings" className="mobile-action-link" onClick={() => handleNavigation('/settings')}>
+                                <Link to="/settings/profile" className="mobile-action-link" onClick={() => handleNavigation('//settings/profile')}>
                                     <span className="material-symbols-outlined">settings</span>
                                     Settings
                                 </Link>

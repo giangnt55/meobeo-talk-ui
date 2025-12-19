@@ -550,39 +550,6 @@
     margin: 0;
 }
 
-/* Toggle Switch Implementation */
-.toggle-switch {
-    width: 3.5rem;
-    height: 2rem;
-    background-color: var(--border-medium);
-    /* gray-200 */
-    border-radius: var(--radius-full);
-    position: relative;
-    cursor: pointer;
-    transition: background-color var(--transition-base);
-}
-
-.toggle-switch.checked {
-    background-color: var(--primary);
-}
-
-.toggle-thumb {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 1.5rem;
-    height: 1.5rem;
-    background-color: white;
-    border-radius: 50%;
-    transition: transform var(--transition-base);
-    border: 1px solid var(--border-medium);
-}
-
-.toggle-switch.checked .toggle-thumb {
-    transform: translateX(1.5rem);
-    border-color: white;
-}
-
 /* Footer Actions */
 .settings-footer {
     display: flex;

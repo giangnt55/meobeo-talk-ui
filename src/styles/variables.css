@@ -24,6 +24,10 @@
   --background-tertiary: #ebe8ef;
   --background-white: #ffffff;
 
+  /* Journal Colors */
+  --journal-paper: #fffdf5;
+  --journal-paper-dark: #2a2230;
+
   /* Text Colors */
   --text-primary: #181311;
   --text-secondary: #896f61;

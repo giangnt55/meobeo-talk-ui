@@ -18,6 +18,7 @@ import { CreateJourney } from '@/pages/CreateJourney';
 import { WelcomePage } from '@/pages/Welcome';
 import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 import { ProfilePage } from '@/pages/Profile';
+import { CreateJournalPage } from '@/pages/CreateJournal';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
@@ -99,6 +100,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile/:username',
         element: <ProfilePage />,
+      },
+      {
+        path: 'journal/create',
+        element: <CreateJournalPage />,
       },
       {
         path: 'settings/profile',

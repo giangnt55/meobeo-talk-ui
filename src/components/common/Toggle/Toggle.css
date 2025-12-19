@@ -1,0 +1,112 @@
+.toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+/* Track */
+.toggle-track {
+    position: relative;
+    display: block;
+    background: var(--border-medium);
+    border-radius: var(--radius-full);
+    transition: background var(--transition-base);
+}
+
+.toggle.sm .toggle-track {
+    width: 2rem;
+    height: 1rem;
+}
+
+.toggle.md .toggle-track {
+    width: 2.25rem;
+    height: 1.25rem;
+}
+
+.toggle.lg .toggle-track {
+    width: 2.75rem;
+    height: 1.5rem;
+}
+
+/* Thumb */
+.toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: white;
+    border-radius: var(--radius-full);
+    transition: transform var(--transition-base);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle.sm .toggle-thumb {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.toggle.md .toggle-thumb {
+    width: 1rem;
+    height: 1rem;
+}
+
+.toggle.lg .toggle-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Checked State */
+.toggle-input:checked+.toggle-track {
+    background: var(--primary);
+}
+
+.toggle.sm .toggle-input:checked+.toggle-track .toggle-thumb {
+    transform: translateX(1rem);
+}
+
+.toggle.md .toggle-input:checked+.toggle-track .toggle-thumb {
+    transform: translateX(1rem);
+}
+
+.toggle.lg .toggle-input:checked+.toggle-track .toggle-thumb {
+    transform: translateX(1.25rem);
+}
+
+/* Focus State */
+.toggle-input:focus-visible+.toggle-track {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Disabled State */
+.toggle.disabled .toggle-track {
+    background: var(--background-secondary);
+}
+
+.toggle.disabled .toggle-input:checked+.toggle-track {
+    background: var(--primary);
+    opacity: 0.5;
+}
+
+/* Hover State */
+.toggle:not(.disabled):hover .toggle-track {
+    background: var(--border-dark);
+}
+
+.toggle:not(.disabled):hover .toggle-input:checked+.toggle-track {
+    background: var(--primary-hover);
+}

@@ -5,38 +5,90 @@ import { Input } from '@/components/common/Input/Input';
 import { Button } from '@/components/common/Button/Button';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { profileApi } from '@/api/services/profileApi';
+import { onboardingApi } from '@/api/services/onboardingApi';
 import './Onboarding.css';
 
 export const ProfileSetupPage: React.FC = () => {
   const navigate = useNavigate();
-  const { toasts, success, warning, removeToast } = useToast();
+  const { toasts, success, warning, error, removeToast } = useToast();
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [avatarPreview, setAvatarPreview] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        warning('File too large', 'Avatar must be less than 5MB');
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        warning('Invalid file type', 'Please upload an image file');
+        return;
+      }
+
+      setAvatarFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarPreview(reader.result as string);
-        success('Avatar uploaded', 'Your profile picture has been updated');
+        success('Avatar selected', 'Your profile picture will be uploaded when you continue');
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!displayName.trim()) {
       warning('Missing information', 'Please enter your display name');
       return;
     }
-    success('Profile saved', 'Moving to next step');
-    setTimeout(() => navigate('/onboarding/interests'), 500);
+
+    setIsLoading(true);
+
+    try {
+      // Upload avatar if selected
+      if (avatarFile) {
+        await profileApi.uploadAvatar(avatarFile);
+      }
+
+      // Update profile
+      await profileApi.updateProfile({
+        display_name: displayName.trim(),
+        bio: bio.trim() || undefined,
+      });
+
+      // Update onboarding progress
+      await onboardingApi.updateStep(1, [1]);
+
+      success('Profile saved', 'Moving to next step');
+      setTimeout(() => navigate('/onboarding/interests'), 500);
+    } catch (err) {
+      console.error('Failed to save profile:', err);
+      error('Failed to save', 'Please try again');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSkip = () => {
-    navigate('/onboarding/interests');
+  const handleSkip = async () => {
+    setIsLoading(true);
+    try {
+      // Still update onboarding step even if skipping
+      await onboardingApi.updateStep(1, [1]);
+      navigate('/onboarding/interests');
+    } catch (err) {
+      console.error('Failed to update onboarding:', err);
+      // Navigate anyway on skip
+      navigate('/onboarding/interests');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -83,17 +135,19 @@ export const ProfileSetupPage: React.FC = () => {
                     type="file"
                     accept="image/*"
                     onChange={handleAvatarUpload}
+                    disabled={isLoading}
                     hidden
                   />
                 </label>
               </div>
-              <button className="avatar-upload-button">
+              <button className="avatar-upload-button" disabled={isLoading}>
                 <label>
                   Upload an Avatar
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleAvatarUpload}
+                    disabled={isLoading}
                     hidden
                   />
                 </label>
@@ -106,23 +160,25 @@ export const ProfileSetupPage: React.FC = () => {
                 placeholder="e.g., Jane Doe"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
+                disabled={isLoading}
                 fullWidth
               />
 
               <div className="form-group">
                 <div className="textarea-header">
                   <label className="form-label">Bio</label>
-                  <span className="char-count">{bio.length} / 160</span>
+                  <span className="char-count">{bio.length} / 500</span>
                 </div>
                 <textarea
                   className="form-textarea"
                   placeholder="Tell us a little about yourself..."
                   value={bio}
                   onChange={(e) => {
-                    if (e.target.value.length <= 160) {
+                    if (e.target.value.length <= 500) {
                       setBio(e.target.value);
                     }
                   }}
+                  disabled={isLoading}
                   rows={4}
                 />
               </div>
@@ -133,11 +189,18 @@ export const ProfileSetupPage: React.FC = () => {
                 variant="primary"
                 fullWidth
                 onClick={handleContinue}
+                disabled={isLoading}
+                isLoading={isLoading}
+                loadingText="Saving..."
                 rounded="lg"
               >
                 Continue
               </Button>
-              <button className="skip-button" onClick={handleSkip}>
+              <button
+                className="skip-button"
+                onClick={handleSkip}
+                disabled={isLoading}
+              >
                 Skip for now
               </button>
             </div>

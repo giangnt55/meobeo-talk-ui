@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { SearchBar } from '@/components/common/SearchBar/SearchBar';
@@ -6,50 +6,130 @@ import { Button } from '@/components/common/Button/Button';
 import { Avatar } from '@/components/common/Avatar/Avatar';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { followApi } from '@/api/services/followApi';
+import { onboardingApi } from '@/api/services/onboardingApi';
+import type { SuggestedUser } from '@/schemas/onboarding.schema';
 import './Onboarding.css';
-
-interface User {
-  id: string;
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-const suggestedUsers: User[] = [
-  { id: '1', name: 'Eleanor Vance', role: 'Photographer & Writer', avatar: 'https://i.pravatar.cc/150?img=1' },
-  { id: '2', name: 'Marcus Holloway', role: 'Digital Artist', avatar: 'https://i.pravatar.cc/150?img=2' },
-  { id: '3', name: 'Clara Bishop', role: 'UX Designer & Podcaster', avatar: 'https://i.pravatar.cc/150?img=3' },
-  { id: '4', name: 'Leo Kim', role: 'Startup Founder', avatar: 'https://i.pravatar.cc/150?img=4' },
-  { id: '5', name: 'Sophie Turner', role: 'Travel Blogger', avatar: 'https://i.pravatar.cc/150?img=5' },
-  { id: '6', name: 'James Chen', role: 'Software Engineer', avatar: 'https://i.pravatar.cc/150?img=6' },
-];
 
 export const FollowUsersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { toasts, success, info, removeToast } = useToast();
-  const [following, setFollowing] = useState<string[]>(['2']); // Marcus is already followed
+  const { toasts, success, info, error, removeToast } = useToast();
+  const [users, setUsers] = useState<SuggestedUser[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [followingInProgress, setFollowingInProgress] = useState<Set<string>>(new Set());
 
-  const filteredUsers = suggestedUsers.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Load suggested users on mount
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        setIsLoading(true);
+        const suggestedUsers = await followApi.getSuggestedUsers(20);
+        setUsers(suggestedUsers);
+      } catch (err) {
+        console.error('Failed to load suggested users:', err);
+        error('Failed to load', 'Could not load suggested users. Please refresh the page.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUsers();
+  }, [error]);
+
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.display_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleToggleFollow = (userId: string) => {
-    setFollowing((prev) => {
-      if (prev.includes(userId)) {
+  const handleToggleFollow = async (userId: string, isCurrentlyFollowing: boolean) => {
+    // Prevent multiple simultaneous follow/unfollow for same user
+    if (followingInProgress.has(userId)) {
+      return;
+    }
+
+    setFollowingInProgress(prev => new Set(prev).add(userId));
+
+    try {
+      if (isCurrentlyFollowing) {
+        await followApi.unfollowUser(userId);
         info('Unfollowed', 'You unfollowed this user');
-        return prev.filter((id) => id !== userId);
+
+        // Update local state
+        setUsers(prevUsers =>
+          prevUsers.map(u =>
+            u.id === userId ? { ...u, is_following: false } : u
+          )
+        );
       } else {
+        await followApi.followUser(userId);
         success('Following', 'You are now following this user');
-        return [...prev, userId];
+
+        // Update local state
+        setUsers(prevUsers =>
+          prevUsers.map(u =>
+            u.id === userId ? { ...u, is_following: true } : u
+          )
+        );
       }
-    });
+    } catch (err) {
+      console.error('Failed to toggle follow:', err);
+      error('Failed', 'Could not update follow status. Please try again.');
+    } finally {
+      setFollowingInProgress(prev => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
   };
 
-  const handleFinish = () => {
-    success('Setup Complete!', 'Welcome to Meobeo Talk');
-    setTimeout(() => navigate('/welcome'), 1000);
+  const handleFinish = async () => {
+    setIsSaving(true);
+
+    try {
+      // Complete onboarding
+      await onboardingApi.complete();
+
+      success('Setup Complete!', 'Welcome to Meobeo Talk');
+      setTimeout(() => navigate('/welcome'), 1000);
+    } catch (err) {
+      console.error('Failed to complete onboarding:', err);
+      error('Failed to complete', 'Please try again');
+    } finally {
+      setIsSaving(false);
+    }
   };
+
+  const handleSkip = async () => {
+    setIsSaving(true);
+    try {
+      // Complete onboarding even if skipping
+      await onboardingApi.complete();
+      navigate('/welcome');
+    } catch (err) {
+      console.error('Failed to complete onboarding:', err);
+      // Navigate anyway on skip
+      navigate('/welcome');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="onboarding-page">
+        <main className="onboarding-main">
+          <div className="onboarding-container">
+            <div className="onboarding-card">
+              <p style={{ textAlign: 'center', padding: '2rem' }}>Loading suggested users...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="onboarding-page">
@@ -97,39 +177,65 @@ export const FollowUsersPage: React.FC = () => {
 
             <div className="users-list">
               {filteredUsers.map((user) => {
-                const isFollowing = following.includes(user.id);
+                const isFollowingUser = user.is_following;
+                const isProcessing = followingInProgress.has(user.id);
+
                 return (
                   <div key={user.id} className="user-card">
                     <div className="user-info">
-                      <Avatar src={user.avatar} size="lg" alt={user.name} />
+                      <Avatar
+                        src={user.avatar_url || undefined}
+                        size="lg"
+                        alt={user.display_name || user.username}
+                      />
                       <div className="user-details">
-                        <p className="user-name">{user.name}</p>
-                        <p className="user-role">{user.role}</p>
+                        <p className="user-name">
+                          {user.display_name || user.username}
+                        </p>
+                        <p className="user-role">
+                          @{user.username}
+                          {user.bio && ` • ${user.bio.substring(0, 50)}${user.bio.length > 50 ? '...' : ''}`}
+                        </p>
                       </div>
                     </div>
                     <Button
-                      variant={isFollowing ? 'primary' : 'secondary'}
+                      variant={isFollowingUser ? 'primary' : 'secondary'}
                       size="sm"
-                      onClick={() => handleToggleFollow(user.id)}
+                      onClick={() => handleToggleFollow(user.id, isFollowingUser)}
+                      disabled={isProcessing || isSaving}
+                      isLoading={isProcessing}
                       rounded="lg"
                     >
-                      {isFollowing ? 'Following' : 'Follow'}
+                      {isFollowingUser ? 'Following' : 'Follow'}
                     </Button>
                   </div>
                 );
               })}
             </div>
 
+            {filteredUsers.length === 0 && (
+              <p style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                No users found. Try a different search.
+              </p>
+            )}
+
             <div className="onboarding-actions-final">
               <Button
                 variant="primary"
                 fullWidth
                 onClick={handleFinish}
+                disabled={isSaving}
+                isLoading={isSaving}
+                loadingText="Completing..."
                 rounded="lg"
               >
                 Continue
               </Button>
-              <button className="skip-button" onClick={() => navigate('/welcome')}>
+              <button
+                className="skip-button"
+                onClick={handleSkip}
+                disabled={isSaving}
+              >
                 Skip for now
               </button>
             </div>

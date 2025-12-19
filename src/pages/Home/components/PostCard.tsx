@@ -3,31 +3,38 @@ import { FaPlay, FaHeart, FaPencilAlt } from 'react-icons/fa';
 import './PostCard.css';
 
 interface PostCardProps {
-    imageUrl: string;
-    title: string;
+    imageUrl?: string;
+    title?: string;
     authorName: string;
-    authorAvatar: string;
+    authorAvatar?: string;
     isVideo?: boolean;
     alt?: string;
-    postType?: 'blog' | 'memory';
+    postType?: 'blog' | 'journey';
+    bannerUrl?: string;
+    thumbnailUrl?: string;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
     imageUrl,
-    title,
+    title = 'Untitled',
     authorName,
-    authorAvatar,
+    authorAvatar = '/default-avatar.png',
     isVideo = false,
     alt = 'Post image',
-    postType = 'blog'
+    postType = 'blog',
+    bannerUrl,
+    thumbnailUrl
 }) => {
+    // Use banner first, then thumbnail, then imageUrl as fallback
+    const displayImage = bannerUrl || thumbnailUrl || imageUrl || '/placeholder-image.png';
+
     return (
         <div className="post-card">
             <div className="post-image-container">
                 <img
                     alt={alt}
                     className="post-image"
-                    src={imageUrl}
+                    src={displayImage}
                 />
 
                 {/* Type Badge */}
@@ -41,7 +48,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         ) : (
                             <>
                                 <FaHeart className="badge-icon filled" />
-                                <span className="badge-label">Memory</span>
+                                <span className="badge-label">Journey</span>
                             </>
                         )}
                     </div>

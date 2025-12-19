@@ -1,113 +1,251 @@
-# Meobeo Talk - Project Restructuring Guide
+# 🎨 Meobeo Talk UI
 
-## 📋 Overview
+> Frontend Application cho Meobeo Talk - Ứng dụng mạng xã hội chia sẻ kỷ niệm
 
-Dự án đã được tái cấu trúc với các common components có thể tái sử dụng, feature components chuyên biệt, và page components được tổ chức rõ ràng.
+## 📋 Mục Lục
 
-## 🗂️ Updated Project Structure
+- [Tổng Quan](#-tổng-quan)
+- [Công Nghệ Sử Dụng](#-công-nghệ-sử-dụng)
+- [Cài Đặt](#-cài-đặt)
+- [Cấu Trúc Dự Án](#-cấu-trúc-dự-án)
+- [Component Library](#-component-library)
+- [Routing & Navigation](#-routing--navigation)
+- [State Management](#-state-management)
+- [API Integration](#-api-integration)
+- [Development Guide](#-development-guide)
+
+---
+
+## 🎯 Tổng Quan
+
+Meobeo Talk UI là ứng dụng frontend được xây dựng với **React**, **TypeScript**, và **Vite**, cung cấp giao diện người dùng hiện đại và responsive cho việc chia sẻ kỷ niệm và kết nối với bạn bè.
+
+### Tính Năng Chính
+
+- ✅ **Authentication Flow**: Đăng ký, đăng nhập, xác thực email
+- ✅ **Onboarding**: Hướng dẫn người dùng mới với profile setup, interests selection
+- ✅ **Home Feed**: Feed cá nhân hóa với posts từ người dùng theo dõi
+- ✅ **Trending Topics**: Hiển thị hashtags đang trending
+- ✅ **User Profiles**: Xem và chỉnh sửa profile
+- ✅ **Social Features**: Follow/unfollow, suggested users
+- ✅ **Responsive Design**: Tối ưu cho mobile, tablet, desktop
+
+---
+
+## 🛠️ Công Nghệ Sử Dụng
+
+| Công Nghệ | Phiên Bản | Mục Đích |
+|-----------|-----------|----------|
+| **React** | 18+ | UI Library |
+| **TypeScript** | 5+ | Type Safety |
+| **Vite** | 5+ | Build Tool & Dev Server |
+| **React Router** | 6+ | Client-side Routing |
+| **Ky** | Latest | HTTP Client |
+| **Zod** | Latest | Schema Validation |
+| **React Icons** | Latest | Icon Library |
+
+---
+
+## 🚀 Cài Đặt
+
+### Prerequisites
+
+```bash
+# Cài đặt Node.js
+node --version  # >= 18
+
+# Cài đặt npm hoặc yarn
+npm --version   # >= 9
+```
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/yourusername/meobeo-talk-ui.git
+cd meobeo-talk-ui
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# hoặc
+yarn install
+```
+
+### 3. Setup Environment
+
+```bash
+# Copy file cấu hình mẫu
+cp .env.development .env
+
+# Chỉnh sửa .env
+nano .env
+```
+
+**Cấu hình .env:**
+
+```env
+# API URL
+VITE_API_URL=http://localhost:8080/api/v1
+
+# App Config
+VITE_APP_NAME=Meobeo Talk
+VITE_APP_ENV=development
+```
+
+### 4. Start Development Server
+
+```bash
+npm run dev
+# hoặc
+yarn dev
+```
+
+Ứng dụng sẽ chạy tại: `http://localhost:5173`
+
+### 5. Build for Production
+
+```bash
+npm run build
+# hoặc
+yarn build
+
+# Preview production build
+npm run preview
+```
+
+---
+
+## 📁 Cấu Trúc Dự Án
 
 ```
-src/
-├── components/
-│   ├── common/                    # Reusable UI components
-│   │   ├── Button/
-│   │   │   ├── Button.tsx
-│   │   │   └── Button.css
-│   │   ├── Input/
-│   │   │   ├── Input.tsx
-│   │   │   └── Input.css
-│   │   ├── Card/
-│   │   │   ├── Card.tsx
-│   │   │   └── Card.css
-│   │   ├── Tag/
-│   │   │   ├── Tag.tsx
-│   │   │   └── Tag.css
-│   │   ├── Avatar/
-│   │   │   ├── Avatar.tsx
-│   │   │   └── Avatar.css
-│   │   ├── SearchBar/
-│   │   │   ├── SearchBar.tsx
-│   │   │   └── SearchBar.css
-│   │   └── Modal/
-│   │       ├── Modal.tsx
-│   │       └── Modal.css
+meobeo-talk-ui/
+├── public/                        # Static assets
+│   ├── favicon.ico
+│   └── images/
+│
+├── src/
+│   ├── api/                       # API Layer
+│   │   ├── services/             # API service modules
+│   │   │   ├── authApi.ts       # Authentication APIs
+│   │   │   ├── postApi.ts       # Post APIs
+│   │   │   ├── followApi.ts     # Follow APIs
+│   │   │   ├── interestsApi.ts  # Interests APIs
+│   │   │   └── profileApi.ts    # Profile APIs
+│   │   └── types/               # API type definitions
 │   │
-│   ├── features/                  # Feature-specific components
-│   │   ├── MemoryCard/
-│   │   │   ├── MemoryCard.tsx
-│   │   │   └── MemoryCard.css
-│   │   ├── TimelineView/
-│   │   │   ├── TimelineView.tsx
-│   │   │   └── TimelineView.css
-│   │   ├── GalleryView/
-│   │   │   ├── GalleryView.tsx
-│   │   │   └── GalleryView.css
-│   │   ├── TemplateCard/
-│   │   │   ├── TemplateCard.tsx
-│   │   │   └── TemplateCard.css
-│   │   └── FilterSidebar/
-│   │       ├── FilterSidebar.tsx
-│   │       └── FilterSidebar.css
+│   ├── components/               # React Components
+│   │   ├── common/              # Reusable components
+│   │   │   ├── Button/
+│   │   │   │   ├── Button.tsx
+│   │   │   │   └── Button.css
+│   │   │   ├── Input/
+│   │   │   ├── Card/
+│   │   │   ├── Avatar/
+│   │   │   ├── Modal/
+│   │   │   ├── SearchBar/
+│   │   │   └── ProtectedRoute/
+│   │   │
+│   │   ├── features/            # Feature-specific components
+│   │   │   ├── MemoryCard/
+│   │   │   ├── TimelineView/
+│   │   │   ├── GalleryView/
+│   │   │   └── FilterSidebar/
+│   │   │
+│   │   └── layout/              # Layout components
+│   │       ├── Navbar/
+│   │       └── Footer/
 │   │
-│   └── layout/                    # Layout components
-│       ├── Navbar/
-│       │   ├── Navbar.tsx
-│       │   └── Navbar.css
-│       └── Footer/
-│           ├── Footer.tsx
-│           └── Footer.css
+│   ├── contexts/                # React Contexts
+│   │   ├── AuthContext.tsx     # Authentication state
+│   │   └── ThemeContext.tsx    # Theme state
+│   │
+│   ├── hooks/                   # Custom React Hooks
+│   │   ├── useAuth.ts
+│   │   ├── useApi.ts
+│   │   └── useDebounce.ts
+│   │
+│   ├── layouts/                 # Page Layouts
+│   │   ├── MainLayout.tsx      # Main app layout
+│   │   ├── PublicLayout.tsx    # Public pages layout
+│   │   └── AuthLayout.tsx      # Auth pages layout
+│   │
+│   ├── pages/                   # Page Components
+│   │   ├── Home/               # Home feed page
+│   │   │   ├── index.tsx
+│   │   │   ├── Home.css
+│   │   │   └── components/
+│   │   │       ├── FeedMasonry.tsx
+│   │   │       ├── TrendingSidebar.tsx
+│   │   │       └── PostCard.tsx
+│   │   │
+│   │   ├── Login/              # Login page
+│   │   ├── Register/           # Registration page
+│   │   ├── VerifyEmail/        # Email verification
+│   │   ├── Onboarding/         # Onboarding flow
+│   │   │   ├── ProfileSetup/
+│   │   │   ├── InterestsSelection/
+│   │   │   └── FollowUsers/
+│   │   │
+│   │   ├── Profile/            # User profile
+│   │   ├── Settings/           # Settings pages
+│   │   ├── Memories/           # Memories list
+│   │   ├── CreateJournal/      # Create journal
+│   │   └── NotFound/           # 404 page
+│   │
+│   ├── router/                  # Routing Configuration
+│   │   └── index.tsx           # Route definitions
+│   │
+│   ├── schemas/                 # Zod Schemas
+│   │   ├── auth.schema.ts
+│   │   ├── memory.schema.ts
+│   │   └── user.schema.ts
+│   │
+│   ├── store/                   # State Management (nếu dùng Redux/Zustand)
+│   │   ├── slices/
+│   │   └── index.ts
+│   │
+│   ├── styles/                  # Global Styles
+│   │   ├── global.css
+│   │   ├── variables.css
+│   │   └── themes/
+│   │
+│   ├── types/                   # TypeScript Types
+│   │   ├── api.ts
+│   │   ├── auth.ts
+│   │   ├── post.ts
+│   │   ├── user.ts
+│   │   └── common.ts
+│   │
+│   ├── utils/                   # Utility Functions
+│   │   ├── dateHelpers.ts
+│   │   ├── validation.ts
+│   │   └── formatters.ts
+│   │
+│   ├── lib/                     # Third-party lib configs
+│   │   └── ky-client.ts        # HTTP client setup
+│   │
+│   ├── App.tsx                  # Root component
+│   ├── main.tsx                 # Entry point
+│   └── vite-env.d.ts           # Vite types
 │
-├── layouts/                       # Page layouts
-│   ├── MainLayout.tsx
-│   ├── MainLayout.css
-│   ├── AuthLayout.tsx
-│   └── DashboardLayout.tsx
-│
-├── pages/                         # Page components
-│   ├── Timeline/
-│   │   ├── index.tsx
-│   │   └── Timeline.css
-│   ├── Gallery/
-│   │   ├── index.tsx
-│   │   └── Gallery.css
-│   ├── MemoryDetail/
-│   │   ├── index.tsx
-│   │   └── MemoryDetail.css
-│   ├── MemoryCreate/
-│   │   ├── index.tsx
-│   │   └── MemoryCreate.css
-│   ├── Templates/
-│   │   ├── index.tsx
-│   │   └── Templates.css
-│   └── NotFound.tsx
-│
-├── types/                         # TypeScript types
-│   ├── memory.ts
-│   ├── user.ts
-│   ├── comment.ts
-│   └── common.ts
-│
-├── mock/                          # Mock data
-│   ├── memoryData.ts
-│   ├── userData.ts
-│   └── handlers.ts
-│
-├── utils/                         # Utility functions
-│   ├── memoryHelpers.ts
-│   ├── dateHelpers.ts
-│   └── validation.ts
-│
-├── router/                        # Router configuration
-│   └── index.tsx
-│
-└── main.tsx
+├── .env.development             # Development environment
+├── .env.production              # Production environment
+├── index.html                   # HTML template
+├── package.json                 # Dependencies
+├── tsconfig.json                # TypeScript config
+├── vite.config.ts               # Vite config
+└── README.md
 ```
+
+---
 
 ## 🎨 Component Library
 
 ### Common Components
 
-#### 1. **Button**
+#### Button
 ```tsx
 import { Button } from '@/components/common/Button/Button';
 
@@ -115,425 +253,594 @@ import { Button } from '@/components/common/Button/Button';
   Click Me
 </Button>
 
-// Variants: primary, secondary, outline, ghost
+// Variants: primary, secondary, outline, ghost, danger
 // Sizes: sm, md, lg
 ```
 
-#### 2. **Input**
+#### Input
 ```tsx
 import { Input } from '@/components/common/Input/Input';
 
 <Input
-  label="Title"
-  placeholder="Enter title..."
-  startIcon={<SearchIcon />}
-  error={errors.title}
-/>
-```
-
-#### 3. **Card**
-```tsx
-import { Card, CardBody, CardHeader, CardFooter } from '@/components/common/Card/Card';
-
-<Card hoverable>
-  <CardHeader>Header Content</CardHeader>
-  <CardBody>Body Content</CardBody>
-  <CardFooter>Footer Content</CardFooter>
-</Card>
-```
-
-#### 4. **Tag**
-```tsx
-import { Tag } from '@/components/common/Tag/Tag';
-
-<Tag variant="primary" icon={<Icon />} onRemove={handleRemove}>
-  travel
-</Tag>
-
-// Variants: default, primary, success, warning, danger
-```
-
-#### 5. **Avatar**
-```tsx
-import { Avatar } from '@/components/common/Avatar/Avatar';
-
-<Avatar src={userImage} alt="User" size="md" />
-<Avatar name="John Doe" size="lg" />
-
-// Sizes: sm, md, lg, xl
-```
-
-#### 6. **SearchBar**
-```tsx
-import { SearchBar } from '@/components/common/SearchBar/SearchBar';
-
-<SearchBar
-  placeholder="Search memories..."
-  onSearch={handleSearch}
+  label="Email"
+  type="email"
+  placeholder="Enter your email"
+  error={errors.email}
   onChange={handleChange}
 />
 ```
 
-#### 7. **Modal**
+#### Card
+```tsx
+import { Card } from '@/components/common/Card/Card';
+
+<Card hoverable>
+  <h3>Card Title</h3>
+  <p>Card content goes here</p>
+</Card>
+```
+
+#### Avatar
+```tsx
+import { Avatar } from '@/components/common/Avatar/Avatar';
+
+<Avatar 
+  src={user.avatar_url} 
+  alt={user.username} 
+  size="md" 
+/>
+
+// Sizes: sm (32px), md (40px), lg (56px), xl (80px)
+```
+
+#### Modal
 ```tsx
 import { Modal } from '@/components/common/Modal/Modal';
 
 <Modal
   isOpen={isOpen}
   onClose={handleClose}
-  title="Modal Title"
-  footer={<Button>Save</Button>}
+  title="Confirm Action"
 >
-  Modal Content
+  <p>Are you sure?</p>
+  <Button onClick={handleConfirm}>Confirm</Button>
 </Modal>
-
-// Sizes: sm, md, lg, xl
 ```
 
 ### Feature Components
 
-#### 1. **MemoryCard**
+#### PostCard
 ```tsx
-import { MemoryCard } from '@/components/features/MemoryCard/MemoryCard';
+import PostCard from '@/pages/Home/components/PostCard';
 
-<MemoryCard
-  id={memory.id}
-  title={memory.title}
-  date={memory.date}
-  content={memory.content}
-  tags={memory.tags}
-  mood={memory.mood}
-  likes={memory.likes}
-  comments={memory.comments}
-  image={memory.images?.[0]}
-  onClick={() => navigate(`/memory/${memory.id}`)}
+<PostCard
+  imageUrl={post.content_preview}
+  title={post.title}
+  authorName={post.author.display_name}
+  authorAvatar={post.author.avatar_url}
+  postType="blog"
 />
 ```
 
-#### 2. **TimelineView**
-```tsx
-import { TimelineView } from '@/components/features/TimelineView/TimelineView';
+---
 
-<TimelineView
-  memories={memories}
-  onMemoryClick={handleMemoryClick}
-/>
-```
+## 🛣️ Routing & Navigation
 
-#### 3. **GalleryView**
-```tsx
-import { GalleryView } from '@/components/features/GalleryView/GalleryView';
-
-<GalleryView
-  memories={memories}
-  onMemoryClick={handleMemoryClick}
-/>
-```
-
-#### 4. **FilterSidebar**
-```tsx
-import { FilterSidebar } from '@/components/features/FilterSidebar/FilterSidebar';
-
-<FilterSidebar onFilterChange={handleFilterChange} />
-```
-
-## 🛣️ Routing Structure
+### Route Structure
 
 ```tsx
 // src/router/index.tsx
 import { createBrowserRouter } from 'react-router-dom';
-import { MainLayout } from '../layouts/MainLayout';
-import { TimelinePage } from '../pages/Timeline';
-import { GalleryPage } from '../pages/Gallery';
-import { MemoryDetailPage } from '../pages/MemoryDetail';
 
 export const router = createBrowserRouter([
+  // Public routes
+  { path: '/login', element: <LoginPage /> },
+  { path: '/signup', element: <RegisterPage /> },
+  { path: '/verify-email', element: <VerifyEmailPage /> },
+  
+  // Protected routes
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      {
-        index: true,
-        element: <TimelinePage />,
+      { index: true, element: <Landing /> },
+      { 
+        path: 'home', 
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ) 
       },
-      {
-        path: 'timeline',
-        element: <TimelinePage />,
-      },
-      {
-        path: 'gallery',
-        element: <GalleryPage />,
-      },
-      {
-        path: 'memory/:id',
-        element: <MemoryDetailPage />,
-      },
-      {
-        path: 'memory/create',
-        element: <MemoryCreatePage />,
-      },
-      {
-        path: 'templates',
-        element: <TemplatesPage />,
-      },
+      { path: 'profile/:username', element: <ProfilePage /> },
+      { path: 'memories', element: <MemoriesPage /> },
+      // ...
     ],
   },
+  
+  // Onboarding flow
+  {
+    path: '/onboarding',
+    children: [
+      { path: 'profile', element: <ProfileSetupPage /> },
+      { path: 'interests', element: <InterestsSelectionPage /> },
+      { path: 'follow', element: <FollowUsersPage /> },
+    ],
+  },
+  
+  // 404
+  { path: '*', element: <NotFoundPage /> },
 ]);
 ```
 
-## 🔗 Navigation Flow
+### Navigation
 
-```
-Home (Timeline) → Memory Detail
-            ↓
-        Gallery View
-            ↓
-    Create New Memory
-            ↓
-    Select Template
-            ↓
-    Add Decorations
-```
-
-## 📊 Type Definitions
-
-```typescript
-// src/types/memory.ts
-export interface Memory {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  mood?: string;
-  tags: string[];
-  images?: string[];
-  visibility: 'public' | 'friends' | 'private';
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  likes: number;
-  comments: number;
-}
-
-export interface MemoryFilter {
-  year?: number;
-  tags?: string[];
-  mood?: string;
-  sortBy?: 'newest' | 'oldest' | 'mostLiked';
-}
-```
-
-## 🎨 Styling System
-
-### Color Palette
-```css
---primary: #281c17ff;
---background-light: #f8f6f6;
---background-dark: #221610;
---text-primary: #181311;
---text-secondary: #896f61;
---border: #f4f2f0;
-```
-
-### Typography
-```css
---font-display: 'Epilogue', sans-serif;
---font-size-xs: 0.75rem;
---font-size-sm: 0.875rem;
---font-size-base: 1rem;
---font-size-lg: 1.125rem;
---font-size-xl: 1.25rem;
---font-size-2xl: 1.5rem;
---font-size-3xl: 2rem;
---font-size-4xl: 2.25rem;
-```
-
-### Spacing
-```css
---spacing-1: 0.25rem;
---spacing-2: 0.5rem;
---spacing-3: 0.75rem;
---spacing-4: 1rem;
---spacing-6: 1.5rem;
---spacing-8: 2rem;
-```
-
-## 🚀 Getting Started
-
-### 1. Install Dependencies
-```bash
-npm install
-```
-
-### 2. Copy Component Files
-Copy all the component files from the artifacts into your project following the structure above.
-
-### 3. Update main.tsx
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router';
-import './styles/global.css';
+import { useNavigate, Link } from 'react-router-dom';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+// Programmatic navigation
+const navigate = useNavigate();
+navigate('/home');
+navigate(-1); // Go back
+
+// Link component
+<Link to="/profile/john">View Profile</Link>
 ```
-
-### 4. Create Global Styles
-```css
-/* src/styles/global.css */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #181311;
-  background-color: #f8f6f6;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-button {
-  font-family: inherit;
-}
-```
-
-### 5. Start Development Server
-```bash
-npm run dev
-```
-
-## 🔄 Data Flow
-
-### Fetching Memories
-```tsx
-// Current: Using mock data
-import { mockMemories } from '@/mock/memoryData';
-
-// Future: Replace with API calls
-import { fetchMemories } from '@/api/services/memoryApi';
-
-const memories = await fetchMemories();
-```
-
-### Filtering & Sorting
-```tsx
-import { filterMemories } from '@/utils/memoryHelpers';
-
-const filtered = filterMemories(memories, {
-  year: 2023,
-  tags: ['travel'],
-  sortBy: 'newest',
-});
-```
-
-## 🎯 Next Steps
-
-### Phase 1: Core Features
-- [x] Component library setup
-- [x] Timeline view
-- [x] Gallery view
-- [x] Memory detail page
-- [ ] Memory creation flow
-- [ ] Template selection
-- [ ] Decoration/sticker picker
-
-### Phase 2: Advanced Features
-- [ ] Map view with geolocation
-- [ ] Social features (likes, comments, shares)
-- [ ] Search & filters
-- [ ] User profiles
-- [ ] Dark mode support
-
-### Phase 3: Backend Integration
-- [ ] Replace mock data with API calls
-- [ ] Authentication flow
-- [ ] File upload for images
-- [ ] Real-time updates (WebSocket)
-
-## 📝 Best Practices
-
-### Component Organization
-1. Keep components small and focused
-2. Use composition over inheritance
-3. Extract reusable logic into custom hooks
-4. Maintain consistent naming conventions
-
-### State Management
-```tsx
-// Local state for UI
-const [isOpen, setIsOpen] = useState(false);
-
-// Global state with Redux (if needed)
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-
-const memories = useAppSelector(state => state.memories.list);
-const dispatch = useAppDispatch();
-```
-
-### Error Handling
-```tsx
-try {
-  const memories = await fetchMemories();
-  setMemories(memories);
-} catch (error) {
-  console.error('Failed to fetch memories:', error);
-  // Show error toast/notification
-}
-```
-
-### Performance Optimization
-```tsx
-// Memoize expensive computations
-const filteredMemories = useMemo(
-  () => filterMemories(memories, filter),
-  [memories, filter]
-);
-
-// Lazy load images
-<img src={image} loading="lazy" alt="Memory" />
-```
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Components not rendering**
-   - Check file paths and imports
-   - Ensure CSS files are imported
-   - Verify router configuration
-
-2. **Styles not applying**
-   - Import CSS files in component
-   - Check class name spelling
-   - Verify CSS specificity
-
-3. **Navigation not working**
-   - Use `Link` from react-router-dom
-   - Check route configuration
-   - Verify `RouterProvider` setup
-
-## 📚 Additional Resources
-
-- [React Router Documentation](https://reactrouter.com/)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [CSS Best Practices](https://developer.mozilla.org/en-US/docs/Web/CSS)
-
-## 🤝 Contributing
-
-1. Create feature branch
-2. Follow component structure
-3. Add TypeScript types
-4. Write CSS following conventions
-5. Test thoroughly before PR
 
 ---
 
-**Happy Coding! 🚀**
+## 🔄 State Management
+
+### Auth Context
+
+```tsx
+// src/contexts/AuthContext.tsx
+import { useAuth } from '@/contexts/AuthContext';
+
+function MyComponent() {
+  const { user, login, logout, isAuthenticated } = useAuth();
+  
+  return (
+    <div>
+      {isAuthenticated ? (
+        <p>Welcome, {user?.username}!</p>
+      ) : (
+        <button onClick={() => login(credentials)}>Login</button>
+      )}
+    </div>
+  );
+}
+```
+
+### Custom Hooks
+
+```tsx
+// useAuth hook
+const { user, isAuthenticated, login, logout } = useAuth();
+
+// useApi hook
+const { data, loading, error } = useApi('/posts/feed');
+
+// useDebounce hook
+const debouncedValue = useDebounce(searchTerm, 500);
+```
+
+---
+
+## 🔌 API Integration
+
+### HTTP Client Setup
+
+```tsx
+// src/lib/ky-client.ts
+import ky from 'ky';
+
+export const api = ky.create({
+  prefixUrl: import.meta.env.VITE_API_URL,
+  hooks: {
+    beforeRequest: [
+      request => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          request.headers.set('Authorization', `Bearer ${token}`);
+        }
+      }
+    ]
+  }
+});
+```
+
+### API Services
+
+```tsx
+// src/api/services/postApi.ts
+import { api } from '@/lib/ky-client';
+
+export const postApi = {
+  getFeed: async (page: number, limit: number) => {
+    const response = await api.get('posts/feed', {
+      searchParams: { page, limit }
+    }).json();
+    return response;
+  },
+  
+  getTrending: async (limit: number) => {
+    const response = await api.get('posts/trending', {
+      searchParams: { limit }
+    }).json();
+    return response;
+  },
+};
+```
+
+### Usage in Components
+
+```tsx
+import { postApi } from '@/api/services/postApi';
+
+function FeedComponent() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchFeed = async () => {
+      try {
+        const response = await postApi.getFeed(1, 20);
+        setPosts(response.posts);
+      } catch (error) {
+        console.error('Error fetching feed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchFeed();
+  }, []);
+  
+  if (loading) return <div>Loading...</div>;
+  
+  return (
+    <div>
+      {posts.map(post => (
+        <PostCard key={post.id} {...post} />
+      ))}
+    </div>
+  );
+}
+```
+
+---
+
+## 💻 Development Guide
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev          # Start dev server
+npm run build        # Build for production
+npm run preview      # Preview production build
+
+# Code Quality
+npm run lint         # Run ESLint
+npm run type-check   # TypeScript type checking
+
+# Testing (nếu có)
+npm run test         # Run tests
+npm run test:watch   # Watch mode
+npm run test:coverage # Coverage report
+```
+
+### Adding a New Page
+
+**Bước 1: Tạo Page Component**
+```tsx
+// src/pages/NewPage/index.tsx
+import React from 'react';
+import './NewPage.css';
+
+export const NewPage: React.FC = () => {
+  return (
+    <div className="new-page">
+      <h1>New Page</h1>
+    </div>
+  );
+};
+```
+
+**Bước 2: Tạo Styles**
+```css
+/* src/pages/NewPage/NewPage.css */
+.new-page {
+  padding: 2rem;
+}
+```
+
+**Bước 3: Thêm Route**
+```tsx
+// src/router/index.tsx
+import { NewPage } from '@/pages/NewPage';
+
+{
+  path: 'new-page',
+  element: <NewPage />
+}
+```
+
+**Bước 4: Thêm Navigation**
+```tsx
+<Link to="/new-page">Go to New Page</Link>
+```
+
+### Adding a New API Service
+
+```tsx
+// src/api/services/newApi.ts
+import { api } from '@/lib/ky-client';
+import type { ApiResponse } from '@/types/api';
+
+export interface NewData {
+  id: string;
+  name: string;
+}
+
+export const newApi = {
+  getAll: async (): Promise<NewData[]> => {
+    const response = await api.get('new-endpoint')
+      .json<ApiResponse<NewData[]>>();
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to fetch data');
+  },
+  
+  create: async (data: Partial<NewData>): Promise<NewData> => {
+    const response = await api.post('new-endpoint', {
+      json: data
+    }).json<ApiResponse<NewData>>();
+    
+    if (response.success && response.data) {
+      return response.data;
+    }
+    
+    throw new Error(response.message || 'Failed to create');
+  },
+};
+```
+
+### Type Definitions
+
+```tsx
+// src/types/newType.ts
+export interface NewType {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateNewTypeInput {
+  name: string;
+  description?: string;
+}
+```
+
+---
+
+## 🎨 Styling Guidelines
+
+### CSS Variables
+
+```css
+/* src/styles/variables.css */
+:root {
+  /* Colors */
+  --color-primary: #281c17;
+  --color-secondary: #896f61;
+  --color-background: #f8f6f6;
+  --color-text: #181311;
+  --color-border: #f4f2f0;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Typography */
+  --font-family: 'Epilogue', sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+}
+```
+
+### Component Styling Pattern
+
+```css
+/* Component.css */
+.component {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  
+  /* Spacing */
+  padding: var(--spacing-lg);
+  margin: 0;
+  
+  /* Colors */
+  background-color: var(--color-background);
+  color: var(--color-text);
+  
+  /* Typography */
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  
+  /* Borders */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+```
+
+---
+
+## 🔐 Authentication Flow
+
+```
+1. User visits /login
+2. Enter credentials
+3. Call authApi.login()
+4. Store tokens in localStorage
+5. Update AuthContext
+6. Redirect to /home
+```
+
+### Protected Routes
+
+```tsx
+// src/components/common/ProtectedRoute/ProtectedRoute.tsx
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+};
+```
+
+---
+
+## 📱 Responsive Design
+
+### Breakpoints
+
+```css
+/* Mobile First Approach */
+.component {
+  /* Mobile styles (default) */
+  padding: 1rem;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .component {
+    padding: 1.5rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .component {
+    padding: 2rem;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1280px) {
+  .component {
+    padding: 3rem;
+  }
+}
+```
+
+---
+
+## 🐛 Debugging
+
+### React DevTools
+- Install React DevTools extension
+- Inspect component tree
+- View props and state
+
+### Network Tab
+- Monitor API calls
+- Check request/response
+- Debug authentication issues
+
+### Console Logging
+```tsx
+console.log('Debug:', { user, posts, loading });
+```
+
+---
+
+## 🚀 Deployment
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+### Environment Variables
+
+```env
+# .env.production
+VITE_API_URL=https://api.meobeo-talk.com/api/v1
+VITE_APP_ENV=production
+```
+
+### Deploy to Vercel/Netlify
+
+```bash
+# Vercel
+vercel --prod
+
+# Netlify
+netlify deploy --prod
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Tạo feature branch: `git checkout -b feature/amazing-feature`
+3. Follow coding conventions
+4. Write TypeScript types
+5. Test thoroughly
+6. Commit: `git commit -m 'Add amazing feature'`
+7. Push: `git push origin feature/amazing-feature`
+8. Create Pull Request
+
+---
+
+## 📝 Best Practices
+
+- ✅ Sử dụng TypeScript cho type safety
+- ✅ Component nhỏ, tập trung vào một nhiệm vụ
+- ✅ Tái sử dụng components thông qua composition
+- ✅ Custom hooks cho logic có thể tái sử dụng
+- ✅ Error boundaries cho error handling
+- ✅ Lazy loading cho performance
+- ✅ Accessibility (a11y) considerations
+- ✅ Responsive design cho mọi thiết bị
+
+---
+
+## 📞 Support
+
+- **Documentation**: [Wiki](https://github.com/yourusername/meobeo-talk-ui/wiki)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/meobeo-talk-ui/issues)
+- **Email**: support@meobeo-talk.com
+
+---
+
+**Happy Coding! 🎨**

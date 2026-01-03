@@ -113,10 +113,10 @@ export const ProfileSetupPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="avatar-section">
-              <div className="avatar-upload-wrapper">
+            <div className="onboarding-avatar-section">
+              <div className="onboarding-avatar-upload-wrapper">
                 <div
-                  className="avatar-preview"
+                  className="onboarding-avatar-preview"
                   style={{
                     backgroundImage: avatarPreview
                       ? `url(${avatarPreview})`
@@ -124,12 +124,12 @@ export const ProfileSetupPage: React.FC = () => {
                   }}
                 >
                   {!avatarPreview && (
-                    <span className="avatar-placeholder">
+                    <span className="onboarding-avatar-placeholder">
                       {displayName ? displayName[0].toUpperCase() : '?'}
                     </span>
                   )}
                 </div>
-                <label className="avatar-upload-overlay">
+                <label className="onboarding-avatar-upload-overlay">
                   <span className="upload-icon">📷</span>
                   <input
                     type="file"
@@ -140,7 +140,7 @@ export const ProfileSetupPage: React.FC = () => {
                   />
                 </label>
               </div>
-              <button className="avatar-upload-button" disabled={isLoading}>
+              <button className="onboarding-avatar-upload-button" disabled={isLoading}>
                 <label>
                   Upload an Avatar
                   <input

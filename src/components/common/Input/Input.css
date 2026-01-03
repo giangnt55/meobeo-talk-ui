@@ -1,4 +1,4 @@
-.input-wrapper {
+.custom-input-wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
@@ -6,11 +6,11 @@
   width: 100%;
 }
 
-.input-full {
+.custom-input-full {
   width: 100%;
 }
 
-.input-label {
+.custom-input-label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);
@@ -20,13 +20,13 @@
   /* Align with input curve */
 }
 
-.input-container {
+.custom-input-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.input {
+.custom-input {
   width: 100%;
   height: var(--height-input);
   /* 3.5rem */
@@ -43,11 +43,11 @@
   font-weight: var(--font-weight-normal);
 }
 
-.input::placeholder {
+.custom-input::placeholder {
   color: var(--text-disabled);
 }
 
-.input:focus {
+.custom-input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-light);
@@ -55,17 +55,17 @@
 }
 
 /* Padding for icons */
-.input-with-start-icon {
+.custom-input-with-start-icon {
   padding-left: 3rem;
   /* pl-12 */
 }
 
-.input-with-end-icon {
+.custom-input-with-end-icon {
   padding-right: 3rem;
   /* pr-12 */
 }
 
-.input-icon {
+.custom-input-icon {
   position: absolute;
   display: flex;
   align-items: center;
@@ -77,38 +77,38 @@
   height: 1.5rem;
 }
 
-.input-icon-start {
+.custom-input-icon-start {
   left: var(--spacing-4);
 }
 
-.input-icon-end {
+.custom-input-icon-end {
   right: var(--spacing-4);
   pointer-events: auto;
 }
 
 /* Error State */
-.input-error .input {
+.custom-input-error .custom-input {
   border-color: var(--error);
   background-color: rgba(239, 68, 68, 0.05);
   /* redness */
 }
 
-.input-error .input:focus {
+.custom-input-error .custom-input:focus {
   border-color: var(--error);
   box-shadow: 0 0 0 4px var(--error-light);
 }
 
-.input-error .input-icon {
+.custom-input-error .custom-input-icon {
   color: var(--error);
 }
 
-.input-helper {
+.custom-input-helper {
   font-size: var(--font-size-xs);
   color: var(--text-secondary);
   font-weight: var(--font-weight-medium);
   margin-left: var(--spacing-4);
 }
 
-.input-helper-error {
+.custom-input-helper-error {
   color: var(--error);
 }

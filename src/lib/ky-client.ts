@@ -1,11 +1,39 @@
 import ky from 'ky';
 
-// Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_URL || '/api';
+// Base URL configuration - support both env variable names for compatibility
+const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 
 // Flag to prevent multiple refresh attempts
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
+
+// Logging utility for debugging
+const logApiCall = (type: 'REQUEST' | 'RESPONSE' | 'ERROR', data: any) => {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const timestamp = new Date().toISOString();
+
+  const logData = {
+    timestamp,
+    type,
+    device: isMobile ? 'MOBILE' : 'DESKTOP',
+    userAgent: navigator.userAgent,
+    online: navigator.onLine,
+    ...data
+  };
+
+  // Always log to console for debugging
+  console.log(`[API ${type}]`, logData);
+
+  // Store logs in sessionStorage for later inspection (max 50 entries)
+  try {
+    const logs = JSON.parse(sessionStorage.getItem('api_logs') || '[]');
+    logs.push(logData);
+    if (logs.length > 50) logs.shift(); // Keep only last 50 logs
+    sessionStorage.setItem('api_logs', JSON.stringify(logs));
+  } catch (e) {
+    console.warn('Failed to store API log:', e);
+  }
+};
 
 const onTokenRefreshed = (token: string) => {
   refreshSubscribers.forEach((callback) => callback(token));
@@ -19,6 +47,7 @@ const addRefreshSubscriber = (callback: (token: string) => void) => {
 export const api = ky.create({
   prefixUrl: BASE_URL,
   timeout: 30000,
+  credentials: 'include',
   retry: {
     limit: 2,
     methods: ['get', 'put', 'delete'],
@@ -32,10 +61,28 @@ export const api = ky.create({
         if (accessToken) {
           request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
+
+        // Log request details
+        logApiCall('REQUEST', {
+          url: request.url,
+          method: request.method,
+          hasAuth: !!accessToken,
+          baseUrl: BASE_URL,
+          headers: Object.fromEntries(request.headers.entries()),
+        });
       },
     ],
     afterResponse: [
       async (request, _options, response) => {
+        // Log response details
+        logApiCall('RESPONSE', {
+          url: request.url,
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
+
         // Handle 401 Unauthorized - try to refresh token
         if (response.status === 401 && !request.url.includes('/auth/refresh')) {
           // If already refreshing, wait for it
@@ -92,15 +139,27 @@ export const api = ky.create({
     ],
     beforeError: [
       async (error) => {
-        const { response } = error;
+        const { response, request } = error;
+
+        // Log error details
+        const errorLog: any = {
+          url: request?.url || 'unknown',
+          method: request?.method || 'unknown',
+          errorName: error.name,
+          errorMessage: error.message,
+        };
 
         if (response) {
+          errorLog.status = response.status;
+          errorLog.statusText = response.statusText;
+
           try {
             const body = (await response.json()) as {
               message?: string;
               errors?: Record<string, string[]> | unknown;
             };
 
+            errorLog.responseBody = body;
             error.message = body.message || error.message;
 
             if (body.errors) {
@@ -108,8 +167,21 @@ export const api = ky.create({
             }
           } catch {
             // Response body is not JSON
+            errorLog.parseError = 'Failed to parse response as JSON';
           }
+        } else {
+          // Network error (no response)
+          errorLog.networkError = true;
+          errorLog.possibleCauses = [
+            'CORS policy blocking request',
+            'Network timeout',
+            'Server unreachable',
+            'Mixed content (HTTP/HTTPS)',
+            'DNS resolution failure'
+          ];
         }
+
+        logApiCall('ERROR', errorLog);
 
         return error;
       },

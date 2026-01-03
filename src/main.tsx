@@ -7,6 +7,8 @@ import { Toaster } from 'react-hot-toast';
 import { queryClient } from '@/lib/react-query';
 import { router } from '@/router';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ApiDebugPanel } from '@/components/debug/ApiDebugPanel';
+import '@/utils/debugUtils';
 // import { ThemeProvider } from '@/contexts/ThemeContext';
 import '@/styles/global.css';
 import '@/styles/variables.css';
@@ -46,6 +48,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </AuthProvider>
       {/* </ThemeProvider> */}
       <ReactQueryDevtools initialIsOpen={false} />
+      <ApiDebugPanel />
     </QueryClientProvider>
   </React.StrictMode>
 );

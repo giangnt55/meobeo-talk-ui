@@ -1,0 +1,257 @@
+.debug-panel-trigger {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9998;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+}
+
+.debug-panel-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+}
+
+.debug-panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.debug-panel {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.debug-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.debug-panel-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.debug-panel-controls {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.filter-buttons,
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn,
+.action-btn {
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover,
+.action-btn:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.filter-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.action-btn.danger {
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.action-btn.danger:hover {
+    background: #fef2f2;
+    border-color: #dc2626;
+}
+
+.debug-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+}
+
+.no-logs {
+    text-align: center;
+    padding: 40px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.log-entry {
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    background: white;
+}
+
+.log-entry.log-request {
+    border-left: 4px solid #3b82f6;
+}
+
+.log-entry.log-response {
+    border-left: 4px solid #10b981;
+}
+
+.log-entry.log-error {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
+}
+
+.log-header {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+
+.log-type {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.log-request .log-type {
+    color: #3b82f6;
+}
+
+.log-response .log-type {
+    color: #10b981;
+}
+
+.log-error .log-type {
+    color: #ef4444;
+}
+
+.log-device {
+    padding: 2px 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.log-time {
+    color: #6b7280;
+}
+
+.log-online {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.log-online.online {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.log-online.offline {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.log-details {
+    padding: 12px 16px;
+}
+
+.log-details pre {
+    margin: 0;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #374151;
+    line-height: 1.5;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .debug-panel {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .debug-panel-controls {
+        flex-direction: column;
+    }
+
+    .filter-buttons,
+    .action-buttons {
+        width: 100%;
+    }
+
+    .filter-btn,
+    .action-btn {
+        flex: 1;
+    }
+}

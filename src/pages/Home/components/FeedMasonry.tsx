@@ -114,7 +114,7 @@ const FeedMasonry: React.FC = () => {
                     {/* Render posts */}
                     {posts.map((post) => {
                         // Determine post type based on content or other criteria
-                        const postType = post.mood ? 'memory' : 'blog';
+                        const postType = post.mood ? 'journey' : 'blog';
 
                         return (
                             <PostCard
@@ -125,7 +125,7 @@ const FeedMasonry: React.FC = () => {
                                 authorAvatar={post.author.avatar_url || 'https://via.placeholder.com/40'}
                                 isVideo={false}
                                 alt={post.title || 'Post image'}
-                                postType={postType as 'blog' | 'memory'}
+                                postType={postType as 'blog' | 'journey'}
                             />
                         );
                     })}

@@ -30,7 +30,7 @@ export const DecorationsPage: React.FC = () => {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            icon={<span>←</span>}
+            leftIcon={<span>←</span>}
           >
             Back
           </Button>

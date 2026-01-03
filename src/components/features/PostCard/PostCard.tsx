@@ -11,10 +11,10 @@ import {
   CardActions,
 } from '@mui/material';
 import {
-  Favorite as FavoriteIcon,
+  //   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
   Comment as CommentIcon,
-  Bookmark as BookmarkIcon,
+  //   Bookmark as BookmarkIcon,
   BookmarkBorder as BookmarkBorderIcon,
   Share as ShareIcon,
 } from '@mui/icons-material';
@@ -44,12 +44,14 @@ const PostCard: React.FC<PostCardProps> = ({
 
   const handleAuthorClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/profile/${post.author.id}`);
+    if (post.author?.id) {
+      navigate(`/profile/${post.author.id}`);
+    }
   };
 
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/category/${post.category.slug}`);
+    // navigate(`/category/${post.category}`);
   };
 
   const handleLike = (e: React.MouseEvent) => {
@@ -67,7 +69,7 @@ const PostCard: React.FC<PostCardProps> = ({
     onShare?.(post.id);
   };
 
-  const timeAgo = formatDistanceToNow(new Date(post.createdAt), {
+  const timeAgo = formatDistanceToNow(new Date(post.created_at), {
     addSuffix: true,
     locale: vi,
   });
@@ -88,11 +90,11 @@ const PostCard: React.FC<PostCardProps> = ({
       onClick={handlePostClick}
     >
       {/* Thumbnail */}
-      {post.thumbnail && (
+      {post.thumbnail_url && (
         <CardMedia
           component="img"
           height="200"
-          image={post.thumbnail}
+          image={post.thumbnail_url}
           alt={post.title}
           sx={{ objectFit: 'cover' }}
         />
@@ -110,34 +112,36 @@ const PostCard: React.FC<PostCardProps> = ({
           onClick={handleAuthorClick}
         >
           <Avatar
-            src={post.author.avatar}
-            alt={post.author.displayName}
+            src={post.author?.avatar_url}
+            alt={post.author?.display_name || post.author?.username}
             sx={{ width: 32, height: 32 }}
           >
-            {post.author.displayName.charAt(0).toUpperCase()}
+            {(post.author?.display_name || post.author?.username || '?').charAt(0).toUpperCase()}
           </Avatar>
           <Box>
             <Typography variant="body2" fontWeight={600}>
-              {post.author.displayName}
+              {post.author?.display_name || post.author?.username || 'Unknown Author'}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {timeAgo} · {post.readTime} phút đọc
+              {timeAgo} · {post.read_time_minutes || 0} phút đọc
             </Typography>
           </Box>
         </Box>
 
         {/* Category */}
-        <Chip
-          label={post.category.name}
-          size="small"
-          onClick={handleCategoryClick}
-          sx={{
-            mb: 1.5,
-            fontWeight: 600,
-            bgcolor: 'primary.50',
-            color: 'primary.main',
-          }}
-        />
+        {post.category && (
+          <Chip
+            label={post.category}
+            size="small"
+            onClick={handleCategoryClick}
+            sx={{
+              mb: 1.5,
+              fontWeight: 600,
+              bgcolor: 'primary.50',
+              color: 'primary.main',
+            }}
+          />
+        )}
 
         {/* Title */}
         <Typography
@@ -169,11 +173,11 @@ const PostCard: React.FC<PostCardProps> = ({
             mb: 2,
           }}
         >
-          {post.description}
+          {post.content_preview}
         </Typography>
 
-        {/* Tags */}
-        <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+        {/* Tags - Removed as not in Post type */}
+        {/* <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
           {post.tags.slice(0, 3).map((tag) => (
             <Chip
               key={tag.id}
@@ -183,7 +187,7 @@ const PostCard: React.FC<PostCardProps> = ({
               sx={{ fontSize: '0.75rem' }}
             />
           ))}
-        </Box>
+        </Box> */}
       </CardContent>
 
       {/* Actions */}
@@ -199,16 +203,18 @@ const PostCard: React.FC<PostCardProps> = ({
             <IconButton
               size="small"
               onClick={handleLike}
-              color={post.isLiked ? 'error' : 'default'}
+              // color={post.isLiked ? 'error' : 'default'}
+              color="default"
             >
-              {post.isLiked ? (
+              {/* {post.isLiked ? (
                 <FavoriteIcon fontSize="small" />
               ) : (
                 <FavoriteBorderIcon fontSize="small" />
-              )}
+              )} */}
+              <FavoriteBorderIcon fontSize="small" />
             </IconButton>
             <Typography variant="body2" color="text.secondary">
-              {post.likesCount}
+              {post.reaction_count}
             </Typography>
           </Box>
 
@@ -217,7 +223,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <CommentIcon fontSize="small" />
             </IconButton>
             <Typography variant="body2" color="text.secondary">
-              {post.commentsCount}
+              {post.comment_count}
             </Typography>
           </Box>
         </Box>
@@ -226,13 +232,15 @@ const PostCard: React.FC<PostCardProps> = ({
           <IconButton
             size="small"
             onClick={handleBookmark}
-            color={post.isBookmarked ? 'primary' : 'default'}
+            // color={post.isBookmarked ? 'primary' : 'default'}
+            color="default"
           >
-            {post.isBookmarked ? (
+            {/* {post.isBookmarked ? (
               <BookmarkIcon fontSize="small" />
             ) : (
               <BookmarkBorderIcon fontSize="small" />
-            )}
+            )} */}
+            <BookmarkBorderIcon fontSize="small" />
           </IconButton>
           <IconButton size="small" onClick={handleShare}>
             <ShareIcon fontSize="small" />

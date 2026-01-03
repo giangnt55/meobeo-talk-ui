@@ -82,7 +82,7 @@ export const MemoryDetailPage: React.FC = () => {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            icon={<span>←</span>}
+            leftIcon={<span>←</span>}
           >
             Back to Journal
           </Button>
@@ -149,7 +149,7 @@ export const MemoryDetailPage: React.FC = () => {
                 onClick={() => setIsLiked(!isLiked)}
               >
                 <span>{isLiked ? '❤️' : '🤍'}</span>
-                <span>{memory.likes}</span>
+                <span>{memory.likes_count}</span>
               </button>
               <div className="liked-avatars">
                 <Avatar size="sm" src="https://i.pravatar.cc/150?img=4" />

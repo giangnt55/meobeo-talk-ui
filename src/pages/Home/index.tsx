@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeSidebar from './components/HomeSidebar';
+// import HomeSidebar from './components/HomeSidebar'; // Removed unused import
 import FeedMasonry from './components/FeedMasonry';
 import TrendingSidebar from './components/TrendingSidebar';
 import './Home.css';

@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '@/hooks/useAuth'; // Removed unused import
 import './CreateJourney.css';
 
 export const CreateJourney: React.FC = () => {
-    const { user } = useAuth();
+    // const { user } = useAuth(); // Removed unused variable
     const navigate = useNavigate();
 
     // State

@@ -126,7 +126,7 @@ export const memoryService = {
    */
   async uploadImage(
     file: File,
-    onProgress?: (progress: number) => void
+    // onProgress?: (progress: number) => void // Removed unused parameter
   ): Promise<ApiResponse<{ url: string }>> {
     const formData = new FormData();
     formData.append('file', file);

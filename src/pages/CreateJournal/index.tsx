@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom'; // Removed unused import
 import { RichTextEditor } from '@/components/common/RichTextEditor/RichTextEditor';
 import { TemplateSelector } from './components/TemplateSelector';
 import { MoodSelector } from './components/MoodSelector';
@@ -8,10 +8,10 @@ import { JournalSettings } from './components/JournalSettings';
 import './CreateJournal.css';
 
 export const CreateJournalPage: React.FC = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate(); // Removed unused variable
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [coverImage, setCoverImage] = useState('');
+    // const [coverImage, setCoverImage] = useState(''); // Removed unused variables
     const [selectedTemplate, setSelectedTemplate] = useState('classic');
     const [selectedMood, setSelectedMood] = useState('joyful');
     const [tags, setTags] = useState<string[]>(['#MorningHike', '#Nature']);
@@ -19,15 +19,15 @@ export const CreateJournalPage: React.FC = () => {
     const [allowComments, setAllowComments] = useState(true);
     const [isPrivate, setIsPrivate] = useState(false);
 
-    const handleSaveDraft = () => {
-        console.log('Saving draft...');
-        // TODO: Implement save draft
-    };
+    // const handleSaveDraft = () => {
+    //     console.log('Saving draft...');
+    //     // TODO: Implement save draft
+    // };
 
-    const handlePublish = () => {
-        console.log('Publishing memory...');
-        // TODO: Implement publish
-    };
+    // const handlePublish = () => {
+    //     console.log('Publishing memory...');
+    //     // TODO: Implement publish
+    // };
 
     return (
         <div className="create-journal-page">

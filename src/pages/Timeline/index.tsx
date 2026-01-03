@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useMemories,
-  useDeleteMemory,
-  useLikeMemory,
+  // useDeleteMemory,
+  // useLikeMemory,
 } from '@/hooks/queries/useMemories';
 import { TimelineView } from '@/components/features/TimelineView/TimelineView';
-import { FilterSidebar } from '@/components/features/FilterSidebar/FilterSidebar';
+// import { FilterSidebar } from '@/components/features/FilterSidebar/FilterSidebar';
 import { SearchBar } from '@/components/common/SearchBar/SearchBar';
 import { Button } from '@/components/common/Button/Button';
 import './Timeline.css';
@@ -21,8 +21,8 @@ export const TimelinePage: React.FC = () => {
 
   // React Query hooks
   const { data, isLoading, error, refetch } = useMemories(filters);
-  const deleteMutation = useDeleteMemory();
-  const likeMutation = useLikeMemory();
+  // const deleteMutation = useDeleteMemory();
+  // const likeMutation = useLikeMemory();
 
   const memories = data?.memories || [];
   const meta = data?.meta;
@@ -31,15 +31,15 @@ export const TimelinePage: React.FC = () => {
     navigate(`/memory/${memoryId}`);
   };
 
-  const handleDelete = async (memoryId: string) => {
-    if (confirm('Are you sure you want to delete this memory?')) {
-      await deleteMutation.mutateAsync(memoryId);
-    }
-  };
+  // const handleDelete = async (memoryId: string) => {
+  //   if (confirm('Are you sure you want to delete this memory?')) {
+  //     await deleteMutation.mutateAsync(memoryId);
+  //   }
+  // };
 
-  const handleLike = (memoryId: string) => {
-    likeMutation.mutate(memoryId);
-  };
+  // const handleLike = (memoryId: string) => {
+  //   likeMutation.mutate(memoryId);
+  // };
 
   const handlePageChange = (page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -57,9 +57,9 @@ export const TimelinePage: React.FC = () => {
   return (
     <div className="timeline-page">
       <div className="timeline-container">
-        <aside className="timeline-sidebar">
+        {/* <aside className="timeline-sidebar">
           <FilterSidebar onFilterChange={(f) => setFilters({ ...filters, ...f })} />
-        </aside>
+        </aside> */}
 
         <main className="timeline-main">
           <div className="timeline-header">
@@ -91,8 +91,8 @@ export const TimelinePage: React.FC = () => {
               <TimelineView
                 memories={memories}
                 onMemoryClick={handleMemoryClick}
-                // onLike={handleLike}
-                // onDelete={handleDelete}
+              // onLike={handleLike}
+              // onDelete={handleDelete}
               />
 
               {meta && meta.totalPages > 1 && (

@@ -126,7 +126,7 @@ export function useLikeMemory() {
       return { previousMemory };
     },
     // Rollback on error
-    onError: (err, id, context) => {
+    onError: (_err, id, context) => {
       if (context?.previousMemory) {
         queryClient.setQueryData(
           queryKeys.memories.detail(id),
@@ -135,7 +135,7 @@ export function useLikeMemory() {
       }
     },
     // Refetch after success or error
-    onSettled: (data, error, id) => {
+    onSettled: (_data, _error, id) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.memories.detail(id) });
     },
   });
@@ -147,7 +147,7 @@ export function useLikeMemory() {
 export function useUploadImage() {
   return useMutation({
     mutationFn: (file: File) => memoryService.uploadImage(file),
-    onSuccess: (response) => {
+    onSuccess: (_response) => {
       toast.success('Image uploaded successfully!');
     },
   });

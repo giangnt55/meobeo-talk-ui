@@ -24,8 +24,8 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
             content={memory.content}
             tags={memory.tags}
             mood={memory.mood}
-            likes={memory.likes}
-            comments={memory.comments}
+            likes={memory.likes_count}
+            comments={memory.comments_count}
             image={memory.images?.[0]}
             onClick={() => onMemoryClick?.(memory.id)}
           />

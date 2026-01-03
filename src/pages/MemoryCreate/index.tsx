@@ -5,7 +5,7 @@ import { CreateMemoryInput } from '@/schemas/memory.schema';
 import { Button } from '@/components/common/Button/Button';
 import { Input } from '@/components/common/Input/Input';
 import { RichTextEditor } from '@/components/common/RichTextEditor/RichTextEditor';
-import { toast } from 'react-hot-toast';
+// import { toast } from 'react-hot-toast'; // Removed unused import
 
 export const MemoryCreatePage: React.FC = () => {
   const navigate = useNavigate();

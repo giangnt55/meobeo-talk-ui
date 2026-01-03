@@ -4,9 +4,9 @@ import { LoginPage } from '@/pages/Login';
 import { ProfileSetupPage } from '@/pages/Onboarding/ProfileSetup';
 import { InterestsSelectionPage } from '@/pages/Onboarding/InterestsSelection';
 import { FollowUsersPage } from '@/pages/Onboarding/FollowUsers';
-import { TimelinePage } from '@/pages/Timeline';
-import { GalleryPage } from '@/pages/Gallery';
-import { MemoryDetailPage } from '@/pages/MemoryDetail';
+// import { TimelinePage } from '@/pages/Timeline'; // Removed unused import
+// import { GalleryPage } from '@/pages/Gallery'; // Removed unused import
+// import { MemoryDetailPage } from '@/pages/MemoryDetail'; // Removed unused import
 import { TemplatesPage } from '@/pages/Templates';
 import { DecorationsPage } from '@/pages/Decorations';
 import { NotFoundPage } from '@/pages/NotFound';

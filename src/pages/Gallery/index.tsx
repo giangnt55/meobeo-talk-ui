@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GalleryView } from '@/components/features/GalleryView/GalleryView';
-import { Button } from '@/components/common/Button/Button';
+// import { Button } from '@/components/common/Button/Button'; // Removed unused import
 import { mockMemories } from '@/mock/memoryData';
 import './Gallery.css';
 

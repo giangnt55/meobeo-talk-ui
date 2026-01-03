@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button/Button';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import { useAuth } from '@/hooks/useAuth';
-import { authApi } from '@/api/services/authApi';
+// import { authApi } from '@/api/services/authApi'; // Removed unused import
 import './Login.css';
 
 // Google Icon Component
@@ -80,7 +80,7 @@ export const LoginPage: React.FC = () => {
     };
   }, [GOOGLE_CLIENT_ID]);
 
-  const handleGoogleCallback = async (response: { credential: string }) => {
+  const handleGoogleCallback = async (_response: { credential: string }) => {
     setIsGoogleLoading(true);
 
     try {

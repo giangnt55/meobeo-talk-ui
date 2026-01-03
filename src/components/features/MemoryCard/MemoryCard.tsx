@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardBody } from '../../common/Card/Card';
 import { Tag } from '../../common/Tag/Tag';
-import { Avatar } from '../../common/Avatar/Avatar';
+// import { Avatar } from '../../common/Avatar/Avatar'; // Removed unused import
 import './MemoryCard.css';
 
 interface MemoryCardProps {
@@ -37,8 +37,8 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
         <p className="memory-date">{date}</p>
         <h3 className="memory-title">{title}</h3>
         {image && (
-          <div 
-            className="memory-image" 
+          <div
+            className="memory-image"
             style={{ backgroundImage: `url(${image})` }}
           />
         )}

@@ -22,17 +22,17 @@ export const filterMemories = (memories: Memory[], filter: MemoryFilter): Memory
   // Sort
   switch (filter.sortBy) {
     case 'newest':
-      filtered.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      filtered.sort((a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
       break;
     case 'oldest':
-      filtered.sort((a, b) => 
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      filtered.sort((a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
       break;
     case 'mostLiked':
-      filtered.sort((a, b) => b.likes - a.likes);
+      filtered.sort((a, b) => b.likes_count - a.likes_count);
       break;
   }
 

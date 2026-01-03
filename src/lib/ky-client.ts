@@ -1,4 +1,4 @@
-import ky, { HTTPError } from 'ky';
+import ky from 'ky';
 
 // Base URL configuration
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
@@ -35,7 +35,7 @@ export const api = ky.create({
       },
     ],
     afterResponse: [
-      async (request, options, response) => {
+      async (request, _options, response) => {
         // Handle 401 Unauthorized - try to refresh token
         if (response.status === 401 && !request.url.includes('/auth/refresh')) {
           // If already refreshing, wait for it

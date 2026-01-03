@@ -7,11 +7,12 @@ export interface Memory {
   tags: string[];
   images?: string[];
   visibility: 'public' | 'friends' | 'private';
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  likes: number;
-  comments: number;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  likes_count: number;
+  comments_count: number;
+  is_liked?: boolean;
 }
 
 export interface MemoryTemplate {

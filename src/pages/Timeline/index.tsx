@@ -28,7 +28,7 @@ export const TimelinePage: React.FC = () => {
   const meta = data?.meta;
 
   const handleMemoryClick = (memoryId: string) => {
-    navigate(`/memory/${memoryId}`);
+    navigate(`/memories/${memoryId}`);
   };
 
   // const handleDelete = async (memoryId: string) => {
@@ -71,7 +71,7 @@ export const TimelinePage: React.FC = () => {
             </div>
             <Button
               variant="primary"
-              onClick={() => navigate('/memory/create')}
+              onClick={() => navigate('/memories/create')}
             >
               + New Memory
             </Button>

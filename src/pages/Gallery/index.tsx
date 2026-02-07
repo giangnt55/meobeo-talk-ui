@@ -51,7 +51,7 @@ export const GalleryPage: React.FC = () => {
 
         <GalleryView
           memories={mockMemories}
-          onMemoryClick={(id) => navigate(`/memory/${id}`)}
+          onMemoryClick={(id) => navigate(`/memories/${id}`)}
         />
       </div>
     </div>

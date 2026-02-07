@@ -16,10 +16,10 @@ export const DecorationsPage: React.FC = () => {
     // For now, just log and optionally navigate back
     if (memoryId) {
       // Apply to existing memory
-      navigate(`/memory/${memoryId}`);
+      navigate(`/memories/${memoryId}`);
     } else {
       // Apply to new memory being created
-      navigate('/memory/create');
+      navigate('/memories/create');
     }
   };
 

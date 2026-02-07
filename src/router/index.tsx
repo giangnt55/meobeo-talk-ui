@@ -6,7 +6,8 @@ import { InterestsSelectionPage } from '@/pages/Onboarding/InterestsSelection';
 import { FollowUsersPage } from '@/pages/Onboarding/FollowUsers';
 // import { TimelinePage } from '@/pages/Timeline'; // Removed unused import
 // import { GalleryPage } from '@/pages/Gallery'; // Removed unused import
-// import { MemoryDetailPage } from '@/pages/MemoryDetail'; // Removed unused import
+import { MemoryDetailPage } from '@/pages/MemoryDetail'; // Removed unused import
+import { JourneyDetailPage } from '@/pages/JourneyDetail';
 import { TemplatesPage } from '@/pages/Templates';
 import { DecorationsPage } from '@/pages/Decorations';
 import { NotFoundPage } from '@/pages/NotFound';
@@ -100,10 +101,10 @@ export const router = createBrowserRouter([
       //   path: 'gallery',
       //   element: <GalleryPage />,
       // },
-      // {
-      //   path: 'memory/:id',
-      //   element: <MemoryDetailPage />,
-      // },
+      {
+        path: 'memories/:id',
+        element: <MemoryDetailPage />,
+      },
       {
         path: 'memories/create',
         element: (
@@ -119,6 +120,18 @@ export const router = createBrowserRouter([
             <CreateJourney />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'journal/create',
+        element: (
+          <ProtectedRoute>
+            <CreateJournalPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'memories/journeys/:id',
+        element: <JourneyDetailPage />,
       },
       {
         path: 'templates',

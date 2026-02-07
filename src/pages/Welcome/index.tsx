@@ -67,7 +67,7 @@ export const WelcomePage: React.FC = () => {
                 size="lg"
                 rounded="lg"
                 className="welcome-action-btn"
-                onClick={() => navigate('/memory/create')}
+                onClick={() => navigate('/memories/create')}
                 leftIcon={<span className="material-symbols-outlined">post_add</span>}
               >
                 Start Creating Your First Post

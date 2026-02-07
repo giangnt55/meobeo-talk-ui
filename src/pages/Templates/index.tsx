@@ -33,7 +33,7 @@ export const TemplatesPage: React.FC = () => {
   });
 
   const handleSelectTemplate = (templateId: string) => {
-    navigate(`/memory/create?template=${templateId}`);
+    navigate(`/memories/create?template=${templateId}`);
   };
 
   return (
@@ -49,7 +49,7 @@ export const TemplatesPage: React.FC = () => {
           </div>
           <Button
             variant="outline"
-            onClick={() => navigate('/memory/create')}
+            onClick={() => navigate('/memories/create')}
           >
             Create Your Own
           </Button>

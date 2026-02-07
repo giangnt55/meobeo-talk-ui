@@ -1,17 +1,15 @@
-import HeroSection from "./components/HeroSection";
-import CTABanner from "./components/CTABanner";
-import TrendingBlogs from "./components/TrendingBlogs";
-import PopularMemories from "./components/PopularMemories";
+import NewHeroSection from './components/NewHeroSection';
+import NewFeaturesSection from './components/NewFeaturesSection';
+import NewMemoryJourneyTimeline from './components/NewMemoryJourneyTimeline';
+import NewCTASection from './components/NewCTASection';
 
 const Landing = () => {
   return (
-    <main className="landing-main">
-      <div className="container">
-        <HeroSection />
-        <CTABanner />
-        <TrendingBlogs />
-        <PopularMemories />
-      </div>
+    <main className="flex-1 flex flex-col items-center w-full bg-background-light dark:bg-background-dark">
+      <NewHeroSection />
+      <NewFeaturesSection />
+      <NewMemoryJourneyTimeline />
+      <NewCTASection />
     </main>
   );
 };

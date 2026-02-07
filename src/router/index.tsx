@@ -21,6 +21,7 @@ import { ProfilePage } from '@/pages/Profile';
 import { CreateJournalPage } from '@/pages/CreateJournal';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
+import BlogPage from '@/pages/Blog';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
 import { PublicLayout } from '@/layouts/PublicLayout';
@@ -66,6 +67,11 @@ export const router = createBrowserRouter([
             <Home />
           </ProtectedRoute>
         ),
+      },
+
+      {
+        path: 'blog',
+        element: <BlogPage />,
       },
 
       // {

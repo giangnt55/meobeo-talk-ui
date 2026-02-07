@@ -92,14 +92,14 @@ export const Navbar: React.FC = () => {
               <nav className="navbar-links">
                 {isAuthenticated ? (
                   <>
-                    <Link to="/home" className="nav-link">Main Feed</Link>
+                    <Link to="/home" className="nav-link">Home</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
                     <Link to="/memories" className="nav-link">Memories</Link>
                     <Link to="/about" className="nav-link">About Us</Link>
                   </>
                 ) : (
                   <>
-                    <Link to="/home" className="nav-link">Main Feed</Link>
+                    <Link to="/home" className="nav-link">Home</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
                     <Link to="/memories" className="nav-link">Memories</Link>
                     <Link to="/about" className="nav-link">About Us</Link>

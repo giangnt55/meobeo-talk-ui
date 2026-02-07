@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaBullhorn } from 'react-icons/fa';
-import PostCard from './PostCard';
+import FeedCard from './FeedCard';
+import CategoryFilter from './MoodFilter';
 import './FeedMasonry.css';
 import { postApi, type Post } from '@/api/services/postApi';
 
@@ -50,13 +51,19 @@ const FeedMasonry: React.FC = () => {
         }
     };
 
+    const getCategoryFromPost = (post: Post): string => {
+        if (post.mood) return post.mood;
+        // Default categories based on content
+        const categories = ['Serene', 'Nostalgic', 'Joyful', 'Peaceful', 'Growth'];
+        return categories[Math.floor(Math.random() * categories.length)];
+    };
+
     if (loading) {
         return (
             <main className="feed-main">
                 <div className="feed-content">
                     <div className="loading-container">
                         <div className="loading-spinner"></div>
-                        {/* <p>Loading your feed...</p> */}
                     </div>
                 </div>
             </main>
@@ -94,8 +101,10 @@ const FeedMasonry: React.FC = () => {
 
     return (
         <main className="feed-main">
-            {/* Feed Content */}
             <div className="feed-content">
+                {/* Category Filter */}
+                <CategoryFilter />
+
                 <div className="masonry-grid">
                     {/* Welcome announcement */}
                     <div className="announcement-card">
@@ -111,21 +120,22 @@ const FeedMasonry: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Render posts */}
-                    {posts.map((post) => {
-                        // Determine post type based on content or other criteria
-                        const postType = post.mood ? 'journey' : 'blog';
+                    {/* Render posts with FeedCard */}
+                    {posts.map((post, index) => {
+                        // Vary aspect ratio for visual interest
+                        const aspectRatio = index % 3 === 0 ? 'square' : 'auto';
 
                         return (
-                            <PostCard
+                            <FeedCard
                                 key={post.id}
-                                imageUrl={post.content_preview || 'https://via.placeholder.com/400x300'}
-                                title={post.title || post.content.substring(0, 50) + '...'}
+                                imageUrl={post.content_preview || 'https://via.placeholder.com/600x800'}
+                                title={post.title || undefined}
+                                category={getCategoryFromPost(post)}
                                 authorName={post.author.display_name || post.author.username}
-                                authorAvatar={post.author.avatar_url || 'https://via.placeholder.com/40'}
-                                isVideo={false}
-                                alt={post.title || 'Post image'}
-                                postType={postType as 'blog' | 'journey'}
+                                authorAvatar={post.author.avatar_url}
+                                likes={Math.floor(Math.random() * 3000)} // Mock likes for now
+                                isLiked={false}
+                                aspectRatio={aspectRatio}
                             />
                         );
                     })}
@@ -142,16 +152,7 @@ const FeedMasonry: React.FC = () => {
                         ) : (
                             <button
                                 onClick={loadMore}
-                                style={{
-                                    padding: '0.75rem 2rem',
-                                    background: '#3498db',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    fontSize: '1rem',
-                                    fontWeight: '500',
-                                }}
+                                className="load-more-button"
                             >
                                 Load More
                             </button>

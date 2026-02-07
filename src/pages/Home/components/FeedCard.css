@@ -1,0 +1,193 @@
+.feed-card {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: var(--spacing-6);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background-color: var(--border-warm);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.feed-card:hover {
+    box-shadow: var(--shadow-xl);
+}
+
+.feed-card-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feed-card-image.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.feed-card:hover .feed-card-image {
+    transform: scale(1.05);
+}
+
+.feed-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 100%);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.feed-card-bookmark {
+    position: absolute;
+    top: var(--spacing-3);
+    right: var(--spacing-3);
+    padding: var(--spacing-2);
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius-full);
+    border: none;
+    color: white;
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feed-card:hover .feed-card-bookmark {
+    opacity: 1;
+}
+
+.feed-card-bookmark:hover {
+    background-color: white;
+    color: var(--primary);
+}
+
+.feed-card-bookmark .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.feed-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-5);
+    z-index: 1;
+}
+
+.feed-card-tags {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    flex-wrap: wrap;
+}
+
+.feed-card-tag {
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: white;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feed-card-tag.bg-blue-500\/80 {
+    background-color: rgba(59, 130, 246, 0.8);
+}
+
+.feed-card-tag.bg-primary\/80 {
+    background-color: rgba(238, 124, 43, 0.8);
+}
+
+.feed-card-tag.bg-green-600\/80 {
+    background-color: rgba(22, 163, 74, 0.8);
+}
+
+.feed-card-tag.bg-white\/20 {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.feed-card-title {
+    color: white;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-2);
+    line-height: var(--line-height-tight);
+}
+
+.feed-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.feed-card-author {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.feed-card-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.feed-card-author-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.feed-card-likes {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    padding: 0;
+    transition: color var(--transition-fast);
+}
+
+.feed-card-likes:hover {
+    color: white;
+}
+
+.feed-card-likes .material-symbols-outlined {
+    font-size: 16px;
+}
+
+.feed-card-likes .material-symbols-outlined.filled {
+    font-variation-settings: 'FILL' 1;
+    color: var(--primary);
+}
+
+.feed-card-likes-count {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .feed-card {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .feed-card-content {
+        padding: var(--spacing-4);
+    }
+
+    .feed-card-title {
+        font-size: var(--font-size-base);
+    }
+}

@@ -1,20 +1,14 @@
 .notification-dropdown {
     position: absolute;
     right: 0;
-    /* Aligned with container right edge, moving left from -10px */
     top: 100%;
-    margin-top: 0.3rem;
-    margin-right: 7rem;
-    /* mt-2 */
+    margin-top: 0.5rem;
     width: 22rem;
-    /* w-88 between 80 and 96 */
     max-width: 90vw;
-    /* Prevent overflow on mobile */
-    background-color: #ffffff;
-    /* Explicitly white as requested */
-    border-radius: 1rem;
+    background-color: white;
+    border-radius: var(--radius-2xl);
     box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-light);
     overflow: hidden;
     z-index: 100;
     color: var(--text-primary);
@@ -23,9 +17,6 @@
 @media (min-width: 768px) {
     .notification-dropdown {
         width: 24rem;
-        /* md:w-96 */
-        right: 0;
-        /* Standard alignment on desktop */
     }
 }
 
@@ -34,28 +25,24 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    /* px-5 py-4 */
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .notification-title {
-    font-size: 1rem;
-    /* text-base */
-    font-weight: 700;
-    /* font-bold */
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0;
 }
 
 .mark-read-btn {
-    font-size: 0.75rem;
-    /* text-xs */
-    font-weight: 700;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
     color: var(--primary);
     background: none;
     border: none;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: opacity var(--transition-fast);
 }
 
 .mark-read-btn:hover {
@@ -67,31 +54,26 @@
     flex-direction: column;
     max-height: 60vh;
     overflow-y: auto;
-    /* Ensure no horizontal scroll */
     overflow-x: hidden;
 }
 
 .notification-item {
     display: flex;
     gap: 0.75rem;
-    /* gap-3 */
     padding: 1rem 1.25rem;
-    /* px-5 py-4 */
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-fast);
     cursor: pointer;
     position: relative;
     text-align: left;
     align-items: flex-start;
-    /* Align top for long text */
 }
 
 .notification-item:hover {
-    background-color: var(--background-hover);
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .notification-item.unread {
-    background-color: rgba(var(--primary-rgb), 0.05);
-    /* bg-primary/5 */
+    background-color: rgba(238, 124, 43, 0.05);
 }
 
 .unread-indicator {
@@ -100,7 +82,6 @@
     top: 0;
     bottom: 0;
     width: 0.25rem;
-    /* w-1 */
     background-color: var(--primary);
 }
 
@@ -111,21 +92,24 @@
 
 .notification-avatar {
     width: 2.5rem;
-    /* size-10 */
     height: 2.5rem;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.875rem;
-    /* text-sm */
-    font-weight: 700;
-    background-color: var(--input-bg);
-    /* fallback */
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    background-color: var(--bg-warm);
     color: var(--text-secondary);
 }
 
-/* Hardcoded colors for now to match utility classes logic */
+.notification-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-full);
+}
+
 .notification-avatar.bg-purple-100 {
     background-color: #f3e8ff;
     color: #9333ea;
@@ -137,33 +121,27 @@
 }
 
 .notification-avatar.bg-gray-100 {
-    background-color: var(--input-bg);
+    background-color: var(--bg-warm);
     color: var(--text-secondary);
 }
 
 .notification-avatar.\!bg-primary\/10 {
-    background-color: rgba(var(--primary-rgb), 0.1);
+    background-color: rgba(238, 124, 43, 0.1);
     color: var(--primary);
 }
-
 
 .notification-badge {
     position: absolute;
     bottom: -0.25rem;
-    /* -bottom-1 */
     right: -0.25rem;
-    /* -right-1 */
     color: white;
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     padding: 2px;
     display: flex;
-    /* IMPORTANT for centering icon */
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 0 2px var(--surface);
-    /* ring-2 ring-surface */
+    box-shadow: 0 0 0 2px white;
     width: 1.25rem;
-    /* Fixed size for badge circle */
     height: 1.25rem;
 }
 
@@ -185,7 +163,6 @@
 
 .notification-icon-symbol {
     font-size: 12px;
-    /* Small icon for badge */
     font-variation-settings: 'FILL' 1;
     display: block;
     line-height: 1;
@@ -196,60 +173,52 @@
     flex-direction: column;
     flex: 1;
     gap: 0.25rem;
-    /* gap-1 */
     min-width: 0;
-    /* Crucial for flex child wrapping */
 }
 
 .notification-text {
-    font-size: 0.875rem;
-    /* text-sm */
+    font-size: var(--font-size-sm);
     color: var(--text-primary);
     line-height: 1.375;
-    /* leading-snug */
     margin: 0;
-    /* Force wrapping */
     white-space: normal;
     overflow-wrap: break-word;
     word-break: break-word;
 }
 
 .notification-actor {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 }
 
 .notification-highlight {
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: var(--text-secondary);
 }
 
 .notification-time {
-    font-size: 0.75rem;
-    /* text-xs */
+    font-size: var(--font-size-xs);
     color: var(--text-secondary);
-    /* or primary for unread? design uses primary for one, secondary for others. logic in component needed if strict adherence */
     margin-top: 0.125rem;
 }
 
 .notification-item.unread .notification-time {
     color: var(--primary);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 }
 
 .view-all-notifications {
     display: block;
     padding: 0.75rem;
     text-align: center;
-    font-size: 0.875rem;
-    /* text-sm */
-    font-weight: 700;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
     color: var(--text-secondary);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-light);
     text-decoration: none;
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
 }
 
 .view-all-notifications:hover {
     color: var(--primary);
-    background-color: var(--background-hover);
+    background-color: rgba(0, 0, 0, 0.03);
 }

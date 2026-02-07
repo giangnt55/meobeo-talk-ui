@@ -111,6 +111,43 @@ export const Navbar: React.FC = () => {
               <div className="navbar-actions">
                 {isAuthenticated ? (
                   <>
+                    {/* Create+ Dropdown */}
+                    <div className="create-dropdown-wrapper">
+                      <button className="create-dropdown-btn">
+                        <span>Create</span>
+                        <span className="material-symbols-outlined">expand_more</span>
+                      </button>
+                      <div className="create-dropdown-menu">
+                        <Link to="/blog/create" className="create-menu-item">
+                          <div className="create-menu-icon create-icon-blog">
+                            <span className="material-symbols-outlined">edit_note</span>
+                          </div>
+                          <div className="create-menu-content">
+                            <span className="create-menu-title">New Blog</span>
+                            <span className="create-menu-subtitle">Write a story</span>
+                          </div>
+                        </Link>
+                        <Link to="/memories/create" className="create-menu-item">
+                          <div className="create-menu-icon create-icon-memory">
+                            <span className="material-symbols-outlined">add_a_photo</span>
+                          </div>
+                          <div className="create-menu-content">
+                            <span className="create-menu-title">New Memory</span>
+                            <span className="create-menu-subtitle">Capture a moment</span>
+                          </div>
+                        </Link>
+                        <Link to="/journey/create" className="create-menu-item">
+                          <div className="create-menu-icon create-icon-journey">
+                            <span className="material-symbols-outlined">flight</span>
+                          </div>
+                          <div className="create-menu-content">
+                            <span className="create-menu-title">New Journey</span>
+                            <span className="create-menu-subtitle">Start a collection</span>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+
                     <div className="relative">
                       <button
                         className="notification-btn"

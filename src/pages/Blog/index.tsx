@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BlogPage: React.FC = () => {
+    const navigate = useNavigate();
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeTab, setActiveTab] = useState('Discover');
 
@@ -93,8 +95,8 @@ const BlogPage: React.FC = () => {
                             </span>
                             <span
                                 className={`absolute bottom-0 h-[3px] w-full rounded-t-sm transition-all ${activeTab === 'My Blogs'
-                                        ? 'bg-text-main dark:bg-primary'
-                                        : 'bg-transparent group-hover:bg-primary/30'
+                                    ? 'bg-text-main dark:bg-primary'
+                                    : 'bg-transparent group-hover:bg-primary/30'
                                     }`}
                             ></span>
                         </button>
@@ -108,8 +110,8 @@ const BlogPage: React.FC = () => {
                             </span>
                             <span
                                 className={`absolute bottom-0 h-[3px] w-full rounded-t-sm transition-all ${activeTab === 'Discover'
-                                        ? 'bg-text-main dark:bg-primary'
-                                        : 'bg-transparent group-hover:bg-primary/30'
+                                    ? 'bg-text-main dark:bg-primary'
+                                    : 'bg-transparent group-hover:bg-primary/30'
                                     }`}
                             ></span>
                         </button>
@@ -123,8 +125,8 @@ const BlogPage: React.FC = () => {
                             key={category}
                             onClick={() => setActiveCategory(category)}
                             className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${activeCategory === category
-                                    ? 'bg-primary text-white'
-                                    : 'bg-[#efedeb] dark:bg-[#2d241b] text-text-muted hover:bg-[#e6e0db] dark:hover:bg-[#3e322a]'
+                                ? 'bg-primary text-white'
+                                : 'bg-[#efedeb] dark:bg-[#2d241b] text-text-muted hover:bg-[#e6e0db] dark:hover:bg-[#3e322a]'
                                 }`}
                         >
                             {category}
@@ -135,7 +137,11 @@ const BlogPage: React.FC = () => {
                 {/* Blog Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 pb-12">
                     {filteredPosts.map((post) => (
-                        <article key={post.id} className="flex flex-col gap-3 group cursor-pointer">
+                        <article
+                            key={post.id}
+                            className="flex flex-col gap-3 group cursor-pointer"
+                            onClick={() => navigate(`/blog/${post.id}`)}
+                        >
                             <div className="overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1">
                                 <div
                                     className="w-full bg-center bg-no-repeat aspect-[4/5] bg-cover transform transition-transform duration-500 group-hover:scale-105"

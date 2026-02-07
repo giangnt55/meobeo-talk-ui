@@ -1,56 +1,41 @@
 .feed-main {
     flex: 1;
-    border-left: 1px solid var(--border-light);
-    border-right: 1px solid var(--border-light);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-6) var(--spacing-4);
 }
 
-/* Sticky Header */
-.feed-header {
-    position: sticky;
-    top: 0;
-    z-index: var(--z-sticky);
-    background-color: rgba(248, 246, 246, 0.8);
-    backdrop-filter: blur(12px);
-    padding: var(--spacing-3) var(--spacing-6);
-    border-bottom: 1px solid var(--border-light);
-}
-
-.feed-header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.feed-title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
+@media (min-width: 768px) {
+    .feed-main {
+        padding: var(--spacing-6) var(--spacing-8);
+    }
 }
 
 /* Feed Content */
 .feed-content {
-    padding: var(--spacing-4) var(--spacing-6);
+    width: 100%;
 }
 
 /* Masonry Grid */
 .masonry-grid {
     columns: 1;
-    column-gap: var(--spacing-4);
+    column-gap: 1.5rem;
 }
 
-@media (min-width: 480px) {
+@media (min-width: 640px) {
     .masonry-grid {
         columns: 2;
     }
 }
 
-@media (min-width: 720px) {
+@media (min-width: 1024px) {
     .masonry-grid {
         columns: 3;
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
     .masonry-grid {
         columns: 4;
     }
@@ -103,50 +88,15 @@
     margin-top: var(--spacing-1);
 }
 
-/* Trending Card */
-.trending-card {
-    break-inside: avoid;
-    padding: var(--spacing-4);
-    background-color: var(--background-white);
-    border-radius: var(--radius-xl);
-    border: 1px solid var(--border-light);
-    margin-bottom: var(--spacing-4);
-}
-
-.trending-card-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-3);
-}
-
-.trending-hashtag {
-    color: var(--primary);
-}
-
-.trending-card-posts {
-    font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
-    margin-bottom: var(--spacing-2);
-}
-
-.trending-card-link {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--primary);
-    text-decoration: none;
-}
-
-.trending-card-link:hover {
-    text-decoration: underline;
-}
-
 /* Loading Indicator */
 .loading-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     padding: var(--spacing-8) 0;
     margin-top: var(--spacing-4);
+    gap: var(--spacing-2);
 }
 
 .loading-spinner {
@@ -164,73 +114,37 @@
     }
 }
 
+/* Load More Button */
+.load-more-button {
+    padding: 0.75rem 2rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.load-more-button:hover {
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.load-more-button:active {
+    transform: translateY(0);
+}
 
 /* Responsive */
-/* Mobile styles */
 @media (max-width: 767px) {
     .feed-main {
-        border: none;
+        padding: var(--spacing-4);
     }
 
-    .feed-header {
-        padding: var(--spacing-3) var(--spacing-4);
-    }
-
-    .feed-header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-2);
-    }
-
-    .feed-search {
-        width: 100%;
-    }
-
-    .feed-content {
-        padding: var(--spacing-3) var(--spacing-4);
-    }
-
-    /* Single column on mobile */
     .masonry-grid {
         columns: 1 !important;
     }
-}
-
-/* Tablet */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .feed-main {
-        border: none;
-    }
-
-    .feed-content {
-        padding: var(--spacing-4);
-    }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-    .feed-main {
-        border-left: 1px solid var(--border-light);
-        border-right: 1px solid var(--border-light);
-    }
-}
-
-
-/* Custom styles for feed search bar */
-.feed-search {
-    width: 16rem;
-    /* 256px */
-    background-color: rgba(0, 0, 0, 0.05);
-    border: 1px solid transparent;
-    transition: all var(--transition-fast);
-}
-
-.feed-search:focus-within {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-.feed-search .search-icon {
-    color: var(--text-tertiary);
-    font-size: var(--font-size-lg);
 }

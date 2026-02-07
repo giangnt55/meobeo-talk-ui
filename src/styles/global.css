@@ -9,15 +9,35 @@ html {
 }
 
 body {
-  font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #181311;
-  background-color: #f8f6f6;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  line-height: var(--line-height-normal);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 button {
   font-family: inherit;
+}
+
+/* Utility Classes */
+.polaroid-tilt-left {
+  transform: rotate(-1.5deg);
+}
+
+.polaroid-tilt-right {
+  transform: rotate(1.2deg);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* View Transitions API - Smooth page transitions */

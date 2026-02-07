@@ -1,11 +1,10 @@
 :root {
   /* Primary Colors */
-  /* Primary Colors */
-  --primary: #ec5b13;
-  --primary-rgb: 236, 91, 19;
-  --primary-hover: #d54e0f;
-  --primary-light: rgba(236, 91, 19, 0.1);
-  --primary-dark: #b33f0a;
+  --primary: #ee7c2b;
+  --primary-rgb: 238, 124, 43;
+  --primary-hover: #d66b1f;
+  --primary-light: rgba(238, 124, 43, 0.1);
+  --primary-dark: #c45a13;
 
   /* Secondary Colors */
   --secondary: #ad2bee;
@@ -13,6 +12,13 @@
   --secondary-hover: #9524d4;
   --secondary-light: rgba(173, 43, 238, 0.1);
   --secondary-dark: #7d1faa;
+
+  /* Warm Color Palette */
+  --espresso: #2d241e;
+  --taupe: #897261;
+  --bg-warm: #f8f7f6;
+  --surface: #fbfaf9;
+  --border-warm: #e6e0db;
 
   /* Background Colors */
   --background-light: #f8f6f6;

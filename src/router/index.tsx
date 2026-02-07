@@ -22,6 +22,9 @@ import { CreateJournalPage } from '@/pages/CreateJournal';
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
 import BlogPage from '@/pages/Blog';
+import BlogDetailPage from '@/pages/BlogDetail';
+import CreateBlog from '@/pages/CreateBlog';
+import { MemoryCreatePage } from '@/pages/MemoryCreate';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
 import { PublicLayout } from '@/layouts/PublicLayout';
@@ -62,16 +65,31 @@ export const router = createBrowserRouter([
 
       {
         path: 'home',
-        element: (
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        ),
+        // element: (
+        //   <ProtectedRoute>
+        //     <Home />
+        //   </ProtectedRoute>
+        // ),
+        element: <Home />
       },
 
       {
         path: 'blog',
         element: <BlogPage />,
+      },
+
+      {
+        path: 'blog/:id',
+        element: <BlogDetailPage />,
+      },
+
+      {
+        path: 'blog/create',
+        element: (
+          <ProtectedRoute>
+            <CreateBlog />
+          </ProtectedRoute>
+        ),
       },
 
       // {
@@ -88,9 +106,20 @@ export const router = createBrowserRouter([
       // },
       {
         path: 'memories/create',
-        element: <CreateJourney />,
+        element: (
+          <ProtectedRoute>
+            <MemoryCreatePage />
+          </ProtectedRoute>
+        ),
       },
-      // { path: '/memories/create', element: <CreateJourney /> },
+      {
+        path: 'journey/create',
+        element: (
+          <ProtectedRoute>
+            <CreateJourney />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: 'templates',
         element: <TemplatesPage />,

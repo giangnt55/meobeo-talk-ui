@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { SEO } from '@/components/common/SEO/SEO';
 import './JourneyDetail.css';
 
@@ -78,7 +78,7 @@ const JOURNEY_DATA = {
 };
 
 export const JourneyDetailPage: React.FC = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return (
         <div className="journey-detail-page">

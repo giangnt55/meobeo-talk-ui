@@ -1,41 +1,57 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { MainLayout } from '@/layouts/MainLayout';
+import { PublicLayout } from '@/layouts/PublicLayout';
+import { ProtectedRoute } from '@/components/common/ProtectedRoute';
+
+// Pages
+import Landing from '@/pages/Landing';
+import Home from '@/pages/Home';
 import { LoginPage } from '@/pages/Login';
+import { RegisterPage } from '@/pages/Register';
+import { VerifyEmailPage } from '@/pages/VerifyEmail';
+import { WelcomePage } from '@/pages/Welcome';
+import { AboutPage } from '@/pages/About';
+import { NotFoundPage } from '@/pages/NotFound';
+
+// Onboarding
 import { ProfileSetupPage } from '@/pages/Onboarding/ProfileSetup';
 import { InterestsSelectionPage } from '@/pages/Onboarding/InterestsSelection';
 import { FollowUsersPage } from '@/pages/Onboarding/FollowUsers';
-// import { TimelinePage } from '@/pages/Timeline'; // Removed unused import
-// import { GalleryPage } from '@/pages/Gallery'; // Removed unused import
-import { MemoryDetailPage } from '@/pages/MemoryDetail'; // Removed unused import
-import { JourneyDetailPage } from '@/pages/JourneyDetail';
-import { TemplatesPage } from '@/pages/Templates';
-import { DecorationsPage } from '@/pages/Decorations';
-import { NotFoundPage } from '@/pages/NotFound';
-import { RegisterPage } from '@/pages/Register';
-import { VerifyEmailPage } from '@/pages/VerifyEmail';
-import { AboutPage } from '@/pages/About';
-import { MemoriesPage } from '@/pages/Memories';
-import { CreateJourney } from '@/pages/CreateJourney';
-import { WelcomePage } from '@/pages/Welcome';
-import { ProfileSettingsPage } from '@/pages/Settings/Profile';
-import { ProfilePage } from '@/pages/Profile';
-import { CreateJournalPage } from '@/pages/CreateJournal';
-import Landing from '@/pages/Landing';
-import Home from '@/pages/Home';
+
+// Blog
 import BlogPage from '@/pages/Blog';
 import BlogDetailPage from '@/pages/BlogDetail';
 import CreateBlog from '@/pages/CreateBlog';
-import { MemoryCreatePage } from '@/pages/MemoryCreate';
-import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
-import { PublicLayout } from '@/layouts/PublicLayout';
+// Memories & Journeys
+import { MemoriesPage } from '@/pages/Memories';
+import { MemoryDetailPage } from '@/pages/MemoryDetail';
+import { MemoryCreatePage } from '@/pages/MemoryCreate';
+import { JourneyDetailPage } from '@/pages/JourneyDetail';
+import { CreateJourney } from '@/pages/CreateJourney';
+
+// Profile & Settings
+import { ProfilePage } from '@/pages/Profile';
+import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 
 export const router = createBrowserRouter([
-  // Auth routes (no layout)
+  // --- Auth Routes ---
   { path: '/login', element: <LoginPage /> },
   { path: '/signup', element: <RegisterPage /> },
   { path: '/verify-email', element: <VerifyEmailPage /> },
+  { path: '/welcome', element: <WelcomePage /> },
 
+  // --- Onboarding Routes ---
+  {
+    path: '/onboarding',
+    children: [
+      { path: 'profile', element: <ProfileSetupPage /> },
+      { path: 'interests', element: <InterestsSelectionPage /> },
+      { path: 'follow', element: <FollowUsersPage /> },
+    ],
+  },
+
+  // --- Public Layout Routes ---
   {
     path: '/about',
     element: (
@@ -45,45 +61,17 @@ export const router = createBrowserRouter([
     ),
   },
 
-  { path: '/welcome', element: <WelcomePage /> },
-
-  {
-    path: '/onboarding',
-    children: [
-      { path: 'profile', element: <ProfileSetupPage /> },
-      { path: 'interests', element: <InterestsSelectionPage /> },
-      { path: 'follow', element: <FollowUsersPage /> },
-    ],
-  },
+  // --- Main Application Routes ---
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      {
-        index: true,
-        element: <Landing />,
-      },
+      { index: true, element: <Landing /> },
+      { path: 'home', element: <Home /> },
 
-      {
-        path: 'home',
-        // element: (
-        //   <ProtectedRoute>
-        //     <Home />
-        //   </ProtectedRoute>
-        // ),
-        element: <Home />
-      },
-
-      {
-        path: 'blog',
-        element: <BlogPage />,
-      },
-
-      {
-        path: 'blog/:id',
-        element: <BlogDetailPage />,
-      },
-
+      // Blog
+      { path: 'blog', element: <BlogPage /> },
+      { path: 'blog/:id', element: <BlogDetailPage /> },
       {
         path: 'blog/create',
         element: (
@@ -93,18 +81,9 @@ export const router = createBrowserRouter([
         ),
       },
 
-      // {
-      //   path: 'timeline',
-      //   element: <TimelinePage />,
-      // },
-      // {
-      //   path: 'gallery',
-      //   element: <GalleryPage />,
-      // },
-      {
-        path: 'memories/:id',
-        element: <MemoryDetailPage />,
-      },
+      // Memories
+      { path: 'memories', element: <MemoriesPage /> },
+      { path: 'memories/:id', element: <MemoryDetailPage /> },
       {
         path: 'memories/create',
         element: (
@@ -113,6 +92,9 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+
+      // Journeys
+      { path: 'memories/journeys/:id', element: <JourneyDetailPage /> },
       {
         path: 'journey/create',
         element: (
@@ -121,45 +103,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: 'journal/create',
-        element: (
-          <ProtectedRoute>
-            <CreateJournalPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'memories/journeys/:id',
-        element: <JourneyDetailPage />,
-      },
-      {
-        path: 'templates',
-        element: <TemplatesPage />,
-      },
-      {
-        path: 'decorations',
-        element: <DecorationsPage />,
-      },
-      {
-        path: 'memories',
-        element: <MemoriesPage />,
-      },
-      {
-        path: 'profile/:username',
-        element: <ProfilePage />,
-      },
-      {
-        path: 'journal/create',
-        element: <CreateJournalPage />,
-      },
-      {
-        path: 'settings/profile',
-        element: <ProfileSettingsPage />,
-      },
+
+      // Profile & Settings
+      { path: 'profile/:username', element: <ProfilePage /> },
+      { path: 'settings/profile', element: <ProfileSettingsPage /> },
     ],
   },
 
+  // --- Catch All ---
   {
     path: '*',
     element: (

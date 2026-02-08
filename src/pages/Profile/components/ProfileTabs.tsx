@@ -17,19 +17,19 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
                     className={`tab-item ${activeTab === 'posts' ? 'active' : ''}`}
                     onClick={() => setActiveTab('posts')}
                 >
-                    Blog Posts
+                    Bài Viết
                 </button>
                 <button
                     className={`tab-item ${activeTab === 'journal' ? 'active' : ''}`}
                     onClick={() => setActiveTab('journal')}
                 >
-                    Memory Journal
+                    Nhật Ký Ký Ức
                 </button>
                 <button
                     className={`tab-item ${activeTab === 'journeys' ? 'active' : ''}`}
                     onClick={() => setActiveTab('journeys')}
                 >
-                    Memory Journeys
+                    Hành Trình Ký Ức
                 </button>
             </nav>
         </div>

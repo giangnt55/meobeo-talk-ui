@@ -35,7 +35,7 @@ const TrendingSidebar: React.FC = () => {
                 <div className="sidebar-sections">
                     <div className="sidebar-card">
                         <p style={{ textAlign: 'center', padding: '1rem', color: '#888' }}>
-                            Loading...
+                            Đang tải nè...
                         </p>
                     </div>
                 </div>
@@ -49,16 +49,16 @@ const TrendingSidebar: React.FC = () => {
                 {/* Trending Topics */}
                 {trendingTopics.length > 0 && (
                     <div className="sidebar-card">
-                        <h3 className="sidebar-card-title">Trending Topics</h3>
+                        <h3 className="sidebar-card-title">Chủ Đề Đang Hot</h3>
                         <div className="trending-topics">
                             {trendingTopics.map((topic, index) => (
                                 <div key={index} className="topic-item">
                                     <p className="topic-meta">
-                                        {index + 1} · Trending
+                                        {index + 1} · Thịnh hành
                                     </p>
                                     <p className="topic-hashtag">{topic.hashtag}</p>
                                     <p className="topic-posts">
-                                        {topic.post_count.toLocaleString()} Posts
+                                        {topic.post_count.toLocaleString()} bài viết
                                     </p>
                                 </div>
                             ))}
@@ -69,7 +69,7 @@ const TrendingSidebar: React.FC = () => {
                 {/* Who to Follow */}
                 {suggestedUsers.length > 0 && (
                     <div className="sidebar-card">
-                        <h3 className="sidebar-card-title">Who to Follow</h3>
+                        <h3 className="sidebar-card-title">Gợi Ý Theo Dõi</h3>
                         <div className="suggested-users">
                             {suggestedUsers.map((user) => (
                                 <div key={user.id} className="user-item">
@@ -87,7 +87,7 @@ const TrendingSidebar: React.FC = () => {
                                             <p className="user-item-handle">@{user.username}</p>
                                         </div>
                                     </div>
-                                    <button className="follow-btn">Follow</button>
+                                    <button className="follow-btn">Theo dõi</button>
                                 </div>
                             ))}
                         </div>
@@ -98,7 +98,7 @@ const TrendingSidebar: React.FC = () => {
                 {trendingTopics.length === 0 && suggestedUsers.length === 0 && (
                     <div className="sidebar-card">
                         <p style={{ textAlign: 'center', padding: '1rem', color: '#888' }}>
-                            No trending topics or suggested users at the moment.
+                            Chưa có gì hot hết trơn.
                         </p>
                     </div>
                 )}

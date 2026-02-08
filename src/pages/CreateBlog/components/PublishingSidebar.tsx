@@ -39,30 +39,30 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
             <div className="publishing-sidebar">
                 {/* Publishing Card */}
                 <div className="publishing-card">
-                    <h3 className="card-title">Publishing</h3>
+                    <h3 className="card-title">Xuất bản</h3>
 
                     {/* Visibility Toggle */}
                     <div className="visibility-section">
-                        <label className="section-label">Visibility</label>
+                        <label className="section-label">Hiển thị</label>
                         <div className="visibility-toggle">
                             <button
                                 className={`toggle-btn ${visibility === 'public' ? 'active' : ''}`}
                                 onClick={() => onVisibilityChange('public')}
                             >
-                                Public
+                                Công khai
                             </button>
                             <button
                                 className={`toggle-btn ${visibility === 'private' ? 'active' : ''}`}
                                 onClick={() => onVisibilityChange('private')}
                             >
-                                Private
+                                Riêng tư
                             </button>
                         </div>
                     </div>
 
                     {/* Tags Input */}
                     <div className="tags-section">
-                        <label className="section-label">Tags</label>
+                        <label className="section-label">Thẻ</label>
                         <div className="tags-list">
                             {tags.map((tag) => (
                                 <span key={tag} className="tag-item">
@@ -82,7 +82,7 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
                             value={newTag}
                             onChange={(e) => setNewTag(e.target.value)}
                             onKeyDown={handleAddTag}
-                            placeholder="Add a tag..."
+                            placeholder="Thêm thẻ..."
                             className="tag-input"
                         />
                     </div>
@@ -90,10 +90,10 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
                     {/* Action Buttons */}
                     <div className="actions-section">
                         <button onClick={onPublish} className="publish-btn">
-                            Publish Now
+                            Xuất bản ngay
                         </button>
                         <button onClick={onSchedule} className="schedule-btn">
-                            Schedule for later
+                            Lên lịch sau
                         </button>
                     </div>
                 </div>
@@ -101,8 +101,8 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
                 {/* Helper Card */}
                 <div className="helper-card">
                     <p className="helper-text">
-                        Changes are auto-saved locally.<br />
-                        Last sync: <span className="sync-status">Successful</span>
+                        Thay đổi được tự động lưu cục bộ.<br />
+                        Đồng bộ lần cuối: <span className="sync-status">Thành công</span>
                     </p>
                 </div>
             </div>

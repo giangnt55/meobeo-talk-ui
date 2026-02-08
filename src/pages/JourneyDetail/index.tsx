@@ -5,41 +5,41 @@ import './JourneyDetail.css';
 
 // Mock Data matching the reference
 const JOURNEY_DATA = {
-    title: "Our Summer Adventure",
-    startDate: "June 15, 2023",
-    endDate: "June 20, 2023",
+    title: "Mùa Hè Phiêu Lưu Của Tụi Mình",
+    startDate: "15 Tháng 6, 2023",
+    endDate: "20 Tháng 6, 2023",
     events: [
         {
             id: 1,
-            title: "Arrival in Tokyo",
-            day: "Day 1",
-            time: "10:00 AM",
+            title: "Đặt chân đến Tokyo",
+            day: "Ngày 1",
+            time: "10:00 Sáng",
             type: "text",
-            content: "Landed at Narita. The humidity hit us immediately, but the excitement is real! Took the Skyliner to the city.",
+            content: "Hạ cánh xuống Narita. Độ ẩm làm tụi mình hơi ngợp, nhưng mà phấn khích lắm luôn! Bắt tàu Skyliner về thành phố nè.",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBTafzqKroLgex_bFA-sC0BuIJe_iW3G3_Qp5g42iGdGcmTRVtyuA8pfSngpcbaHziFsO4gDEc-Y_O9I2Qc0J4iZMvJ8Z9ZRAi_ZkPCg3O-kElIF-62Uh06AXhqWlXKOOlda3c0eBu1uS33wj_4sTWDvGI_KiPSiULT6pL6Iq2EB_F1vFPzZ7yzOZM8Bs-d6xZr0P7mkfEyZoSuVB6QpLEWr1NW0NFYH-Eb74LV5KP4cUkBWXFgbegApjm1hljMnV0QtrqZ7aqPlyc"
         },
         {
             id: 2,
-            title: "Visit to Senso-ji Temple",
-            day: "Day 1",
-            time: "2:00 PM",
+            title: "Thăm đền Senso-ji",
+            day: "Ngày 1",
+            time: "2:00 Chiều",
             type: "image",
             content: "https://lh3.googleusercontent.com/aida-public/AB6AXuBaNuK-8dVKJ7xHMP1RzOwFHwV2K0JodUNbjXwgGPmHt65Wm2B82Un8L_bHJ4OrxbBdoFBmPYKhvdeQ5fKNpTQ3DEao_LPq0ST3Aq2rZ9Ol9KQbwx7lF7CsDD93LA12YVj19IAdU4PXPn3J9mdyApoIdcT1Kw49_xD8ABo-tAyyhgtxV_cA-ujSs6Q3EugUvldYvYqvVLmhnAO-6D2lFzGeIwPFcEjRZqlYfxGvAorlSu4KgmfOCmqi8P9lbD6aXdIAAtbwyWKZ84o",
             timelineImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQyWRxUGyaMbbVT6d9UObfxZC4Ay3yUGqR6HWlcGHJNuqGoLBjGSU384Tb_6o0csdkL7pCkI5JOx-d345hlC4UUkoRpFaQ_TddhRmkJ-TnXEwgzhcGqy8lvXkf_ZmVGW1Ex6OZUIsFpYIKR4vkdpgUAVudqwN9FG5exuaJUrkl2MFqNm-AKIwvSsq_DkZTokvOaCCyp_owbgqesRAEQYGPW2CZwdw3dI1-y8x-aEHmbH-6vctXkpKNQkzIA5g2JbiD9eAaUi4Tif0"
         },
         {
             id: 3,
-            title: "Sushi Lunch at Tsukiji",
-            day: "Day 2",
-            time: "12:30 PM",
+            title: "Ăn trưa Sushi ở Tsukiji",
+            day: "Ngày 2",
+            time: "12:30 Trưa",
             type: "text",
             timelineImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuACSCZQZCfe_boWnst9xoY35Y3W7QRpQ8MfCotDjtQvOm6o0ArWWVgCKyFAvU794ZpyyBoDZxvJpDveRt4ZobtDZSnHsKn2Z02iRtrWCgn8qL-m_SX6VbDtXbeif5oTdPRwMP36dq_fdAbkODfzpUwZVEsKQUYSr0P15aTz5dHn1wHo0LE8PEyG7dfveFDZ00JVz-bHqaj7mh1Sp6pFK1PJCl-NDwjWynIcBEyAC_b-PLulIz0xLmq2C8Za-8VGNIljitSf1l3WaDI"
         },
         {
             id: 4,
-            title: "Shibuya Crossing",
-            day: "Day 2",
-            time: "5:00 PM",
+            title: "Giao lộ Shibuya",
+            day: "Ngày 2",
+            time: "5:00 Chiều",
             type: "video",
             content: "Video_004.mp4",
             fileSize: "0:45 • 24MB",
@@ -47,31 +47,31 @@ const JOURNEY_DATA = {
         },
         {
             id: 5,
-            title: "Departure from Narita",
-            day: "Day 5",
-            time: "11:00 AM",
+            title: "Tạm biệt Narita",
+            day: "Ngày 5",
+            time: "11:00 Sáng",
             type: "end"
         }
     ],
     highlights: [
         {
-            title: "Smiling faces",
-            location: "Yoyogi Park",
+            title: "Những nụ cười",
+            location: "Công viên Yoyogi",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtawcDwZekUZqaUdpxHv9cQAMBQgPyVCy720wXkYDX-YiD9dL3hR4tCWorDJleVaWQA3ZCq2NqAs8i3r4EugO1OSIfhRNwkjPPvVPMxTUAG8RMuNQyy7kJQmlJZbykFV5H4Y_2JWDrCwO4SHT3Jjs_bvKEhfqH2k6p1O5iW3nNFnyTj61fwngLr1yxEATBq5d_Zy0Q3E8hrjovmn2yAKdq-t-cOekLXT4LrFEL47VW2nT4SkNBGVnXOIeN11AKlkr_Id2P0MEWGKg"
         },
         {
-            title: "City Lights",
+            title: "Ánh đèn thành phố",
             location: "Shinjuku",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCLaSosYp18JJOxiuQvAzzXGM03SRh4CKN3V8H47VutL09TUYSoR6CUQRp_htrcaRCiLabnZUcJL7sGmzkLvjsF2Tn-151C59Y7bJ8ipBTyGMgLLEt59tntLeRMd9JjW0wn24K-VCDBboaJ06Qiq0kMRnERRP-pwDQJmn89J2EdJXlFiXrgFqjU-ysr2s7JAcJtxVXKQ7A6akqWzdqkvFYI5AImVWURHauH8OW8Z1SR8yBJExe7S3wljI9zSQPfPHFQgWxOgE-0Klk"
         },
         {
-            title: "Delicious Eats",
-            location: "Ramen Street",
+            title: "Món ngon khó cưỡng",
+            location: "Phố Ramen",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8W7NygV7LJkgufgSF5b_j_unXy5JYEudjfybtmZM8CnTeIX953xwe0Coj6x3M0wlsZI4s_foWHQ0q2BghQIl-sM6Sul-VXzYvBXCPQ4YoWIe4sACb33rixFoYafhB4gS_GPV6v4kCFVjs6jH-noHcTG6_4zWuKahWuAlTLcge3dJ4gWW5Q6csa3EbY4_Ih_LaghE0vkow4IC4RNb5nfSO60QOfFYs6Q6G-ALA5Os5iYY1gLm9hcPXTW1YQOPds6cLiJBwaU3kYS4"
         },
         {
-            title: "Night Walk",
-            location: "Gion District",
+            title: "Dạo đêm",
+            location: "Quận Gion",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFWW7X52_sMKlcJxCKYRyHVPiHX8phbtKT3qpSXHRyfCmkrHD8gn6WeDbBRHtQ_ST61wf4F2FwMQB2cQIuT0JgcAinNIUVfIi982YBZnqSgRnKYkVImq9MPJmwigH9QXihq0Sky5I7wjJTiGMiYxqJI6-NLnzPvZvKNJTqAjK8i2e0f_Xd6t80eQMXKiOHg2981uexMwVJ52Y9RCRt4xRg-ogQmMqaiQkxx5oY58GF-fphH4rXjOlxd2P2y1ahSJI3P-bM2evu5IM"
         }
     ]
@@ -83,8 +83,8 @@ export const JourneyDetailPage: React.FC = () => {
     return (
         <div className="journey-detail-page">
             <SEO
-                title="Journey Story - MeoBeo Talk"
-                description="Our Summer Adventure Journey"
+                title="Câu Chuyện Hành Trình - MeoBeo Talk"
+                description="Hành trình Mùa Hè Phiêu Lưu Của Tụi Mình"
             />
 
             {/* Main Content */}
@@ -128,7 +128,7 @@ export const JourneyDetailPage: React.FC = () => {
                                 <div className="timeline-content-col">
                                     <div className="timeline-header">
                                         <p className="timeline-event-title">{event.title}</p>
-                                        <span className={`timeline-day-badge ${event.day === 'Day 1' ? 'badge-primary' : 'badge-secondary'}`}>
+                                        <span className={`timeline-day-badge ${event.day === 'Ngày 1' ? 'badge-primary' : 'badge-secondary'}`}>
                                             {event.day}
                                         </span>
                                     </div>
@@ -173,8 +173,8 @@ export const JourneyDetailPage: React.FC = () => {
                     {/* Horizontal Gallery */}
                     <div className="journey-gallery-section">
                         <div className="gallery-header">
-                            <h3>Memorable Moments</h3>
-                            <button className="view-all-btn">View All</button>
+                            <h3>Những Khoảnh Khắc Đáng Nhớ</h3>
+                            <button className="view-all-btn">Xem Tất Cả</button>
                         </div>
                         <div className="gallery-scroll-container">
                             {JOURNEY_DATA.highlights.map((highlight, idx) => (

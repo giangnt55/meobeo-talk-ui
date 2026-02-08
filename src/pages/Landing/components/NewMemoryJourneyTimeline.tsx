@@ -4,7 +4,7 @@ const NewMemoryJourneyTimeline: React.FC = () => {
     return (
         <div className="w-full max-w-[960px] px-6 py-20">
             <h2 className="text-[#181411] dark:text-white text-3xl font-bold text-center mb-16">
-                Your Memory Journey
+                Hành Trình Ký Ức Của Bạn
             </h2>
             <div className="relative max-w-3xl mx-auto">
                 {/* Vertical Line */}
@@ -17,12 +17,12 @@ const NewMemoryJourneyTimeline: React.FC = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-6 p-6 rounded-2xl bg-white dark:bg-[#2c2018] border border-[#e6e0db] dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex-1">
-                            <span className="text-xs font-bold text-primary uppercase tracking-wide">Step 1</span>
+                            <span className="text-xs font-bold text-primary uppercase tracking-wide">Bước 1</span>
                             <h3 className="text-lg font-bold text-[#181411] dark:text-white mt-1">
-                                Create Your Sanctuary
+                                Tạo Góc Nhỏ Riêng
                             </h3>
                             <p className="text-[#897261] dark:text-gray-400 text-sm mt-2">
-                                Sign up and customize your personal profile. Choose your themes, privacy settings, and start your digital scrapbook.
+                                Đăng ký và trang trí hồ sơ cá nhân theo chất riêng. Chọn theme, cài đặt quyền riêng tư và bắt đầu cuốn sổ tay kỹ thuật số của bạn.
                             </p>
                         </div>
                         <div className="w-full sm:w-32 h-24 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
@@ -42,12 +42,12 @@ const NewMemoryJourneyTimeline: React.FC = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-6 p-6 rounded-2xl bg-white dark:bg-[#2c2018] border border-[#e6e0db] dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex-1">
-                            <span className="text-xs font-bold text-sage uppercase tracking-wide">Step 2</span>
+                            <span className="text-xs font-bold text-sage uppercase tracking-wide">Bước 2</span>
                             <h3 className="text-lg font-bold text-[#181411] dark:text-white mt-1">
-                                Capture & Curate
+                                Lưu Giữ & Chăm Chút
                             </h3>
                             <p className="text-[#897261] dark:text-gray-400 text-sm mt-2">
-                                Upload photos from your adventures. Use our built-in editor to add filters, stickers, and meaningful captions.
+                                Đăng tải những bức ảnh từ các chuyến đi. Dùng bộ chỉnh sửa xịn xò để thêm filter, sticker và những dòng chú thích ý nghĩa.
                             </p>
                         </div>
                         <div className="w-full sm:w-32 h-24 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
@@ -67,12 +67,12 @@ const NewMemoryJourneyTimeline: React.FC = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-6 p-6 rounded-2xl bg-white dark:bg-[#2c2018] border border-[#e6e0db] dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex-1">
-                            <span className="text-xs font-bold text-primary uppercase tracking-wide">Step 3</span>
+                            <span className="text-xs font-bold text-primary uppercase tracking-wide">Bước 3</span>
                             <h3 className="text-lg font-bold text-[#181411] dark:text-white mt-1">
-                                Share & Connect
+                                Chia Sẻ & Kết Nối
                             </h3>
                             <p className="text-[#897261] dark:text-gray-400 text-sm mt-2">
-                                Publish your stories to the world or keep them private. Connect with others who resonate with your journey.
+                                Khoe câu chuyện của bạn với cả thế giới hoặc giữ làm của riêng. Kết nối với những tâm hồn đồng điệu.
                             </p>
                         </div>
                         <div className="w-full sm:w-32 h-24 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">

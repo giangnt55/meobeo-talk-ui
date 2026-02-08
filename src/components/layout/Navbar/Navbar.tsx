@@ -92,17 +92,17 @@ export const Navbar: React.FC = () => {
               <nav className="navbar-links">
                 {isAuthenticated ? (
                   <>
-                    <Link to="/home" className="nav-link">Home</Link>
+                    <Link to="/home" className="nav-link">Trang Chủ</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
-                    <Link to="/memories" className="nav-link">Memories</Link>
-                    <Link to="/about" className="nav-link">About Us</Link>
+                    <Link to="/memories" className="nav-link">Ký Ức</Link>
+                    <Link to="/about" className="nav-link">Về Tụi Mình</Link>
                   </>
                 ) : (
                   <>
-                    <Link to="/home" className="nav-link">Home</Link>
+                    <Link to="/home" className="nav-link">Trang Chủ</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
-                    <Link to="/memories" className="nav-link">Memories</Link>
-                    <Link to="/about" className="nav-link">About Us</Link>
+                    <Link to="/memories" className="nav-link">Ký Ức</Link>
+                    <Link to="/about" className="nav-link">Về Tụi Mình</Link>
                     {/* <Link to="/contact" className="nav-link">Contact</Link> */}
                   </>
                 )}
@@ -114,7 +114,7 @@ export const Navbar: React.FC = () => {
                     {/* Create+ Dropdown */}
                     <div className="create-dropdown-wrapper">
                       <button className="create-dropdown-btn">
-                        <span>Create</span>
+                        <span>Tạo Mới</span>
                         <span className="material-symbols-outlined">expand_more</span>
                       </button>
                       <div className="create-dropdown-menu">
@@ -123,8 +123,8 @@ export const Navbar: React.FC = () => {
                             <span className="material-symbols-outlined">edit_note</span>
                           </div>
                           <div className="create-menu-content">
-                            <span className="create-menu-title">New Blog</span>
-                            <span className="create-menu-subtitle">Write a story</span>
+                            <span className="create-menu-title">Blog Mới</span>
+                            <span className="create-menu-subtitle">Viết câu chuyện</span>
                           </div>
                         </Link>
                         <Link to="/memories/create" className="create-menu-item">
@@ -132,8 +132,8 @@ export const Navbar: React.FC = () => {
                             <span className="material-symbols-outlined">add_a_photo</span>
                           </div>
                           <div className="create-menu-content">
-                            <span className="create-menu-title">New Memory</span>
-                            <span className="create-menu-subtitle">Capture a moment</span>
+                            <span className="create-menu-title">Ký Ức Mới</span>
+                            <span className="create-menu-subtitle">Lưu giữ khoảnh khắc</span>
                           </div>
                         </Link>
                         <Link to="/journey/create" className="create-menu-item">
@@ -141,8 +141,8 @@ export const Navbar: React.FC = () => {
                             <span className="material-symbols-outlined">flight</span>
                           </div>
                           <div className="create-menu-content">
-                            <span className="create-menu-title">New Journey</span>
-                            <span className="create-menu-subtitle">Start a collection</span>
+                            <span className="create-menu-title">Hành Trình Mới</span>
+                            <span className="create-menu-subtitle">Bắt đầu bộ sưu tập</span>
                           </div>
                         </Link>
                       </div>
@@ -194,16 +194,16 @@ export const Navbar: React.FC = () => {
                           <div className="dropdown-divider"></div>
                           <Link to="/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
                             <span className="material-symbols-outlined">person</span>
-                            Profile
+                            Hồ Sơ
                           </Link>
                           <Link to="/settings/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
                             <span className="material-symbols-outlined">settings</span>
-                            Settings
+                            Cài Đặt
                           </Link>
                           <div className="dropdown-divider"></div>
                           <button className="dropdown-item logout" onClick={handleLogout}>
                             <span className="material-symbols-outlined">logout</span>
-                            Logout
+                            Đăng Xuất
                           </button>
                         </div>
                       )}
@@ -216,14 +216,14 @@ export const Navbar: React.FC = () => {
                       onClick={() => navigate('/signup')}
                       className="start-blog-btn"
                     >
-                      Start Your Blog
+                      Bắt Đầu Viết Blog
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => navigate('/login')}
                       className="login-btn"
                     >
-                      Log In
+                      Đăng Nhập
                     </Button>
                   </>
                 )}

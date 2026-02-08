@@ -29,23 +29,23 @@ export const ProfileSettingsPage: React.FC = () => {
                                 <nav className="sidebar-nav">
                                     <a className="sidebar-link active" href="#">
                                         <span className="material-symbols-outlined">person</span>
-                                        <span className="link-text">Account</span>
+                                        <span className="link-text">Tài khoản</span>
                                     </a>
                                     <a className="sidebar-link" href="#">
                                         <span className="material-symbols-outlined">security</span>
-                                        <span className="link-text">Privacy & Safety</span>
+                                        <span className="link-text">Riêng tư & An toàn</span>
                                     </a>
                                     <a className="sidebar-link" href="#">
                                         <span className="material-symbols-outlined">notifications</span>
-                                        <span className="link-text">Notifications</span>
+                                        <span className="link-text">Thông báo</span>
                                     </a>
                                     <a className="sidebar-link" href="#">
                                         <span className="material-symbols-outlined">palette</span>
-                                        <span className="link-text">Appearance</span>
+                                        <span className="link-text">Giao diện</span>
                                     </a>
                                     <a className="sidebar-link" href="#">
                                         <span className="material-symbols-outlined">extension</span>
-                                        <span className="link-text">Connected Apps</span>
+                                        <span className="link-text">Ứng dụng kết nối</span>
                                     </a>
                                 </nav>
                             </div>
@@ -55,8 +55,8 @@ export const ProfileSettingsPage: React.FC = () => {
                         <main className="settings-main">
                             <div className="settings-card">
                                 <div className="section-heading">
-                                    <h2>Account Settings</h2>
-                                    <p>Manage your basic profile information and account security.</p>
+                                    <h2>Cài đặt tài khoản</h2>
+                                    <p>Quản lý thông tin cá nhân và bảo mật tài khoản.</p>
                                 </div>
 
                                 <section className="profile-header-card">
@@ -69,56 +69,56 @@ export const ProfileSettingsPage: React.FC = () => {
                                     <div className="profile-info">
                                         <div>
                                             <h3 className="profile-name">Jane Doe</h3>
-                                            <p className="profile-meta">Member since September 2023</p>
+                                            <p className="profile-meta">Thành viên từ tháng 9, 2023</p>
                                         </div>
                                         <div className="profile-actions">
-                                            <Button variant="outline" size="sm" rounded="full">Change Avatar</Button>
-                                            <Button variant="ghost" size="sm" rounded="full" className="text-error hover:bg-error-light">Remove</Button>
+                                            <Button variant="outline" size="sm" rounded="full">Đổi ảnh đại diện</Button>
+                                            <Button variant="ghost" size="sm" rounded="full" className="text-error hover:bg-error-light">Xóa</Button>
                                         </div>
                                     </div>
                                 </section>
 
                                 <section className="form-section">
-                                    <h3 className="section-title">Personal Information</h3>
+                                    <h3 className="section-title">Thông tin cá nhân</h3>
                                     <div className="form-grid">
                                         <Input
-                                            label="Display Name"
+                                            label="Tên hiển thị"
                                             value="Jane Doe"
                                             fullWidth
                                             endIcon={<span className="material-symbols-outlined text-[#896f61]">edit</span>}
                                             readOnly
                                         />
                                         <Input
-                                            label="Username"
+                                            label="Tên đăng nhập"
                                             value="@janedoe"
                                             fullWidth
                                             endIcon={<span className="material-symbols-outlined text-green-500">check_circle</span>}
                                             readOnly
                                         />
                                         <div className="col-span-full" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            <label className="text-sm font-bold ml-2">Bio</label>
+                                            <label className="text-sm font-bold ml-2">Giới thiệu</label>
                                             <textarea
                                                 className="textarea-field"
-                                                placeholder="Tell us a little about yourself..."
+                                                placeholder="Kể cho chúng tớ nghe một chút về bạn..."
                                                 defaultValue="Digital nomad, coffee enthusiast, and lover of all things design. Creating stories on Meobeo Talk."
                                             />
-                                            <span className="text-xs text-[#896f61] text-right mr-2">120/160 characters</span>
+                                            <span className="text-xs text-[#896f61] text-right mr-2">120/160 ký tự</span>
                                         </div>
                                         <div className="col-span-full relative">
                                             <Input
-                                                label="Email Address"
+                                                label="Địa chỉ Email"
                                                 type="email"
                                                 value="jane.doe@example.com"
                                                 fullWidth
                                                 readOnly
                                             />
-                                            <Button size="sm" variant="secondary" rounded="full" className="absolute right-2 top-[2rem] z-10 h-8 text-xs">Verify</Button>
+                                            <Button size="sm" variant="secondary" rounded="full" className="absolute right-2 top-[2rem] z-10 h-8 text-xs">Xác thực</Button>
                                         </div>
                                     </div>
                                 </section>
 
                                 <section className="form-section">
-                                    <h3 className="section-title">Preferences</h3>
+                                    <h3 className="section-title">Tùy chọn</h3>
                                     <div className="flex flex-col gap-4">
                                         <div className="pref-item">
                                             <div className="flex items-center gap-4">
@@ -126,8 +126,8 @@ export const ProfileSettingsPage: React.FC = () => {
                                                     <span className="material-symbols-outlined">visibility</span>
                                                 </div>
                                                 <div className="pref-label">
-                                                    <h4>Profile Visibility</h4>
-                                                    <p>Make your profile visible to search engines</p>
+                                                    <h4>Hiển thị hồ sơ</h4>
+                                                    <p>Cho phép tìm thấy hồ sơ của bạn trên trang tìm kiếm</p>
                                                 </div>
                                             </div>
                                             <Toggle
@@ -143,8 +143,8 @@ export const ProfileSettingsPage: React.FC = () => {
                                                     <span className="material-symbols-outlined">mark_email_unread</span>
                                                 </div>
                                                 <div className="pref-label">
-                                                    <h4>Marketing Emails</h4>
-                                                    <p>Receive news about product updates</p>
+                                                    <h4>Email quảng cáo</h4>
+                                                    <p>Nhận thông tin về các cập nhật mới nhất</p>
                                                 </div>
                                             </div>
                                             <Toggle
@@ -160,20 +160,20 @@ export const ProfileSettingsPage: React.FC = () => {
                                                     <span className="material-symbols-outlined">verified_user</span>
                                                 </div>
                                                 <div className="pref-label">
-                                                    <h4>Two-Factor Auth</h4>
-                                                    <p>Secure your account with 2FA</p>
+                                                    <h4>Xác thực 2 yếu tố</h4>
+                                                    <p>Bảo vệ tài khoản với 2FA</p>
                                                 </div>
                                             </div>
-                                            <Button variant="ghost" size="sm" className="text-primary font-bold">Setup</Button>
+                                            <Button variant="ghost" size="sm" className="text-primary font-bold">Thiết lập</Button>
                                         </div>
                                     </div>
                                 </section>
 
                                 <div className="settings-footer">
-                                    <a href="#" className="deactivate-link">Deactivate Account</a>
+                                    <a href="#" className="deactivate-link">Vô hiệu hóa tài khoản</a>
                                     <div className="footer-btn-group">
-                                        <Button variant="outline" rounded="full" className="flex-1 sm:flex-none">Cancel</Button>
-                                        <Button variant="primary" rounded="full" className="flex-1 sm:flex-none shadow-lg shadow-primary/30">Save Changes</Button>
+                                        <Button variant="outline" rounded="full" className="flex-1 sm:flex-none">Hủy</Button>
+                                        <Button variant="primary" rounded="full" className="flex-1 sm:flex-none shadow-lg shadow-primary/30">Lưu thay đổi</Button>
                                     </div>
                                 </div>
                             </div>

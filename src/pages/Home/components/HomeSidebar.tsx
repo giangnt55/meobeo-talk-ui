@@ -33,27 +33,27 @@ const HomeSidebar: React.FC = () => {
                         <nav className="sidebar-nav">
                             <a href="/" className="nav-item active">
                                 <FaHome className="nav-icon fill" />
-                                <p className="nav-text">Home</p>
+                                <p className="nav-text">Trang Chủ</p>
                             </a>
                             <a href="/explore" className="nav-item">
                                 <FaCompass className="nav-icon" />
-                                <p className="nav-text">Explore</p>
+                                <p className="nav-text">Khám Phá</p>
                             </a>
                             <a href="/notifications" className="nav-item">
                                 <FaBell className="nav-icon" />
-                                <p className="nav-text">Notifications</p>
+                                <p className="nav-text">Thông Báo</p>
                             </a>
                             <a href="/messages" className="nav-item">
                                 <FaEnvelope className="nav-icon" />
-                                <p className="nav-text">Messages</p>
+                                <p className="nav-text">Tin Nhắn</p>
                             </a>
                             <a href="/bookmarks" className="nav-item">
                                 <FaBookmark className="nav-icon" />
-                                <p className="nav-text">Bookmarks</p>
+                                <p className="nav-text">Đã Lưu</p>
                             </a>
                             <a href="/profile" className="nav-item">
                                 <FaUser className="nav-icon" />
-                                <p className="nav-text">Profile</p>
+                                <p className="nav-text">Hồ Sơ</p>
                             </a>
                         </nav>
                     </div>
@@ -61,7 +61,7 @@ const HomeSidebar: React.FC = () => {
 
                 {/* Create Post Button */}
                 <button className="create-post-btn">
-                    <span>Create Post</span>
+                    <span>Đăng Bài</span>
                 </button>
             </div>
         </header>

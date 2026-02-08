@@ -168,24 +168,24 @@ export const LoginPage: React.FC = () => {
                 className="welcome-image"
               />
               <h3 className="welcome-title">
-                Welcome Back to the Conversation.
+                Chào Mừng Bạn Trở Lại!
               </h3>
               <p className="welcome-subtitle">
-                Your community is waiting for your next big idea.
+                Cộng đồng đang chờ những ý tưởng tuyệt vời từ bạn đó.
               </p>
             </div>
 
             {/* Right Side - Form */}
             <div className="login-form-section">
               <div className="login-form-header">
-                <h1 className="form-title">Sign In</h1>
-                <p className="form-subtitle">Welcome back to the conversation.</p>
+                <h1 className="form-title">Vào Nhà Thôi</h1>
+                <p className="form-subtitle">Mừng bạn quay lại nha!</p>
               </div>
 
               <form onSubmit={handleSubmit} className="login-form">
                 <Input
-                  label="Email or Username"
-                  placeholder="Enter your email or username"
+                  label="Email hoặc Tên đăng nhập"
+                  placeholder="Nhập email hoặc tên nè"
                   value={formData.emailOrUsername}
                   onChange={(e) =>
                     setFormData({
@@ -199,8 +199,8 @@ export const LoginPage: React.FC = () => {
                 <div className="password-field">
                   <Input
                     type={showPassword ? 'text' : 'password'}
-                    label="Password"
-                    placeholder="Enter your password"
+                    label="Mật khẩu"
+                    placeholder="Nhập mật khẩu bí mật"
                     value={formData.password}
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
@@ -210,7 +210,7 @@ export const LoginPage: React.FC = () => {
                         type="button"
                         className="password-toggle"
                         onClick={() => setShowPassword(!showPassword)}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
                       >
                         {showPassword ? (
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,7 +234,7 @@ export const LoginPage: React.FC = () => {
                     className="forgot-link"
                     onClick={() => navigate('/forgot-password')}
                   >
-                    Forgot Password?
+                    Quên mật khẩu hả?
                   </button>
 
                 </div>
@@ -244,15 +244,15 @@ export const LoginPage: React.FC = () => {
                   variant="primary"
                   fullWidth
                   isLoading={isLoading}
-                  loadingText="Signing in..."
+                  loadingText="Đang vào nhà..."
                   rounded="lg"
                 >
-                  Sign In
+                  Đăng Nhập Ngay
                 </Button>
               </form>
 
               <div className="login-divider">
-                <span>OR</span>
+                <span>HOẶC</span>
               </div>
 
               <Button
@@ -261,21 +261,21 @@ export const LoginPage: React.FC = () => {
                 rounded="lg"
                 fullWidth
                 isLoading={isGoogleLoading}
-                loadingText="Connecting..."
+                loadingText="Đang kết nối..."
                 onClick={handleGoogleLogin}
                 leftIcon={!isGoogleLoading && <GoogleIcon />}
               >
-                Sign in with Google
+                Đăng nhập bằng Google
               </Button>
 
               <p className="signup-link">
-                Don't have an account?{' '}
+                Chưa có tài khoản hả?{' '}
                 <button
                   type="button"
                   className="signup-button-link"
                   onClick={() => navigate('/signup')}
                 >
-                  Sign Up
+                  Đăng ký liền
                 </button>
               </p>
             </div>

@@ -15,7 +15,7 @@ interface BlogEditorProps {
 export const BlogEditor: React.FC<BlogEditorProps> = ({
     content,
     onChange,
-    placeholder = 'Tell your story...',
+    placeholder = 'Kể câu chuyện của bạn...',
 }) => {
     const imageInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +57,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
     }
 
     const setLink = () => {
-        const url = window.prompt('Enter URL:');
+        const url = window.prompt('Nhập đường dẫn:');
         if (url) {
             editor.chain().focus().setLink({ href: url }).run();
         }
@@ -93,7 +93,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                         className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-                        title="Heading 1"
+                        title="Tiêu đề 1"
                     >
                         <span className="material-symbols-outlined">format_h1</span>
                     </button>
@@ -101,7 +101,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                         className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-                        title="Heading 2"
+                        title="Tiêu đề 2"
                     >
                         <span className="material-symbols-outlined">format_h2</span>
                     </button>
@@ -109,7 +109,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                         className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
-                        title="Heading 3"
+                        title="Tiêu đề 3"
                     >
                         <span className="material-symbols-outlined">format_h3</span>
                     </button>
@@ -122,7 +122,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleBold().run()}
                         className={editor.isActive('bold') ? 'is-active' : ''}
-                        title="Bold (Cmd+B)"
+                        title="In đậm (Cmd+B)"
                     >
                         <span className="material-symbols-outlined">format_bold</span>
                     </button>
@@ -130,7 +130,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleItalic().run()}
                         className={editor.isActive('italic') ? 'is-active' : ''}
-                        title="Italic (Cmd+I)"
+                        title="In nghiêng (Cmd+I)"
                     >
                         <span className="material-symbols-outlined">format_italic</span>
                     </button>
@@ -138,7 +138,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleStrike().run()}
                         className={editor.isActive('strike') ? 'is-active' : ''}
-                        title="Strikethrough"
+                        title="Gạch ngang"
                     >
                         <span className="material-symbols-outlined">strikethrough_s</span>
                     </button>
@@ -151,7 +151,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
                         className={editor.isActive('bulletList') ? 'is-active' : ''}
-                        title="Bullet List"
+                        title="Danh sách liệt kê"
                     >
                         <span className="material-symbols-outlined">format_list_bulleted</span>
                     </button>
@@ -159,7 +159,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleOrderedList().run()}
                         className={editor.isActive('orderedList') ? 'is-active' : ''}
-                        title="Numbered List"
+                        title="Danh sách số"
                     >
                         <span className="material-symbols-outlined">format_list_numbered</span>
                     </button>
@@ -172,7 +172,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleBlockquote().run()}
                         className={editor.isActive('blockquote') ? 'is-active' : ''}
-                        title="Quote"
+                        title="Trích dẫn"
                     >
                         <span className="material-symbols-outlined">format_quote</span>
                     </button>
@@ -180,7 +180,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                         className={editor.isActive('codeBlock') ? 'is-active' : ''}
-                        title="Code Block"
+                        title="Khối mã"
                     >
                         <span className="material-symbols-outlined">code</span>
                     </button>
@@ -193,21 +193,21 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
                         type="button"
                         onClick={setLink}
                         className={editor.isActive('link') ? 'is-active' : ''}
-                        title="Add Link"
+                        title="Thêm liên kết"
                     >
                         <span className="material-symbols-outlined">link</span>
                     </button>
                     <button
                         type="button"
                         onClick={addImage}
-                        title="Add Image"
+                        title="Thêm hình ảnh"
                     >
                         <span className="material-symbols-outlined">image</span>
                     </button>
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().setHorizontalRule().run()}
-                        title="Horizontal Line"
+                        title="Đường kẻ ngang"
                     >
                         <span className="material-symbols-outlined">horizontal_rule</span>
                     </button>

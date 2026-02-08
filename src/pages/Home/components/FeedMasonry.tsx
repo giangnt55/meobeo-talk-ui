@@ -111,11 +111,11 @@ const FeedMasonry: React.FC = () => {
                         <div className="announcement-content">
                             <div className="announcement-header">
                                 <FaBullhorn className="announcement-icon" />
-                                <h3 className="announcement-label">System Announcement</h3>
+                                <h3 className="announcement-label">Thông Báo Hệ Thống</h3>
                             </div>
-                            <h4 className="announcement-title">Welcome to Meobeo Talk!</h4>
+                            <h4 className="announcement-title">Chào mừng bạn đến với Meobeo Talk!</h4>
                             <p className="announcement-description">
-                                Share your thoughts, memories, and connect with others.
+                                Chia sẻ suy nghĩ, kỷ niệm và kết nối với mọi người nha.
                             </p>
                         </div>
                     </div>
@@ -147,14 +147,14 @@ const FeedMasonry: React.FC = () => {
                         {loadingMore ? (
                             <>
                                 <div className="loading-spinner"></div>
-                                <p>Loading more posts...</p>
+                                <p>Đang tải thêm bài viết...</p>
                             </>
                         ) : (
                             <button
                                 onClick={loadMore}
                                 className="load-more-button"
                             >
-                                Load More
+                                Xem Thêm
                             </button>
                         )}
                     </div>
@@ -162,7 +162,7 @@ const FeedMasonry: React.FC = () => {
 
                 {!hasMore && posts.length > 0 && (
                     <div className="loading-container">
-                        <p style={{ color: '#888' }}>You've reached the end of your feed</p>
+                        <p style={{ color: '#888' }}>Hết bài rồi nè. Quay lại sau nha!</p>
                     </div>
                 )}
             </div>

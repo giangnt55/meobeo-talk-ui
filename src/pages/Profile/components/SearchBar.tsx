@@ -17,7 +17,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 <input
                     type="text"
                     className="search-input"
-                    placeholder="Search blog posts..."
+                    placeholder="Tìm kiếm bài viết..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />

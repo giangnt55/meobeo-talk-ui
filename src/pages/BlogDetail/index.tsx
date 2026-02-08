@@ -9,21 +9,21 @@ const BlogDetailPage: React.FC = () => {
     // Mock data - in production, fetch based on ID
     const post = {
         id: id || '1',
-        category: 'Design',
-        tags: ['Design System', 'Minimalism', 'UX/UI'],
-        title: 'The Art of Minimalist Design',
-        subtitle: 'In a world cluttered with noise, finding clarity often means stripping away the unnecessary. This exploration into minimalism isn\'t just about aesthetic choices, but a fundamental shift in how we perceive value.',
+        category: 'Thiết kế',
+        tags: ['Hệ thống thiết kế', 'Tối giản', 'UX/UI'],
+        title: 'Nghệ Thuật Thiết Kế Tối Giản',
+        subtitle: 'Trong một thế giới đầy tiếng ồn, tìm kiếm sự rõ ràng thường có nghĩa là loại bỏ những thứ không cần thiết. Cuộc khám phá về sự tối giản này không chỉ là về lựa chọn thẩm mỹ, mà là một sự thay đổi cơ bản trong cách chúng ta nhìn nhận giá trị.',
         author: {
             name: 'Elena Fisher',
             avatar: 'https://via.placeholder.com/40',
-            date: 'Oct 24, 2023',
-            readTime: '5 min read'
+            date: '24 Th10, 2023',
+            readTime: '5 phút đọc'
         },
         heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAYvxfGtD5hG4qubvuZEjgePXBg9AdtbCkqnHjIA3RIKOAFhsU1FoucyFhF_FFvKeq8NN39hnBsKP5n8UC5SFRZ3kuceUVwvyiXeirG9rtgm5Bd5o9jM-X8Tm3m1I7jShruixIH_vPQGzCYB9yvgccDt4Nbl_8J5d1OfaitMCjviXOwZ8xXAw1N3KQfDWPo9AOTFyJW2MUYgVuQm0hHtruD-yEnAt6zoGBOgCskMpEm2UuKtjzhLcY3voYFNkcUvsbp9XLhT3bc-e8',
-        heroCaption: 'Visual silence allows the mind to speak.',
+        heroCaption: 'Sự tĩnh lặng của thị giác cho phép tâm trí lên tiếng.',
         likes: 1200,
         comments: 48,
-        lastUpdated: '2 days ago'
+        lastUpdated: '2 ngày trước'
     };
 
     return (
@@ -36,7 +36,7 @@ const BlogDetailPage: React.FC = () => {
                     <div className="article-categories">
                         <span>{post.category}</span>
                         <span className="category-dot"></span>
-                        <span>Philosophy</span>
+                        <span>Triết lý</span>
                     </div>
 
                     {/* Title */}
@@ -82,38 +82,38 @@ const BlogDetailPage: React.FC = () => {
                     {/* Article Body */}
                     <div className="article-body">
                         <p className="article-opening">
-                            Minimalism is not about emptiness; it is about making room for what truly matters. When we remove the visual clutter from our screens, or the physical clutter from our homes, we are not just creating space—we are curating our attention. The modern web has become a carnival of distractions, with pop-ups, banners, and infinite scrolls vying for a slice of our cognitive bandwidth.
+                            Chủ nghĩa tối giản không phải là sự trống rỗng; đó là việc tạo ra không gian cho những gì thực sự quan trọng. Khi chúng ta loại bỏ sự lộn xộn về hình ảnh khỏi màn hình, hoặc sự lộn xộn vật lý khỏi ngôi nhà của mình, chúng ta không chỉ tạo ra không gian—chúng ta đang chọn lọc sự chú ý của mình. Web hiện đại đã trở thành một lễ hội của sự xao nhãng, với các cửa sổ bật lên, biểu ngữ và cuộn vô hạn tranh giành một phần băng thông nhận thức của chúng ta.
                         </p>
 
                         <p>
-                            Designing for minimalism requires a disciplined restraint. It is easy to add; it is difficult to subtract. Every element on a page must fight for its existence. Does this button serve the user's primary goal? Does this image advance the narrative? If the answer is hesitant, the element must go. This philosophy extends beyond design into the way we write and communicate.
+                            Thiết kế cho sự tối giản đòi hỏi sự kiềm chế có kỷ luật. Thêm vào thì dễ; bớt đi mới khó. Mỗi yếu tố trên một trang phải chiến đấu cho sự tồn tại của nó. Nút này có phục vụ mục tiêu chính của người dùng không? Hình ảnh này có thúc đẩy câu chuyện không? Nếu câu trả lời là do dự, yếu tố đó phải đi. Triết lý này mở rộng ra ngoài thiết kế vào cách chúng ta viết và giao tiếp.
                         </p>
 
-                        <h3>The Functional Aesthetic</h3>
+                        <h3>Thẩm Mỹ Chức Năng</h3>
 
                         <p>
-                            Form follows function is an old adage, but in the digital age, it has taken on new urgency. A beautiful interface that confuses the user is a failure of design. True minimalism marries aesthetics with usability, creating an experience that feels intuitive and effortless.
+                            Hình thức tuân theo chức năng là một câu ngạn ngữ cũ, nhưng trong thời đại kỹ thuật số, nó đã mang một sự cấp bách mới. Một giao diện đẹp mắt nhưng làm người dùng bối rối là một thất bại của thiết kế. Chủ nghĩa tối giản thực sự kết hợp thẩm mỹ với khả năng sử dụng, tạo ra một trải nghiệm cảm thấy trực quan và dễ dàng.
                         </p>
 
                         {/* Inline Image */}
                         <figure className="inline-image">
                             <img
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7If36zOX6WqTTbznoeWQnpzoRu6hUSJ__AvjXWHeBGAyweIo2xMh0DiXL4omhl7pNE5Yca0ZV9RiSymrrnOV1_AwyvL-kiuoJecXYq2ZqGx-EWKe6_BqfDi4O7qvODAbE5L17dvd7le4qOoR1hf832NmhfUx1nhYk-qH8avlB-gFM1s3MP1oPIOTuO8QgAQGRhzFnMKFDtXTgIv3oB325-5ht7MHjEpCTdDXHlEZ77R6rzHWPtlPG8fhYjSP5rpKddYbs3248_RA"
-                                alt="Clean desk setup with a laptop and a plant"
+                                alt="Góc làm việc gọn gàng với laptop và cây xanh"
                             />
                         </figure>
 
                         <p>
-                            As we move forward, the "MeoBeo Talk" platform aims to embody these principles. By prioritizing the written word and the author's voice, we strip away the gamification of social interaction. There are no flashing notifications here, only stories waiting to be read.
+                            Khi chúng tôi tiến về phía trước, nền tảng "MeoBeo Talk" nhằm mục đích thể hiện những nguyên tắc này. Bằng cách ưu tiên từ ngữ viết và tiếng nói của tác giả, chúng tôi loại bỏ sự game hóa của tương tác xã hội. Không có thông báo nhấp nháy ở đây, chỉ có những câu chuyện đang chờ được đọc.
                         </p>
 
                         <blockquote className="article-quote">
-                            "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
+                            "Sự hoàn hảo đạt được, không phải khi không còn gì để thêm vào, mà là khi không còn gì để bớt đi."
                             <cite>— Antoine de Saint-Exupéry</cite>
                         </blockquote>
 
                         <p>
-                            Embracing this mindset allows creators to focus on the essence of their message. It invites readers into a calm, contemplative space where ideas can be digested slowly, without the pressure to click away to the next trending topic. This is the art of minimalist design—a quiet revolution in a loud world.
+                            Nắm lấy tư duy này cho phép người sáng tạo tập trung vào bản chất thông điệp của họ. Nó mời độc giả vào một không gian tĩnh lặng, suy ngẫm, nơi các ý tưởng có thể được tiêu hóa chậm rãi, không chịu áp lực phải nhấp sang chủ đề xu hướng tiếp theo. Đây là nghệ thuật của thiết kế tối giản—một cuộc cách mạng thầm lặng trong một thế giới ồn ào.
                         </p>
                     </div>
 
@@ -137,7 +137,7 @@ const BlogDetailPage: React.FC = () => {
                                 </button>
                             </div>
                             <div className="last-updated">
-                                Last updated {post.lastUpdated}
+                                Cập nhật lần cuối {post.lastUpdated}
                             </div>
                         </div>
                     </div>

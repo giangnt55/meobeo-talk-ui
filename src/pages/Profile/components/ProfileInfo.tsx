@@ -33,28 +33,28 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
             <div className="profile-stats">
                 <div className="stat-item">
                     <span className="stat-value">{stats.posts}</span>
-                    <span className="stat-label">Posts</span>
+                    <span className="stat-label">Bài viết</span>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
                     <span className="stat-value">{stats.followers.toLocaleString()}</span>
-                    <span className="stat-label">Followers</span>
+                    <span className="stat-label">Người theo dõi</span>
                 </div>
                 <div className="stat-divider"></div>
                 <div className="stat-item">
                     <span className="stat-value">{stats.following}</span>
-                    <span className="stat-label">Following</span>
+                    <span className="stat-label">Đang theo dõi</span>
                 </div>
             </div>
 
             {/* Action Buttons */}
             <div className="profile-actions">
                 {isOwnProfile ? (
-                    <button className="btn-edit-profile">Edit Profile</button>
+                    <button className="btn-edit-profile">Chỉnh sửa hồ sơ</button>
                 ) : (
                     <>
-                        <button className="btn-follow">Follow</button>
-                        <button className="btn-message">Message</button>
+                        <button className="btn-follow">Theo dõi</button>
+                        <button className="btn-message">Nhắn tin</button>
                     </>
                 )}
             </div>

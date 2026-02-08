@@ -101,15 +101,15 @@ export const ProfileSetupPage: React.FC = () => {
             <ProgressBar
               currentStep={1}
               totalSteps={3}
-              stepLabel="Profile Setup"
+              stepLabel="Thiết Lập Hồ Sơ"
             />
 
             <div className="onboarding-header">
               <h1 className="onboarding-title">
-                Set Up Your Meobeo Talk Profile
+                Tạo Hồ Sơ Meobeo Talk Của Bạn
               </h1>
               <p className="onboarding-subtitle">
-                Personalize your space. You can always change this later.
+                Trang trí không gian riêng của bạn. Bạn có thể thay đổi sau nhen.
               </p>
             </div>
 
@@ -142,7 +142,7 @@ export const ProfileSetupPage: React.FC = () => {
               </div>
               <button className="onboarding-avatar-upload-button" disabled={isLoading}>
                 <label>
-                  Upload an Avatar
+                  Tải Ảnh Đại Diện
                   <input
                     type="file"
                     accept="image/*"
@@ -156,8 +156,8 @@ export const ProfileSetupPage: React.FC = () => {
 
             <div className="onboarding-form">
               <Input
-                label="Display Name"
-                placeholder="e.g., Jane Doe"
+                label="Tên Hiển Thị"
+                placeholder="ví dụ: Meo Beo Cute"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 disabled={isLoading}
@@ -166,12 +166,12 @@ export const ProfileSetupPage: React.FC = () => {
 
               <div className="form-group">
                 <div className="textarea-header">
-                  <label className="form-label">Bio</label>
+                  <label className="form-label">Giới Thiệu</label>
                   <span className="char-count">{bio.length} / 500</span>
                 </div>
                 <textarea
                   className="form-textarea"
-                  placeholder="Tell us a little about yourself..."
+                  placeholder="Kể chút xíu về bạn đi nè..."
                   value={bio}
                   onChange={(e) => {
                     if (e.target.value.length <= 500) {
@@ -191,17 +191,17 @@ export const ProfileSetupPage: React.FC = () => {
                 onClick={handleContinue}
                 disabled={isLoading}
                 isLoading={isLoading}
-                loadingText="Saving..."
+                loadingText="Đang lưu..."
                 rounded="lg"
               >
-                Continue
+                Tiếp Tục
               </Button>
               <button
                 className="skip-button"
                 onClick={handleSkip}
                 disabled={isLoading}
               >
-                Skip for now
+                Để sau nha
               </button>
             </div>
           </div>

@@ -40,14 +40,14 @@ const MemoryJourneysListComponent: React.FC<MemoryJourneysListProps> = ({ journe
                                     {journey.category}
                                 </span>
                                 <span className="meta-dot">●</span>
-                                <span className="profile-journey-entries">{journey.entriesCount} Entries</span>
+                                <span className="profile-journey-entries">{journey.entriesCount} Mục</span>
                             </div>
 
                             <h3 className="profile-journey-title">{journey.title}</h3>
                             <p className="profile-journey-description">{journey.description}</p>
 
                             <button className="profile-journey-view-btn">
-                                View Journey Details
+                                Xem chi tiết hành trình
                                 <span className="material-symbols-outlined">arrow_forward</span>
                             </button>
                         </div>

@@ -141,19 +141,19 @@ export const InterestsSelectionPage: React.FC = () => {
             <ProgressBar
               currentStep={2}
               totalSteps={3}
-              stepLabel="Interests Selection"
+              stepLabel="Chọn Sở Thích"
             />
 
             <div className="onboarding-header">
-              <h1 className="onboarding-title">What are you interested in?</h1>
+              <h1 className="onboarding-title">Bạn thích gì dợ?</h1>
               <p className="onboarding-subtitle">
-                Select 5 or more topics to see the content you love.
+                Chọn ít nhất 5 chủ đề để tụi mình gợi ý nội dung chuẩn gu nha.
               </p>
             </div>
 
             <div className="search-section">
               <SearchBar
-                placeholder="Search for interests"
+                placeholder="Tìm sở thích"
                 onSearch={setSearchQuery}
                 onChange={setSearchQuery}
               />
@@ -204,14 +204,14 @@ export const InterestsSelectionPage: React.FC = () => {
 
             {filteredInterests.length === 0 && (
               <p style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-                No interests found. Try a different search or category.
+                Hông tìm thấy gì hết trơn. Thử tìm từ khác xem sao ha.
               </p>
             )}
 
             <div className="onboarding-footer">
               <p className="selection-status">
-                {selectedInterests.length} selected.{' '}
-                {remaining > 0 ? `Select ${remaining} more.` : 'Ready to continue!'}
+                {selectedInterests.length} đã chọn.{' '}
+                {remaining > 0 ? `Chọn thêm ${remaining} cái nữa nha.` : 'Sẵn sàng rồi nè!'}
               </p>
               <div className="footer-actions">
                 <button
@@ -219,17 +219,17 @@ export const InterestsSelectionPage: React.FC = () => {
                   onClick={handleSkip}
                   disabled={isSaving}
                 >
-                  Skip for now
+                  Để sau nha
                 </button>
                 <Button
                   variant="primary"
                   onClick={handleContinue}
                   disabled={selectedInterests.length < 5 || isSaving}
                   isLoading={isSaving}
-                  loadingText="Saving..."
+                  loadingText="Đang lưu..."
                   rounded="lg"
                 >
-                  Continue
+                  Tiếp Tục
                 </Button>
               </div>
             </div>

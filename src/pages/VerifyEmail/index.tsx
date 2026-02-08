@@ -157,10 +157,9 @@ export const VerifyEmailPage: React.FC = () => {
                     </div>
 
                     <div className="verify-welcome">
-                        <h1>Welcome to Meobeo Talk</h1>
+                        <h1>Chào Mừng Đến Với Meobeo Talk</h1>
                         <p>
-                            Share your ideas, connect with a vibrant community,
-                            and let your voice be heard.
+                            Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của bạn vang xa.
                         </p>
                     </div>
                 </div>
@@ -175,20 +174,20 @@ export const VerifyEmailPage: React.FC = () => {
                             disabled={isLoading}
                             rounded="lg"
                         >
-                            Back to Sign Up
+                            Quay lại Đăng Ký
                         </Button>
                     </header>
 
                     <main className="verify-main">
-                        <h1>OTP Verification</h1>
+                        <h1>Xác Thực OTP</h1>
                         <p className="verify-description">
-                            A 6-digit verification code has been sent to{' '}
+                            Mã xác thực 6 số đã được gửi tới{' '}
                             <strong>{email}</strong>
                         </p>
 
                         <form onSubmit={handleSubmit} className="verify-form">
                             <div className="otp-section">
-                                <label>Enter Verification Code</label>
+                                <label>Nhập mã xác thực</label>
                                 <div className="otp-inputs">
                                     {otp.map((digit, index) => (
                                         <input
@@ -216,17 +215,17 @@ export const VerifyEmailPage: React.FC = () => {
                                 className="verify-btn"
                                 rounded="lg"
                             >
-                                Verify Account
+                                Xác Thực Ngay
                             </Button>
                         </form>
 
                         <div className="resend-section">
-                            <p>Didn't receive the code?</p>
+                            <p>Chưa nhận được mã hả?</p>
                             <p>
                                 {resendTimer > 0 ? (
                                     <>
-                                        <span className="resend-link disabled">Resend Code</span>
-                                        {' '}in{' '}
+                                        <span className="resend-link disabled">Gửi lại mã</span>
+                                        {' '}sau{' '}
                                         <span className="timer">
                                             00:{resendTimer.toString().padStart(2, '0')}
                                         </span>
@@ -237,7 +236,7 @@ export const VerifyEmailPage: React.FC = () => {
                                         onClick={handleResend}
                                         className="resend-link active"
                                     >
-                                        Resend Code
+                                        Gửi lại mã
                                     </button>
                                 )}
                             </p>

@@ -172,8 +172,7 @@ export const RegisterPage: React.FC = () => {
           <div className="register-welcome">
             <h1>Chào mừng đến với Meobeo Talk</h1>
             <p>
-              Chia sẻ ý tưởng của bạn, kết nối với cộng đồng sôi động,
-              và cho phép giọng của bạn được nghe.
+              Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của bạn vang xa.
             </p>
           </div>
         </div>
@@ -183,13 +182,13 @@ export const RegisterPage: React.FC = () => {
           <header className="register-header">
             <h2 className="register-logo">Meobeo Talk</h2>
             <div className="register-login-link">
-              <span>Đã có tài khoản?</span>
-              <Link to="/login">Đăng nhập</Link>
+              <span>Có tài khoản rồi à?</span>
+              <Link to="/login">Vào nhà thôi</Link>
             </div>
           </header>
 
           <main className="register-main">
-            <h1>Tạo tài khoản</h1>
+            <h1>Tạo Tài Khoản Mới</h1>
 
             <div className="social-buttons">
               <Button
@@ -201,7 +200,7 @@ export const RegisterPage: React.FC = () => {
                 disabled={isPending}
                 leftIcon={<GoogleIcon />}
               >
-                Đăng ký với Google
+                Đăng ký bằng Google
               </Button>
             </div>
 
@@ -211,12 +210,12 @@ export const RegisterPage: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="register-form">
               <div className="form-group">
-                <label htmlFor="name">Tên</label>
+                <label htmlFor="name">Tên của bạn</label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="Nhập tên"
+                  placeholder="Nhập tên nè"
                   value={formData.name}
                   onChange={handleChange}
                   error={errors.name}
@@ -230,7 +229,7 @@ export const RegisterPage: React.FC = () => {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="Nhập email"
+                  placeholder="Nhập email của bạn"
                   value={formData.email}
                   onChange={handleChange}
                   error={errors.email}
@@ -244,7 +243,7 @@ export const RegisterPage: React.FC = () => {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Nhập mật khẩu bí mật"
                   value={formData.password}
                   onChange={handleChange}
                   error={errors.password}
@@ -253,12 +252,12 @@ export const RegisterPage: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                <label htmlFor="confirmPassword">Nhập lại mật khẩu</label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  placeholder="Xác nhận mật khẩu"
+                  placeholder="Nhập lại y chang nha"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   error={errors.confirmPassword}
@@ -274,13 +273,13 @@ export const RegisterPage: React.FC = () => {
                 className="submit-btn"
                 rounded="lg"
               >
-                Tạo tài khoản
+                Đăng Ký Ngay
               </Button>
 
               <p className="terms-text">
-                Bằng việc tạo tài khoản, bạn đồng ý với{' '}
-                <Link to="/terms">Điều khoản dịch vụ</Link> và{' '}
-                <Link to="/privacy">Privacy Policy</Link>.
+                Tạo tài khoản là bạn đồng ý với{' '}
+                <Link to="/terms">Điều khoản</Link> và{' '}
+                <Link to="/privacy">Chính sách</Link> của tụi mình rồi nha.
               </p>
             </form>
           </main>

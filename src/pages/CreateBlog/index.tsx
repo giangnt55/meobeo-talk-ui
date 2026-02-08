@@ -10,7 +10,7 @@ const CreateBlog: React.FC = () => {
     const [coverImage, setCoverImage] = useState<string | null>(null);
     const [tags, setTags] = useState<string[]>(['design']);
     const [visibility, setVisibility] = useState<'public' | 'private'>('public');
-    const lastSaved = '2m ago';
+    const lastSaved = '2 phút trước';
 
     const titleRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +54,7 @@ const CreateBlog: React.FC = () => {
 
     return (
         <>
-            <SEO title="Create Blog - MeoBeo Talk" />
+            <SEO title="Tạo Blog - MeoBeo Talk" />
 
             {/* Main Layout */}
             <div className="create-blog-layout">
@@ -66,7 +66,7 @@ const CreateBlog: React.FC = () => {
                     {/* Draft Status Indicator */}
                     <div className="draft-status-bar">
                         <span className="material-symbols-outlined">edit_note</span>
-                        <span>Draft - Last saved {lastSaved}</span>
+                        <span>Bản nháp - Đã lưu {lastSaved}</span>
                     </div>
 
                     {/* Cover Image Upload */}
@@ -85,8 +85,8 @@ const CreateBlog: React.FC = () => {
                                 <span className="material-symbols-outlined upload-icon">
                                     add_photo_alternate
                                 </span>
-                                <p className="upload-text">Add a cover image</p>
-                                <p className="upload-hint">Recommended size: 1200x600</p>
+                                <p className="upload-text">Thêm ảnh bìa</p>
+                                <p className="upload-hint">Kích thước khuyến nghị: 1200x600</p>
                             </>
                         )}
                         <input
@@ -104,7 +104,7 @@ const CreateBlog: React.FC = () => {
                             ref={titleRef}
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Title"
+                            placeholder="Tiêu đề"
                             className="title-input"
                             rows={1}
                         />
@@ -120,7 +120,7 @@ const CreateBlog: React.FC = () => {
                         </div>
                         <div className="author-details">
                             <span className="author-name">Alex Meow</span>
-                            <span className="author-meta">Just now · 1 min read</span>
+                            <span className="author-meta">Vừa xong · 1 phút đọc</span>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@ const CreateBlog: React.FC = () => {
                         <BlogEditor
                             content={body}
                             onChange={setBody}
-                            placeholder="Tell your story..."
+                            placeholder="Kể câu chuyện của bạn..."
                         />
                     </div>
                 </main>

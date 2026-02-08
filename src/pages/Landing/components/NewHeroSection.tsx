@@ -8,9 +8,9 @@ const NewHeroSection: React.FC = () => {
                 <div className="flex flex-col gap-6 lg:gap-8 order-2 lg:order-1">
                     <div className="flex flex-col gap-4">
                         <h1 className="text-[#181411] dark:text-white text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-[-0.02em]">
-                            Every Memory <br />
+                            Mỗi Ký Ức <br />
                             <span className="text-primary relative inline-block">
-                                Tells a Story
+                                Là Một Câu Chuyện
                                 <svg
                                     className="absolute -bottom-2 w-full left-0 text-primary/20 -z-10"
                                     height="10"
@@ -27,15 +27,15 @@ const NewHeroSection: React.FC = () => {
                             </span>
                         </h1>
                         <p className="text-[#897261] dark:text-gray-300 text-lg leading-relaxed max-w-lg">
-                            Capture the fleeting moments, the laughter, and the quiet reflections. MeoBeo Talk is your digital sanctuary for visual storytelling, turning your life's fragments into a beautiful, lasting narrative.
+                            Lưu giữ những khoảnh khắc thoáng qua, tiếng cười, và những phút giây lắng đọng. MeoBeo Talk là nơi cất giữ những câu chuyện bằng hình ảnh, biến những mảnh ghép cuộc sống thành một hành trình đáng nhớ.
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-4 pt-2">
                         <button className="flex items-center justify-center rounded-xl h-12 px-8 bg-primary hover:bg-orange-600 text-white text-base font-bold shadow-lg shadow-orange-200 dark:shadow-none transition-all hover:-translate-y-0.5">
-                            Start sharing your memories
+                            Bắt đầu chia sẻ nè
                         </button>
                         <button className="flex items-center justify-center rounded-xl h-12 px-8 bg-white dark:bg-[#382a20] border border-[#e6e0db] dark:border-gray-700 text-[#181411] dark:text-white text-base font-bold hover:bg-gray-50 dark:hover:bg-[#443328] transition-all">
-                            Explore stories
+                            Khám phá các câu chuyện
                         </button>
                     </div>
                     <div className="flex items-center gap-4 mt-4 text-sm text-[#897261] dark:text-gray-400">
@@ -59,7 +59,7 @@ const NewHeroSection: React.FC = () => {
                                 +2k
                             </div>
                         </div>
-                        <p>Join 2,000+ storytellers today.</p>
+                        <p>Tham gia cùng 2,000+ người kể chuyện điii.</p>
                     </div>
                 </div>
 

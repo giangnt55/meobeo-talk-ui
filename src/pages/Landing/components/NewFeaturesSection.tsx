@@ -7,13 +7,13 @@ const NewFeaturesSection: React.FC = () => {
                 <div className="flex flex-col gap-10">
                     <div className="flex flex-col gap-4 text-center items-center">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-                            Features
+                            Tính Năng Xịn
                         </div>
                         <h2 className="text-[#181411] dark:text-white text-3xl lg:text-4xl font-bold leading-tight">
-                            Ways to Share Your World
+                            Muôn Cách Chia Sẻ Thế Giới Của Bạn
                         </h2>
                         <p className="text-[#897261] dark:text-gray-400 text-base max-w-2xl">
-                            Choose the format that fits your story best. From quick snapshots to deep dives, we have a canvas for you.
+                            Chọn cách kể chuyện hợp gu bạn nhất. Từ những bức ảnh nhanh đến những dòng tâm sự sâu sắc, tụi mình cân tất.
                         </p>
                     </div>
 
@@ -24,9 +24,9 @@ const NewFeaturesSection: React.FC = () => {
                                 <span className="material-symbols-outlined text-2xl">edit_note</span>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <h3 className="text-[#181411] dark:text-white text-xl font-bold">Small Blogs</h3>
+                                <h3 className="text-[#181411] dark:text-white text-xl font-bold">Blog Nhỏ Xinh</h3>
                                 <p className="text-[#897261] dark:text-gray-400 text-sm leading-relaxed">
-                                    Share quick thoughts, single photos, or bite-sized updates about your day. Perfect for keeping friends in the loop without the pressure of a long post.
+                                    Chia sẻ suy nghĩ nhanh, một tấm ảnh, hay cập nhật xíu xiu về ngày của bạn. Thích hợp để kể lể với bạn bè mà không cần viết dài dòng.
                                 </p>
                             </div>
                         </div>
@@ -37,9 +37,9 @@ const NewFeaturesSection: React.FC = () => {
                                 <span className="material-symbols-outlined text-2xl">menu_book</span>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <h3 className="text-[#181411] dark:text-white text-xl font-bold">Memory Journals</h3>
+                                <h3 className="text-[#181411] dark:text-white text-xl font-bold">Nhật Ký Ký Ức</h3>
                                 <p className="text-[#897261] dark:text-gray-400 text-sm leading-relaxed">
-                                    Dedicate a space for deeper reflection. Combine text, multiple images, and mood tags to chronicle significant life events or personal growth.
+                                    Dành một góc nhỏ để suy ngẫm. Kết hợp chữ viết, hình ảnh và cảm xúc để ghi lại những cột mốc đáng nhớ.
                                 </p>
                             </div>
                         </div>
@@ -47,7 +47,7 @@ const NewFeaturesSection: React.FC = () => {
 
                     <div className="flex justify-center mt-4">
                         <button className="flex items-center gap-2 text-primary font-bold text-sm hover:underline">
-                            See all features <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                            Xem hết tính năng luôn <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </button>
                     </div>
                 </div>

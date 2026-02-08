@@ -9,12 +9,12 @@ import './MemoryDetail.css';
 // Reference mock data for fallback
 const REFERENCE_MEMORY = {
   id: 'ref-1',
-  title: 'Sunday Picnic at the Park',
-  content: "It was such a beautiful day. The sun was shining through the leaves, casting dancing shadows on our blanket. We found the perfect spot under the big oak tree near the lake. We ate cucumber sandwiches and fresh strawberries, and just watched the clouds go by for hours. There was no rush, no noise from the city, just the sound of the wind and distant laughter. It felt truly at peace, a moment suspended in time that I want to remember forever.",
+  title: 'Chuyến Dã Ngoại Chủ Nhật Ở Công Viên',
+  content: "Một ngày thật đẹp trời. Nắng xuyên qua kẽ lá, nhảy múa trên tấm thảm trải của tụi mình. Tụi mình tìm được một chỗ tuyệt vời dưới gốc sồi già gần hồ nước. Cùng ăn bánh mì dưa leo, dâu tây tươi, và ngắm mây trôi lững lờ suốt cả buổi. Không vội vã, không tiếng ồn phố thị, chỉ có tiếng gió và tiếng cười xa xa. Cảm giác thật bình yên, một khoảnh khắc ngưng đọng mà mình muốn nhớ mãi.",
   date: '2023-10-15',
-  mood: 'Blessed',
+  mood: 'Hạnh phúc',
   images: ['https://lh3.googleusercontent.com/aida-public/AB6AXuA1a0OLECUOnOOAsMuO8dye1laJ0rzKPRnkLtMyLoBhn6M6svCovRnnNhVKKksaMtygBzOoD4eRvdLJFcm7si-uuMChlfYHrKn6MZ4a7wIc0wZsiEJ1Oa9byrYpwdGifDbbTNg6XCvLAIz4EnRQ8c-lz3O9FcX6_sI2hgfCdm65KMt7HiMMyk1bTkPU85u19a2hvKheTcl1YXrxlCZRUKfyEs36-mUKHp-TklMHs0TfbYcymUolAf9s9bdH0UhN9hpPMKUA75gH04o'],
-  location: 'Golden Gate Park',
+  location: 'Công viên Golden Gate',
   likes_count: 12,
   views_count: 45
 };
@@ -43,7 +43,7 @@ export const MemoryDetailPage: React.FC = () => {
   if (!memory) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p>Loading memory...</p>
+        <p>Đang tải ký ức...</p>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export const MemoryDetailPage: React.FC = () => {
         <div className="memory-back-nav">
           <a href="#" onClick={(e) => { e.preventDefault(); navigate(-1); }} className="back-link">
             <span className="material-symbols-outlined">arrow_back</span>
-            <span>Back to Journal</span>
+            <span>Quay Lại Nhật Ký</span>
           </a>
         </div>
 
@@ -121,11 +121,11 @@ export const MemoryDetailPage: React.FC = () => {
             <div className="memory-stats">
               <div className="stat-item">
                 <span className="material-symbols-outlined filled" style={{ color: '#ef4444' }}>favorite</span>
-                <span className="stat-value">{memory.likes_count || 0} Likes</span>
+                <span className="stat-value">{memory.likes_count || 0} Lượt thích</span>
               </div>
               <div className="stat-item">
                 <span className="material-symbols-outlined">visibility</span>
-                <span className="stat-value">{memory.views_count || 0} Views</span>
+                <span className="stat-value">{memory.views_count || 0} Lượt xem</span>
               </div>
             </div>
 
@@ -133,11 +133,11 @@ export const MemoryDetailPage: React.FC = () => {
             <div className="memory-actions-footer">
               <button className="action-btn primary">
                 <span className="material-symbols-outlined">edit</span>
-                <span>Edit Memory</span>
+                <span>Chỉnh Sửa Ký Ức</span>
               </button>
               <button className="action-btn secondary">
                 <span className="material-symbols-outlined">ios_share</span>
-                <span>Share</span>
+                <span>Chia Sẻ</span>
               </button>
               <button className="action-btn icon-only">
                 <span className="material-symbols-outlined">more_horiz</span>

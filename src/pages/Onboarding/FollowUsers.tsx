@@ -140,19 +140,19 @@ export const FollowUsersPage: React.FC = () => {
             <ProgressBar
               currentStep={3}
               totalSteps={3}
-              stepLabel="Follow Users"
+              stepLabel="Theo Dõi Bạn Bè"
             />
 
             <div className="onboarding-header">
-              <h1 className="onboarding-title">Connect with others</h1>
+              <h1 className="onboarding-title">Kết Nối Bạn Bè</h1>
               <p className="onboarding-subtitle">
-                Follow a few creators to get started. You can always find more later.
+                Theo dõi vài người thú vị để bắt đầu nha. Tìm thêm sau cũng được.
               </p>
             </div>
 
             <div className="search-section-compact">
               <SearchBar
-                placeholder="Search for people you know"
+                placeholder="Tìm người quen nè"
                 onSearch={setSearchQuery}
                 onChange={setSearchQuery}
               />
@@ -189,7 +189,7 @@ export const FollowUsersPage: React.FC = () => {
                       isLoading={isProcessing}
                       rounded="lg"
                     >
-                      {isFollowingUser ? 'Following' : 'Follow'}
+                      {isFollowingUser ? 'Đang theo dõi' : 'Theo dõi'}
                     </Button>
                   </div>
                 );
@@ -198,7 +198,7 @@ export const FollowUsersPage: React.FC = () => {
 
             {filteredUsers.length === 0 && (
               <p style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
-                No users found. Try a different search.
+                Hông thấy ai hết trơn. Thử tìm tên khác xem.
               </p>
             )}
 
@@ -209,17 +209,17 @@ export const FollowUsersPage: React.FC = () => {
                 onClick={handleFinish}
                 disabled={isSaving}
                 isLoading={isSaving}
-                loadingText="Completing..."
+                loadingText="Đang xử lý..."
                 rounded="lg"
               >
-                Continue
+                Hoàn Tất
               </Button>
               <button
                 className="skip-button"
                 onClick={handleSkip}
                 disabled={isSaving}
               >
-                Skip for now
+                Để sau nha
               </button>
             </div>
           </div>

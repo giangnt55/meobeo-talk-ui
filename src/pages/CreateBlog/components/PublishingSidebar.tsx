@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import './PublishingSidebar.css';
+import { BLOG_CATEGORIES } from '@/constants/blog';
 
 interface PublishingSidebarProps {
-    visibility: 'public' | 'private';
-    onVisibilityChange: (visibility: 'public' | 'private') => void;
+    visibility: 'public' | 'private' | 'followers';
+    onVisibilityChange: (visibility: 'public' | 'private' | 'followers') => void;
+    category: string;
+    onCategoryChange: (category: string) => void;
     tags: string[];
     onTagsChange: (tags: string[]) => void;
     onPublish: () => void;
@@ -13,6 +16,8 @@ interface PublishingSidebarProps {
 const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
     visibility,
     onVisibilityChange,
+    category,
+    onCategoryChange,
     tags,
     onTagsChange,
     onPublish,
@@ -58,6 +63,23 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
                                 Riêng tư
                             </button>
                         </div>
+                    </div>
+
+                    {/* Category Selection */}
+                    <div className="section-container">
+                        <label className="section-label">Chuyên mục</label>
+                        <select
+                            value={category}
+                            onChange={(e) => onCategoryChange(e.target.value)}
+                            className="category-select"
+                        >
+                            <option value="">Chọn chuyên mục</option>
+                            {BLOG_CATEGORIES.map((cat) => (
+                                <option key={cat} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Tags Input */}

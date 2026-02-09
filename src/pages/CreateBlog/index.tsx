@@ -1,15 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PublishingSidebar from './components/PublishingSidebar.tsx';
 import { BlogEditor } from './components/BlogEditor';
 import { SEO } from '@/components/common/SEO/SEO';
+import { blogApi } from '@/api/services/blogApi';
 import './CreateBlog.css';
 
 const CreateBlog: React.FC = () => {
+    const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImage, setCoverImage] = useState<string | null>(null);
     const [tags, setTags] = useState<string[]>(['design']);
-    const [visibility, setVisibility] = useState<'public' | 'private'>('public');
+    const [visibility, setVisibility] = useState<'public' | 'private' | 'followers'>('public');
+    const [category, setCategory] = useState<string>('');
+    const [isPublishing, setIsPublishing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const lastSaved = '2 phút trước';
 
     const titleRef = useRef<HTMLTextAreaElement>(null);
@@ -42,9 +48,64 @@ const CreateBlog: React.FC = () => {
         }
     };
 
-    const handlePublish = () => {
-        console.log('Publishing blog...', { title, body, coverImage, tags, visibility });
-        // TODO: Implement actual publish logic
+    const handlePublish = async () => {
+        if (!title.trim() || !body.trim()) {
+            setError('Title and content are required');
+            return;
+        }
+
+        try {
+            setIsPublishing(true);
+            setError(null);
+
+            const blog = await blogApi.createBlog({
+                title: title.trim(),
+                content_html: body,
+                category: category || undefined,
+                banner_url: coverImage || undefined,
+                tags,
+                visibility,
+                status: 'published',
+            });
+
+            // Navigate to the created blog
+            navigate(`/blog/${blog.id}`);
+        } catch (err) {
+            setError('Failed to publish blog. Please try again.');
+            console.error('Error publishing blog:', err);
+        } finally {
+            setIsPublishing(false);
+        }
+    };
+
+    const handleSaveDraft = async () => {
+        if (!title.trim() || !body.trim()) {
+            setError('Title and content are required to save draft');
+            return;
+        }
+
+        try {
+            setIsPublishing(true);
+            setError(null);
+
+            await blogApi.createBlog({
+                title: title.trim(),
+                content_html: body,
+                category: category || undefined,
+                banner_url: coverImage || undefined,
+                tags,
+                visibility,
+                status: 'draft',
+            });
+
+            // Show success message or navigate
+            alert('Draft saved successfully!');
+        } catch (err) {
+            setError('Failed to save draft. Please try again.');
+            console.error('Error saving draft:', err);
+        } finally {
+            setIsPublishing(false);
+        }
     };
 
     const handleSchedule = () => {
@@ -138,6 +199,8 @@ const CreateBlog: React.FC = () => {
                 <PublishingSidebar
                     visibility={visibility}
                     onVisibilityChange={setVisibility}
+                    category={category}
+                    onCategoryChange={setCategory}
                     tags={tags}
                     onTagsChange={setTags}
                     onPublish={handlePublish}

@@ -1,144 +1,170 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SEO } from '@/components/common/SEO/SEO';
+import { blogApi, type Blog } from '@/api/services/blogApi';
 import './BlogDetail.css';
 
 const BlogDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const [blog, setBlog] = useState<Blog | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Mock data - in production, fetch based on ID
-    const post = {
-        id: id || '1',
-        category: 'Thiết kế',
-        tags: ['Hệ thống thiết kế', 'Tối giản', 'UX/UI'],
-        title: 'Nghệ Thuật Thiết Kế Tối Giản',
-        subtitle: 'Trong một thế giới đầy tiếng ồn, tìm kiếm sự rõ ràng thường có nghĩa là loại bỏ những thứ không cần thiết. Cuộc khám phá về sự tối giản này không chỉ là về lựa chọn thẩm mỹ, mà là một sự thay đổi cơ bản trong cách chúng ta nhìn nhận giá trị.',
-        author: {
-            name: 'Elena Fisher',
-            avatar: 'https://via.placeholder.com/40',
-            date: '24 Th10, 2023',
-            readTime: '5 phút đọc'
-        },
-        heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAYvxfGtD5hG4qubvuZEjgePXBg9AdtbCkqnHjIA3RIKOAFhsU1FoucyFhF_FFvKeq8NN39hnBsKP5n8UC5SFRZ3kuceUVwvyiXeirG9rtgm5Bd5o9jM-X8Tm3m1I7jShruixIH_vPQGzCYB9yvgccDt4Nbl_8J5d1OfaitMCjviXOwZ8xXAw1N3KQfDWPo9AOTFyJW2MUYgVuQm0hHtruD-yEnAt6zoGBOgCskMpEm2UuKtjzhLcY3voYFNkcUvsbp9XLhT3bc-e8',
-        heroCaption: 'Sự tĩnh lặng của thị giác cho phép tâm trí lên tiếng.',
-        likes: 1200,
-        comments: 48,
-        lastUpdated: '2 ngày trước'
+    useEffect(() => {
+        const fetchBlog = async () => {
+            if (!id) {
+                setError('Blog ID not found');
+                setLoading(false);
+                return;
+            }
+
+            try {
+                setLoading(true);
+                setError(null);
+                const data = await blogApi.getBlogById(id);
+                setBlog(data);
+            } catch (err) {
+                setError('Failed to load blog. Please try again later.');
+                console.error('Error fetching blog:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBlog();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <main className="blog-detail-container">
+                <div className="flex justify-center items-center py-20">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                </div>
+            </main>
+        );
+    }
+
+    if (error || !blog) {
+        return (
+            <main className="blog-detail-container">
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                    <p className="text-red-500 text-lg">{error || 'Blog not found'}</p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </main>
+        );
+    }
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', { day: '2-digit', month: 'short', year: 'numeric' });
     };
 
     return (
         <>
-            <SEO title={`${post.title} - MeoBeo Talk`} />
+            <SEO title={`${blog.title} - MeoBeo Talk`} />
 
             <main className="blog-detail-container">
                 <article className="blog-detail-article">
                     {/* Category Tags */}
                     <div className="article-categories">
-                        <span>{post.category}</span>
-                        <span className="category-dot"></span>
-                        <span>Triết lý</span>
+                        {blog.category && <span>{blog.category}</span>}
                     </div>
 
                     {/* Title */}
-                    <h1 className="article-title">{post.title}</h1>
+                    <h1 className="article-title">{blog.title}</h1>
 
                     {/* Subtitle */}
-                    <p className="article-subtitle">{post.subtitle}</p>
+                    {blog.content_preview && (
+                        <p className="article-subtitle">{blog.content_preview}</p>
+                    )}
 
                     {/* Author & Actions */}
                     <div className="article-meta">
                         <div className="author-info">
                             <div className="author-avatar">
-                                <img src={post.author.avatar} alt={post.author.name} />
+                                <img src={blog.author.avatar_url || 'https://via.placeholder.com/40'} alt={blog.author.display_name || blog.author.username} />
                             </div>
                             <div className="author-details">
-                                <span className="author-name">{post.author.name}</span>
+                                <span className="author-name">{blog.author.display_name || blog.author.username}</span>
                                 <span className="author-date">
-                                    {post.author.date} · {post.author.readTime}
+                                    {formatDate(blog.created_at)} · {blog.read_time_minutes} phút đọc
                                 </span>
                             </div>
                         </div>
+
                         <div className="article-actions">
-                            <button className="action-btn" aria-label="Bookmark">
-                                <span className="material-symbols-outlined">bookmark</span>
+                            <button className="action-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                </svg>
                             </button>
-                            <button className="action-btn" aria-label="Share">
-                                <span className="material-symbols-outlined">ios_share</span>
+                            <button className="action-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="18" cy="5" r="3"></circle>
+                                    <circle cx="6" cy="12" r="3"></circle>
+                                    <circle cx="18" cy="19" r="3"></circle>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                </svg>
                             </button>
-                            <button className="action-btn" aria-label="More options">
-                                <span className="material-symbols-outlined">more_horiz</span>
+                            <button className="action-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="19" cy="12" r="1"></circle>
+                                    <circle cx="5" cy="12" r="1"></circle>
+                                </svg>
                             </button>
                         </div>
                     </div>
 
                     {/* Hero Image */}
-                    <div className="hero-image-container">
-                        <div className="hero-image">
-                            <img src={post.heroImage} alt={post.title} />
+                    {blog.banner_url && (
+                        <div className="article-hero">
+                            <img src={blog.banner_url} alt={blog.title} />
                         </div>
-                        <figcaption className="hero-caption">{post.heroCaption}</figcaption>
-                    </div>
+                    )}
 
-                    {/* Article Body */}
-                    <div className="article-body">
-                        <p className="article-opening">
-                            Chủ nghĩa tối giản không phải là sự trống rỗng; đó là việc tạo ra không gian cho những gì thực sự quan trọng. Khi chúng ta loại bỏ sự lộn xộn về hình ảnh khỏi màn hình, hoặc sự lộn xộn vật lý khỏi ngôi nhà của mình, chúng ta không chỉ tạo ra không gian—chúng ta đang chọn lọc sự chú ý của mình. Web hiện đại đã trở thành một lễ hội của sự xao nhãng, với các cửa sổ bật lên, biểu ngữ và cuộn vô hạn tranh giành một phần băng thông nhận thức của chúng ta.
-                        </p>
+                    {/* Content */}
+                    <div
+                        className="article-content"
+                        dangerouslySetInnerHTML={{ __html: blog.content_html }}
+                    />
 
-                        <p>
-                            Thiết kế cho sự tối giản đòi hỏi sự kiềm chế có kỷ luật. Thêm vào thì dễ; bớt đi mới khó. Mỗi yếu tố trên một trang phải chiến đấu cho sự tồn tại của nó. Nút này có phục vụ mục tiêu chính của người dùng không? Hình ảnh này có thúc đẩy câu chuyện không? Nếu câu trả lời là do dự, yếu tố đó phải đi. Triết lý này mở rộng ra ngoài thiết kế vào cách chúng ta viết và giao tiếp.
-                        </p>
-
-                        <h3>Thẩm Mỹ Chức Năng</h3>
-
-                        <p>
-                            Hình thức tuân theo chức năng là một câu ngạn ngữ cũ, nhưng trong thời đại kỹ thuật số, nó đã mang một sự cấp bách mới. Một giao diện đẹp mắt nhưng làm người dùng bối rối là một thất bại của thiết kế. Chủ nghĩa tối giản thực sự kết hợp thẩm mỹ với khả năng sử dụng, tạo ra một trải nghiệm cảm thấy trực quan và dễ dàng.
-                        </p>
-
-                        {/* Inline Image */}
-                        <figure className="inline-image">
-                            <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7If36zOX6WqTTbznoeWQnpzoRu6hUSJ__AvjXWHeBGAyweIo2xMh0DiXL4omhl7pNE5Yca0ZV9RiSymrrnOV1_AwyvL-kiuoJecXYq2ZqGx-EWKe6_BqfDi4O7qvODAbE5L17dvd7le4qOoR1hf832NmhfUx1nhYk-qH8avlB-gFM1s3MP1oPIOTuO8QgAQGRhzFnMKFDtXTgIv3oB325-5ht7MHjEpCTdDXHlEZ77R6rzHWPtlPG8fhYjSP5rpKddYbs3248_RA"
-                                alt="Góc làm việc gọn gàng với laptop và cây xanh"
-                            />
-                        </figure>
-
-                        <p>
-                            Khi chúng tôi tiến về phía trước, nền tảng "MeoBeo Talk" nhằm mục đích thể hiện những nguyên tắc này. Bằng cách ưu tiên từ ngữ viết và tiếng nói của tác giả, chúng tôi loại bỏ sự game hóa của tương tác xã hội. Không có thông báo nhấp nháy ở đây, chỉ có những câu chuyện đang chờ được đọc.
-                        </p>
-
-                        <blockquote className="article-quote">
-                            "Sự hoàn hảo đạt được, không phải khi không còn gì để thêm vào, mà là khi không còn gì để bớt đi."
-                            <cite>— Antoine de Saint-Exupéry</cite>
-                        </blockquote>
-
-                        <p>
-                            Nắm lấy tư duy này cho phép người sáng tạo tập trung vào bản chất thông điệp của họ. Nó mời độc giả vào một không gian tĩnh lặng, suy ngẫm, nơi các ý tưởng có thể được tiêu hóa chậm rãi, không chịu áp lực phải nhấp sang chủ đề xu hướng tiếp theo. Đây là nghệ thuật của thiết kế tối giản—một cuộc cách mạng thầm lặng trong một thế giới ồn ào.
-                        </p>
-                    </div>
-
-                    {/* Footer Meta / Tags */}
-                    <div className="article-footer">
+                    {/* Tags */}
+                    {blog.tags && blog.tags.length > 0 && (
                         <div className="article-tags">
-                            {post.tags.map((tag, index) => (
-                                <span key={index} className="tag-pill">{tag}</span>
+                            {blog.tags.map((tag: string, index: number) => (
+                                <span key={index} className="tag">{tag}</span>
                             ))}
                         </div>
-                        <div className="article-engagement">
-                            <div className="engagement-actions">
-                                <button className="engagement-btn">
-                                    <span className="material-symbols-outlined">thumb_up</span>
-                                    <span>{post.likes.toLocaleString()}</span>
-                                </button>
-                                <span className="engagement-divider">|</span>
-                                <button className="engagement-btn">
-                                    <span className="material-symbols-outlined">chat_bubble</span>
-                                    <span>{post.comments}</span>
-                                </button>
-                            </div>
-                            <div className="last-updated">
-                                Cập nhật lần cuối {post.lastUpdated}
-                            </div>
+                    )}
+
+                    {/* Stats */}
+                    <div className="article-stats">
+                        <div className="stat-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            <span>{blog.reaction_count}</span>
+                        </div>
+                        <div className="stat-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>{blog.comment_count}</span>
+                        </div>
+                        <div className="stat-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span>{blog.view_count}</span>
                         </div>
                     </div>
                 </article>

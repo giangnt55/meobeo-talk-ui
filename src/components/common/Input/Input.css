@@ -26,24 +26,24 @@
   align-items: center;
 }
 
-.custom-input {
+input.custom-input {
   width: 100%;
-  height: var(--height-input);
+  height: var(--height-input) !important;
   /* 3.5rem */
-  padding: 0 var(--spacing-6);
+  padding: 0 var(--spacing-6) !important;
   /* pl-6 */
   font-size: var(--font-size-base);
-  border: 2px solid var(--border-light);
+  border: 2px solid var(--border-light) !important;
   /* border-2 */
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-full) !important;
   /* rounded-full */
-  background-color: var(--background-surface);
+  background-color: var(--background-surface) !important;
   color: var(--text-primary);
   transition: all var(--transition-base);
   font-weight: var(--font-weight-normal);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
 }
 
 .custom-input::placeholder {
@@ -57,15 +57,15 @@
   /* ring-4 */
 }
 
-/* Padding for icons */
-.custom-input-with-start-icon {
-  padding-left: 3rem;
-  /* pl-12 */
+/* Padding for icons - Use higher specificity */
+.custom-input-container input.custom-input-with-start-icon {
+  padding-left: 3.5rem !important;
+  /* pl-14 */
 }
 
-.custom-input-with-end-icon {
-  padding-right: 3rem;
-  /* pr-12 */
+.custom-input-container input.custom-input-with-end-icon {
+  padding-right: 3.5rem !important;
+  /* pr-14 */
 }
 
 .custom-input-icon {

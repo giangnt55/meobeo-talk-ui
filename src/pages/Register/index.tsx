@@ -30,6 +30,9 @@ export const RegisterPage: React.FC = () => {
     confirmPassword: '',
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [errors, setErrors] = useState({
     email: '',
     name: '',
@@ -210,58 +213,106 @@ export const RegisterPage: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="register-form">
               <div className="form-group">
-                <label htmlFor="name">Tên của bạn</label>
                 <Input
                   id="name"
                   name="name"
+                  label="Tên của bạn"
                   type="text"
                   placeholder="Nhập tên nè"
                   value={formData.name}
                   onChange={handleChange}
                   error={errors.name}
                   disabled={isPending}
+                  fullWidth
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="email">Email</label>
                 <Input
                   id="email"
                   name="email"
+                  label="Email"
                   type="email"
                   placeholder="Nhập email của bạn"
                   value={formData.email}
                   onChange={handleChange}
                   error={errors.email}
                   disabled={isPending}
+                  fullWidth
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="password">Mật khẩu</label>
                 <Input
                   id="password"
                   name="password"
-                  type="password"
+                  label="Mật khẩu"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Nhập mật khẩu bí mật"
                   value={formData.password}
                   onChange={handleChange}
                   error={errors.password}
                   disabled={isPending}
+                  fullWidth
+                  endIcon={
+                    <button
+                      type="button"
+                      className="password-toggle"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                      style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', color: 'var(--text-tertiary)' }}
+                    >
+                      {showPassword ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5C5.63636 5 2 12 2 12C2 12 5.63636 19 12 19C18.3636 19 22 12 22 12C22 12 18.3636 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3 3L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M10.584 10.587C10.2087 10.9624 9.99778 11.4708 9.99756 12.0013C9.99734 12.5317 10.2078 13.0403 10.5828 13.416C10.9578 13.7917 11.4662 14.0026 11.9966 14.0028C12.5271 14.003 13.0357 13.7925 13.4114 13.4175" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M9.363 5.365C10.2204 5.11972 11.1082 4.99684 12 5C18.364 5 22 12 22 12C21.3034 13.3356 20.4265 14.5684 19.393 15.667M17.357 17.349C15.726 18.449 13.942 19 12 19C5.636 19 2 12 2 12C2.90595 10.4214 4.07171 9.00409 5.447 7.807L17.357 17.349Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </button>
+                  }
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="confirmPassword">Nhập lại mật khẩu</label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
+                  label="Nhập lại mật khẩu"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Nhập lại y chang nha"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   error={errors.confirmPassword}
                   disabled={isPending}
+                  fullWidth
+                  endIcon={
+                    <button
+                      type="button"
+                      className="password-toggle"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      aria-label={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                      style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', color: 'var(--text-tertiary)' }}
+                    >
+                      {showConfirmPassword ? (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5C5.63636 5 2 12 2 12C2 12 5.63636 19 12 19C18.3636 19 22 12 22 12C22 12 18.3636 5 12 5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3 3L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M10.584 10.587C10.2087 10.9624 9.99778 11.4708 9.99756 12.0013C9.99734 12.5317 10.2078 13.0403 10.5828 13.416C10.9578 13.7917 11.4662 14.0026 11.9966 14.0028C12.5271 14.003 13.0357 13.7925 13.4114 13.4175" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M9.363 5.365C10.2204 5.11972 11.1082 4.99684 12 5C18.364 5 22 12 22 12C21.3034 13.3356 20.4265 14.5684 19.393 15.667M17.357 17.349C15.726 18.449 13.942 19 12 19C5.636 19 2 12 2 12C2.90595 10.4214 4.07171 9.00409 5.447 7.807L17.357 17.349Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </button>
+                  }
                 />
               </div>
 

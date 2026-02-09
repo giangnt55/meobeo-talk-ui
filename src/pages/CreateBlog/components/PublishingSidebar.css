@@ -173,6 +173,34 @@
     transform: translateY(0);
 }
 
+.publish-btn.loading {
+    opacity: 0.8;
+    cursor: wait;
+}
+
+.draft-btn {
+    width: 100%;
+    padding: 0.625rem;
+    background-color: var(--bg-warm);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.draft-btn:hover:not(:disabled) {
+    background-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+.draft-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .schedule-btn {
     width: 100%;
     padding: 0.625rem;

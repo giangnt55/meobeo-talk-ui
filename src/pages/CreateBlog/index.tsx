@@ -4,6 +4,8 @@ import PublishingSidebar from './components/PublishingSidebar.tsx';
 import { BlogEditor } from './components/BlogEditor';
 import { SEO } from '@/components/common/SEO/SEO';
 import { blogApi } from '@/api/services/blogApi';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import './CreateBlog.css';
 
 const CreateBlog: React.FC = () => {
@@ -15,7 +17,7 @@ const CreateBlog: React.FC = () => {
     const [visibility, setVisibility] = useState<'public' | 'private' | 'followers'>('public');
     const [category, setCategory] = useState<string>('');
     const [isPublishing, setIsPublishing] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { toasts, removeToast, error: toastError, success: toastSuccess } = useToast();
     const lastSaved = '2 phút trước';
 
     const titleRef = useRef<HTMLTextAreaElement>(null);
@@ -50,13 +52,12 @@ const CreateBlog: React.FC = () => {
 
     const handlePublish = async () => {
         if (!title.trim() || !body.trim()) {
-            setError('Title and content are required');
+            toastError('Lỗi', 'Vui lòng nhập tiêu đề và nội dung bài viết');
             return;
         }
 
         try {
             setIsPublishing(true);
-            setError(null);
 
             const blog = await blogApi.createBlog({
                 title: title.trim(),
@@ -69,9 +70,10 @@ const CreateBlog: React.FC = () => {
             });
 
             // Navigate to the created blog
+            toastSuccess('Thành công', 'Bài viết đã được xuất bản');
             navigate(`/blog/${blog.id}`);
         } catch (err) {
-            setError('Failed to publish blog. Please try again.');
+            toastError('Lỗi', 'Không thể xuất bản bài viết. Vui lòng thử lại.');
             console.error('Error publishing blog:', err);
         } finally {
             setIsPublishing(false);
@@ -80,13 +82,12 @@ const CreateBlog: React.FC = () => {
 
     const handleSaveDraft = async () => {
         if (!title.trim() || !body.trim()) {
-            setError('Title and content are required to save draft');
+            toastError('Lỗi', 'Cần có tiêu đề và nội dung để lưu bản nháp');
             return;
         }
 
         try {
             setIsPublishing(true);
-            setError(null);
 
             await blogApi.createBlog({
                 title: title.trim(),
@@ -98,10 +99,9 @@ const CreateBlog: React.FC = () => {
                 status: 'draft',
             });
 
-            // Show success message or navigate
-            alert('Draft saved successfully!');
+            toastSuccess('Đã lưu', 'Bản nháp đã được lưu thành công!');
         } catch (err) {
-            setError('Failed to save draft. Please try again.');
+            toastError('Lỗi', 'Không thể lưu bản nháp. Vui lòng thử lại.');
             console.error('Error saving draft:', err);
         } finally {
             setIsPublishing(false);
@@ -116,6 +116,7 @@ const CreateBlog: React.FC = () => {
     return (
         <>
             <SEO title="Tạo Blog - MeoBeo Talk" />
+            <ToastContainer toasts={toasts} onClose={removeToast} />
 
             {/* Main Layout */}
             <div className="create-blog-layout">
@@ -205,6 +206,8 @@ const CreateBlog: React.FC = () => {
                     onTagsChange={setTags}
                     onPublish={handlePublish}
                     onSchedule={handleSchedule}
+                    onSaveDraft={handleSaveDraft}
+                    isPublishing={isPublishing}
                 />
             </div>
 

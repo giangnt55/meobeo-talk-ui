@@ -6,7 +6,7 @@ export interface UploadRequest {
     file_name: string;
     file_type: string;
     file_size: number;
-    upload_type: 'avatar' | 'banner' | 'post_image' | 'journal_image';
+    upload_type: 'avatar' | 'banner' | 'post_image' | 'journal_image' | 'blog_image' | 'content_image';
     entity_id?: string;
 }
 
@@ -17,6 +17,7 @@ export interface UploadResponse {
 }
 
 export interface FileInfo {
+    image_id: string;
     file_key: string;
     public_url: string;
     thumbnail_url?: string;
@@ -102,5 +103,36 @@ export const uploadApi = {
         }
 
         throw new Error(response.message || 'Failed to get file info');
+    },
+
+    /**
+     * Direct upload for local storage or simple uploads
+     */
+    directUpload: async (
+        file: File,
+        uploadType: UploadRequest['upload_type'] = 'blog_image',
+        entityId?: string
+    ): Promise<FileInfo> => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_type', uploadType);
+        formData.append('file_name', file.name);
+        formData.append('file_type', file.type);
+        formData.append('file_size', file.size.toString());
+        if (entityId) {
+            formData.append('entity_id', entityId);
+        }
+
+        const response = await api
+            .post('upload/direct', {
+                body: formData,
+            })
+            .json<ApiResponse<FileInfo>>();
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+
+        throw new Error(response.message || 'Failed to upload file');
     },
 };

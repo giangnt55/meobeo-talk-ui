@@ -11,6 +11,8 @@ interface PublishingSidebarProps {
     onTagsChange: (tags: string[]) => void;
     onPublish: () => void;
     onSchedule: () => void;
+    onSaveDraft?: () => void;
+    isPublishing?: boolean;
 }
 
 const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
@@ -22,6 +24,8 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
     onTagsChange,
     onPublish,
     onSchedule,
+    onSaveDraft,
+    isPublishing = false,
 }) => {
     const [newTag, setNewTag] = useState('');
 
@@ -111,10 +115,21 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
 
                     {/* Action Buttons */}
                     <div className="actions-section">
-                        <button onClick={onPublish} className="publish-btn">
-                            Xuất bản ngay
+                        <button
+                            onClick={onPublish}
+                            className={`publish-btn ${isPublishing ? 'loading' : ''}`}
+                            disabled={isPublishing}
+                        >
+                            {isPublishing ? 'Đang xuất bản...' : 'Xuất bản ngay'}
                         </button>
-                        <button onClick={onSchedule} className="schedule-btn">
+                        <button
+                            onClick={onSaveDraft}
+                            className="draft-btn"
+                            disabled={isPublishing}
+                        >
+                            Lưu nháp
+                        </button>
+                        <button onClick={onSchedule} className="schedule-btn" disabled={isPublishing}>
                             Lên lịch sau
                         </button>
                     </div>

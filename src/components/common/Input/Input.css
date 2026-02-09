@@ -70,6 +70,8 @@
 
 .custom-input-icon {
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,6 +80,13 @@
   /* Let clicks pass through unless interactive */
   width: 1.5rem;
   height: 1.5rem;
+}
+
+/* Suppress native browser icons for password reveal and clear */
+.custom-input::-ms-reveal,
+.custom-input::-ms-clear,
+.custom-input::-webkit-contacts-auto-fill-button {
+  display: none !important;
 }
 
 .custom-input-icon-start {
@@ -92,8 +101,8 @@
 /* Error State */
 .custom-input-error .custom-input {
   border-color: var(--error);
-  background-color: rgba(239, 68, 68, 0.05);
-  /* redness */
+  background-color: var(--error-light);
+  /* themed redness */
 }
 
 .custom-input-error .custom-input:focus {

@@ -242,14 +242,11 @@
 .register-form .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  width: 100%;
 }
 
-.register-form .form-group label {
-  color: var(--text-primary);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-}
+/* Label is now handled by Input component */
+/* .register-form .form-group label { ... } removed */
 
 .submit-btn {
   width: 100%;

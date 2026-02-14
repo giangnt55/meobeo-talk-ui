@@ -17,6 +17,12 @@ interface LoginApiResponse {
   following?: string[];
   followers?: string[];
   created_at?: string;
+  updated_at?: string;
+  is_active?: boolean;
+  email_verified?: boolean;
+  post_count?: number;
+  follower_count?: number;
+  following_count?: number;
 }
 
 export const authApi = {
@@ -47,6 +53,13 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          created_at: apiData.created_at || new Date().toISOString(),
+          updated_at: apiData.updated_at || new Date().toISOString(),
+          is_active: apiData.is_active ?? true,
+          email_verified: apiData.email_verified ?? false,
+          post_count: apiData.post_count ?? 0,
+          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
+          following_count: apiData.following_count ?? (apiData.following?.length || 0),
           onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
@@ -83,6 +96,13 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          created_at: apiData.created_at || new Date().toISOString(),
+          updated_at: apiData.updated_at || new Date().toISOString(),
+          is_active: apiData.is_active ?? true,
+          email_verified: apiData.email_verified ?? false,
+          post_count: apiData.post_count ?? 0,
+          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
+          following_count: apiData.following_count ?? (apiData.following?.length || 0),
           onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
@@ -123,6 +143,13 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          created_at: apiData.created_at || new Date().toISOString(),
+          updated_at: apiData.updated_at || new Date().toISOString(),
+          is_active: apiData.is_active ?? true,
+          email_verified: apiData.email_verified ?? false,
+          post_count: apiData.post_count ?? 0,
+          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
+          following_count: apiData.following_count ?? (apiData.following?.length || 0),
           onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,
@@ -251,6 +278,13 @@ export const authApi = {
           following: apiData.following || [],
           followers: apiData.followers || [],
           createdAt: apiData.created_at || new Date().toISOString(),
+          created_at: apiData.created_at || new Date().toISOString(),
+          updated_at: apiData.updated_at || new Date().toISOString(),
+          is_active: apiData.is_active ?? true,
+          email_verified: apiData.email_verified ?? false,
+          post_count: apiData.post_count ?? 0,
+          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
+          following_count: apiData.following_count ?? (apiData.following?.length || 0),
           onboardingCompleted: apiData.onboarding_completed,
         },
         accessToken: apiData.access_token,

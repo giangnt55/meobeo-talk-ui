@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import type { User, AuthContextType } from '@/types/auth';
 import { authApi } from '@/api/services/authApi';
+import { userApi } from '@/api/services/userApi';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -15,21 +16,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // INIT AUTH
   useEffect(() => {
-    try {
-      const storedAccessToken = localStorage.getItem('accessToken');
-      const storedUser = localStorage.getItem('user');
+    const initAuth = async () => {
+      try {
+        const storedAccessToken = localStorage.getItem('accessToken');
+        const storedUser = localStorage.getItem('user');
 
-      // Refresh token is in HttpOnly cookie, so we only check access token and user
-      if (storedAccessToken && storedUser) {
-        setUser(JSON.parse(storedUser));
-        setAccessToken(storedAccessToken);
+        // Refresh token is in HttpOnly cookie, so we only check access token and user
+        if (storedAccessToken && storedUser) {
+          setAccessToken(storedAccessToken);
+
+          // Fetch fresh profile from server
+          try {
+            const profile = await userApi.getProfile();
+            setUser(profile);
+            localStorage.setItem('user', JSON.stringify(profile));
+          } catch (error) {
+            console.error('Failed to fetch profile:', error);
+            // Fallback to stored user if API fails
+            setUser(JSON.parse(storedUser));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to initialize auth:', err);
+        localStorage.clear();
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error('Failed to initialize auth:', err);
-      localStorage.clear();
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    initAuth();
   }, []);
 
   const login = async (emailOrUsername: string, password: string) => {
@@ -77,6 +92,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
+  const refreshProfile = async () => {
+    try {
+      const profile = await userApi.getProfile();
+      setUser(profile);
+      localStorage.setItem('user', JSON.stringify(profile));
+      return profile;
+    } catch (error) {
+      console.error('Failed to refresh profile:', error);
+      throw error;
+    }
+  };
+
   const value: AuthContextType = {
     user,
     accessToken,
@@ -86,6 +113,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout,
     updateUser,
+    refreshProfile,
     setAuth: (user, token) => setAuth(user, token),
   };
 

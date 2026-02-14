@@ -1,4 +1,5 @@
 :root {
+  --scrollbar-width: 0px;
   /* Primary Colors */
   --primary: #ee7c2b;
   --primary-rgb: 238, 124, 43;

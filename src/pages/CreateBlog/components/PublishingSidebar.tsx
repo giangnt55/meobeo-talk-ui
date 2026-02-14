@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PublishingSidebar.css';
-import { BLOG_CATEGORIES } from '@/constants/blog';
+import { CategoryDropdown } from './CategoryDropdown';
+import { categoryApi } from '@/api/services/categoryApi';
 
 interface PublishingSidebarProps {
     visibility: 'public' | 'private' | 'followers';
@@ -28,6 +29,23 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
     isPublishing = false,
 }) => {
     const [newTag, setNewTag] = useState('');
+    const [categories, setCategories] = useState<string[]>([]);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const data = await categoryApi.getCategories();
+                setCategories(data.map(cat => cat.name));
+            } catch (error) {
+                console.error('Failed to fetch categories:', error);
+            } finally {
+                setIsLoadingCategories(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && newTag.trim()) {
@@ -72,18 +90,15 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
                     {/* Category Selection */}
                     <div className="section-container">
                         <label className="section-label">Chuyên mục</label>
-                        <select
-                            value={category}
-                            onChange={(e) => onCategoryChange(e.target.value)}
-                            className="category-select"
-                        >
-                            <option value="">Chọn chuyên mục</option>
-                            {BLOG_CATEGORIES.map((cat) => (
-                                <option key={cat} value={cat}>
-                                    {cat}
-                                </option>
-                            ))}
-                        </select>
+                        {isLoadingCategories ? (
+                            <div className="category-loading">Đang tải...</div>
+                        ) : (
+                            <CategoryDropdown
+                                value={category}
+                                onChange={onCategoryChange}
+                                categories={categories}
+                            />
+                        )}
                     </div>
 
                     {/* Tags Input */}

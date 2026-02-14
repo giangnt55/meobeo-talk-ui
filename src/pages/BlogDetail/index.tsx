@@ -125,14 +125,14 @@ const BlogDetailPage: React.FC = () => {
 
                     {/* Hero Image */}
                     {blog.banner_url && (
-                        <div className="article-hero">
+                        <div className="hero-image">
                             <img src={blog.banner_url} alt={blog.title} />
                         </div>
                     )}
 
                     {/* Content */}
                     <div
-                        className="article-content"
+                        className="article-body"
                         dangerouslySetInnerHTML={{ __html: blog.content_html }}
                     />
 

@@ -1,15 +1,17 @@
 import React, { useRef, useEffect } from 'react';
 import './NotificationDropdown.css'; // We will create this CSS file
 import { Notification } from '@/types/notification';
+import { Tooltip } from '@/components/common/Tooltip';
 
 interface NotificationDropdownProps {
     isOpen: boolean;
     onClose: () => void;
     notifications: Notification[];
     onMarkAllRead: () => void;
+    onNotificationClick: (notification: Notification) => void;
 }
 
-export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onClose, notifications, onMarkAllRead }) => {
+export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onClose, notifications, onMarkAllRead, onNotificationClick }) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -68,18 +70,26 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOp
             </div>
             <div className="notification-list">
                 {notifications.map((notification) => (
-                    <div key={notification.id} className={`notification-item ${!notification.isRead ? 'unread' : ''}`}>
+                    <div
+                        key={notification.id}
+                        className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
+                        onClick={() => onNotificationClick(notification)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         {!notification.isRead && <div className="unread-indicator"></div>}
                         <div className="notification-avatar-container">
                             <div className={`notification-avatar ${getActorAvatarColor(notification.type)}`}>
                                 {notification.actor.avatar ? (
-                                    // If we had real avatars
                                     <img src={notification.actor.avatar} alt={notification.actor.name} />
                                 ) : (
-                                    notification.actor.initials || notification.actor.name.charAt(0).toUpperCase()
+                                    <>
+                                        {notification.type === 'system' && <span className="material-symbols-outlined text-xl icon-filled">celebration</span>}
+                                        {notification.type === 'mention' && <span className="material-symbols-outlined text-xl">alternate_email</span>}
+                                        {notification.type !== 'system' && notification.type !== 'mention' && (
+                                            notification.actor.initials || notification.actor.name.charAt(0).toUpperCase()
+                                        )}
+                                    </>
                                 )}
-                                {notification.type === 'system' && <span className="material-symbols-outlined text-xl icon-filled">celebration</span>}
-                                {notification.type === 'mention' && <span className="material-symbols-outlined text-xl">alternate_email</span>}
                             </div>
 
                             {/* Badge for comment/like */}
@@ -91,13 +101,21 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOp
                         </div>
 
                         <div className="notification-content">
-                            <p className="notification-text">
-                                <span className="notification-actor">{notification.actor.name}</span>
-                                {notification.type === 'comment' && <> commented on your post <span className="notification-highlight">"{notification.content.target}"</span></>}
-                                {notification.type === 'like' && <> liked your photo.</>}
-                                {notification.type === 'mention' && <> mentioned you in a comment.</>}
-                                {notification.type === 'system' && <><br />{notification.content.text}</>}
-                            </p>
+                            <Tooltip
+                                content={`${notification.actor.name} ${notification.content.text}${notification.content.highlight ? ` ${notification.content.highlight}` : ''}${notification.content.target ? ` ${notification.content.target}` : ''}`}
+                                position="top"
+                            >
+                                <p className="notification-text">
+                                    <strong>{notification.actor.name}</strong>{' '}
+                                    {notification.content.text}
+                                    {notification.content.highlight && (
+                                        <span className="notification-highlight"> {notification.content.highlight}</span>
+                                    )}
+                                    {notification.content.target && (
+                                        <span className="notification-target"> {notification.content.target}</span>
+                                    )}
+                                </p>
+                            </Tooltip>
                             <span className="notification-time">{notification.timestamp}</span>
                         </div>
                     </div>

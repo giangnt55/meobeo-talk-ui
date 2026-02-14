@@ -4,8 +4,8 @@ import PublishingSidebar from './components/PublishingSidebar.tsx';
 import { BlogEditor } from './components/BlogEditor';
 import { SEO } from '@/components/common/SEO/SEO';
 import { blogApi } from '@/api/services/blogApi';
-import { useToast } from '@/hooks/useToast';
-import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { uploadApi } from '@/api/services/uploadApi';
+import { ConfirmModal, SuccessModal, InfoModal } from '@/components/common/Modal';
 import './CreateBlog.css';
 
 const CreateBlog: React.FC = () => {
@@ -13,11 +13,19 @@ const CreateBlog: React.FC = () => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImage, setCoverImage] = useState<string | null>(null);
+    const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
     const [tags, setTags] = useState<string[]>(['design']);
     const [visibility, setVisibility] = useState<'public' | 'private' | 'followers'>('public');
     const [category, setCategory] = useState<string>('');
     const [isPublishing, setIsPublishing] = useState(false);
-    const { toasts, removeToast, error: toastError, success: toastSuccess } = useToast();
+
+    // Modal states
+    const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+    const [showDraftConfirm, setShowDraftConfirm] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
+    const [errorMessage, setErrorMessage] = useState({ title: '', message: '' });
     const lastSaved = '2 phút trước';
 
     const titleRef = useRef<HTMLTextAreaElement>(null);
@@ -38,11 +46,11 @@ const CreateBlog: React.FC = () => {
     const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setCoverImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            // Store file for later upload
+            setCoverImageFile(file);
+            // Create preview URL
+            const previewUrl = URL.createObjectURL(file);
+            setCoverImage(previewUrl);
         }
         // Reset input value so the same file can be selected again
         if (fileInputRef.current) {
@@ -50,58 +58,110 @@ const CreateBlog: React.FC = () => {
         }
     };
 
-    const handlePublish = async () => {
+    const handlePublishClick = () => {
         if (!title.trim() || !body.trim()) {
-            toastError('Lỗi', 'Vui lòng nhập tiêu đề và nội dung bài viết');
+            setErrorMessage({
+                title: 'Thiếu thông tin',
+                message: 'Vui lòng nhập tiêu đề và nội dung bài viết trước khi xuất bản.'
+            });
+            setShowError(true);
             return;
         }
+        setShowPublishConfirm(true);
+    };
+
+    const handlePublish = async () => {
+        setShowPublishConfirm(false);
 
         try {
             setIsPublishing(true);
+
+            // Upload cover image if exists
+            let uploadedCoverUrl = coverImage;
+            if (coverImageFile) {
+                const result = await uploadApi.directUpload(coverImageFile, 'banner');
+                uploadedCoverUrl = result.public_url;
+            }
 
             const blog = await blogApi.createBlog({
                 title: title.trim(),
                 content_html: body,
                 category: category || undefined,
-                banner_url: coverImage || undefined,
+                banner_url: uploadedCoverUrl || undefined,
                 tags,
                 visibility,
                 status: 'published',
             });
 
-            // Navigate to the created blog
-            toastSuccess('Thành công', 'Bài viết đã được xuất bản');
-            navigate(`/blog/${blog.id}`);
+            // Show success and navigate
+            setSuccessMessage({
+                title: 'Đã xuất bản!',
+                message: 'Bài viết của bạn đã được xuất bản thành công.'
+            });
+            setShowSuccess(true);
+
+            // Navigate after a short delay
+            setTimeout(() => {
+                navigate(`/blog/${blog.id}`);
+            }, 1500);
         } catch (err) {
-            toastError('Lỗi', 'Không thể xuất bản bài viết. Vui lòng thử lại.');
+            setErrorMessage({
+                title: 'Lỗi xuất bản',
+                message: 'Không thể xuất bản bài viết. Vui lòng thử lại.'
+            });
+            setShowError(true);
             console.error('Error publishing blog:', err);
         } finally {
             setIsPublishing(false);
         }
     };
 
-    const handleSaveDraft = async () => {
+    const handleSaveDraftClick = () => {
         if (!title.trim() || !body.trim()) {
-            toastError('Lỗi', 'Cần có tiêu đề và nội dung để lưu bản nháp');
+            setErrorMessage({
+                title: 'Thiếu thông tin',
+                message: 'Cần có tiêu đề và nội dung để lưu bản nháp.'
+            });
+            setShowError(true);
             return;
         }
+        setShowDraftConfirm(true);
+    };
+
+    const handleSaveDraft = async () => {
+        setShowDraftConfirm(false);
 
         try {
             setIsPublishing(true);
+
+            // Upload cover image if exists
+            let uploadedCoverUrl = coverImage;
+            if (coverImageFile) {
+                const result = await uploadApi.directUpload(coverImageFile, 'banner');
+                uploadedCoverUrl = result.public_url;
+            }
 
             await blogApi.createBlog({
                 title: title.trim(),
                 content_html: body,
                 category: category || undefined,
-                banner_url: coverImage || undefined,
+                banner_url: uploadedCoverUrl || undefined,
                 tags,
                 visibility,
                 status: 'draft',
             });
 
-            toastSuccess('Đã lưu', 'Bản nháp đã được lưu thành công!');
+            setSuccessMessage({
+                title: 'Đã lưu bản nháp',
+                message: 'Bản nháp của bạn đã được lưu thành công!'
+            });
+            setShowSuccess(true);
         } catch (err) {
-            toastError('Lỗi', 'Không thể lưu bản nháp. Vui lòng thử lại.');
+            setErrorMessage({
+                title: 'Lỗi lưu bản nháp',
+                message: 'Không thể lưu bản nháp. Vui lòng thử lại.'
+            });
+            setShowError(true);
             console.error('Error saving draft:', err);
         } finally {
             setIsPublishing(false);
@@ -116,7 +176,46 @@ const CreateBlog: React.FC = () => {
     return (
         <>
             <SEO title="Tạo Blog - MeoBeo Talk" />
-            <ToastContainer toasts={toasts} onClose={removeToast} />
+
+            {/* Modals */}
+            <ConfirmModal
+                isOpen={showPublishConfirm}
+                onClose={() => setShowPublishConfirm(false)}
+                onConfirm={handlePublish}
+                title="Xuất bản bài viết?"
+                message="Bài viết sẽ được công khai và mọi người có thể xem. Bạn có chắc chắn muốn xuất bản?"
+                confirmText="Xuất bản"
+                cancelText="Hủy"
+                variant="primary"
+            />
+
+            <ConfirmModal
+                isOpen={showDraftConfirm}
+                onClose={() => setShowDraftConfirm(false)}
+                onConfirm={handleSaveDraft}
+                title="Lưu bản nháp?"
+                message="Bài viết sẽ được lưu dưới dạng bản nháp và bạn có thể chỉnh sửa sau."
+                confirmText="Lưu"
+                cancelText="Hủy"
+                variant="primary"
+            />
+
+            <SuccessModal
+                isOpen={showSuccess}
+                onClose={() => setShowSuccess(false)}
+                title={successMessage.title}
+                message={successMessage.message}
+            />
+
+            <InfoModal
+                isOpen={showError}
+                onClose={() => setShowError(false)}
+                title={errorMessage.title}
+                icon="error"
+                iconColor="red"
+            >
+                <p>{errorMessage.message}</p>
+            </InfoModal>
 
             {/* Main Layout */}
             <div className="create-blog-layout">
@@ -204,15 +303,15 @@ const CreateBlog: React.FC = () => {
                     onCategoryChange={setCategory}
                     tags={tags}
                     onTagsChange={setTags}
-                    onPublish={handlePublish}
+                    onPublish={handlePublishClick}
                     onSchedule={handleSchedule}
-                    onSaveDraft={handleSaveDraft}
+                    onSaveDraft={handleSaveDraftClick}
                     isPublishing={isPublishing}
                 />
             </div>
 
             {/* Mobile Floating Button */}
-            <button className="mobile-publish-btn" onClick={handlePublish}>
+            <button className="mobile-publish-btn" onClick={handlePublishClick}>
                 <span className="material-symbols-outlined">publish</span>
             </button>
         </>

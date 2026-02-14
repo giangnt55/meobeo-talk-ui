@@ -2,13 +2,23 @@ export interface User {
   id: string;
   email: string;
   username: string;
-  displayName: string;
-  avatar?: string;
+  display_name?: string;
+  displayName?: string; // Keep for backward compatibility
+  avatar_url?: string;
+  avatar?: string; // Keep for backward compatibility
   bio?: string;
-  interests: string[];
-  following: string[];
-  followers: string[];
-  createdAt: string;
+  is_active: boolean;
+  email_verified: boolean;
+  post_count: number;
+  follower_count: number;
+  following_count: number;
+  interests?: string[]; // Optional for backward compatibility
+  following?: string[]; // Optional for backward compatibility
+  followers?: string[]; // Optional for backward compatibility
+  created_at: string;
+  createdAt?: string; // Keep for backward compatibility
+  updated_at: string;
+  last_seen_at?: string;
   onboardingCompleted?: boolean;
 }
 
@@ -54,5 +64,6 @@ export interface AuthContextType {
   login: (emailOrUsername: string, password: string) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   updateUser: (user: Partial<User>) => void;
-  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
+  refreshProfile: () => Promise<User>;
+  setAuth: (user: User, accessToken: string, refreshToken?: string) => void;
 }

@@ -1,7 +1,7 @@
 .debug-panel-trigger {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: calc(20px + var(--scrollbar-width, 0px));
     z-index: 9998;
     padding: 12px 16px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

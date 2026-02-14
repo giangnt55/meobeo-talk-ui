@@ -1,57 +1,158 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/common/Button/Button';
 import { MobileMenu } from './MobileMenu';
 import { NotificationDropdown } from '@/components/features/Notification/NotificationDropdown';
 import { Notification } from '@/types/notification';
+import { socketService } from '@/api/services/socketService';
+import { notificationApi } from '@/api/services/notificationApi';
 import './Navbar.css';
 
-// Mock data (temporary)
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    type: 'comment',
-    actor: { name: 'Alex Smith', initials: 'AS' },
-    content: { target: 'Creative Coding' },
-    timestamp: '2 min ago',
-    isRead: false
-  },
-  {
-    id: '2',
-    type: 'like',
-    actor: { name: 'Mary Jane', initials: 'MJ' },
-    content: {},
-    timestamp: '1 hour ago',
-    isRead: true
-  },
-  {
-    id: '3',
-    type: 'mention',
-    actor: { name: 'Sarah Jenkins', initials: 'SJ' },
-    content: {},
-    timestamp: '3 hours ago',
-    isRead: true
-  },
-  {
-    id: '4',
-    type: 'system',
-    actor: { name: 'Meobeo Talk' },
-    content: { text: 'Welcome to the community! 🎉' },
-    timestamp: '1 day ago',
-    isRead: true
-  }
-];
-
 export const Navbar: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, accessToken } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [mockNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (isAuthenticated && accessToken) {
+      // 1. Connect to WebSocket
+      socketService.connect(accessToken);
+
+      // 2. Fetch initial notifications
+      fetchNotifications();
+
+      // 3. Listen for new notifications
+      const unsubscribe = socketService.onMessage((data: any) => {
+        if (data.type) {
+          handleNewNotification(data);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+        socketService.disconnect();
+      };
+    }
+  }, [isAuthenticated, accessToken]);
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await notificationApi.getNotifications();
+      // Transform backend data to frontend model if necessary
+      // Backend returns: { notifications: [], total: 0, unread_count: 0 }
+      // Each notification: { id, type, actor: { name, avatar... }, payload: { text... }, created_at, is_read }
+
+      // Handle null or undefined notifications array
+      const notificationsList = data.notifications || [];
+      const formattedNotifications = notificationsList.map(mapBackendToFrontend);
+      setNotifications(formattedNotifications);
+      setUnreadCount(data.unread_count || 0);
+    } catch (error) {
+      console.error('Failed to fetch notifications', error);
+      // Set empty state on error
+      setNotifications([]);
+      setUnreadCount(0);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await notificationApi.markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Failed to mark all as read:', error);
+    }
+  };
+
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      // Only mark as read if it has a valid UUID (not a temp ID)
+      const isTempId = notification.id.startsWith('temp-');
+
+      if (!notification.isRead && !isTempId) {
+        await notificationApi.markAsRead(notification.id);
+        setNotifications(prev =>
+          prev.map(n => (n.id === notification.id ? { ...n, isRead: true } : n))
+        );
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      }
+
+      const link = notification.content?.link;
+      if (link) {
+        navigate(link);
+        setShowNotifications(false);
+      }
+    } catch (error) {
+      console.error('Failed to handle notification click:', error);
+    }
+  };
+
+  const handleNewNotification = (data: any) => {
+    console.log('New notification received:', data);
+    const newNotification = mapBackendToFrontend(data);
+    console.log('Transformed notification:', newNotification);
+
+    setNotifications(prev => [newNotification, ...prev]);
+    setUnreadCount(prev => prev + 1);
+  };
+
+  const mapBackendToFrontend = (n: any): Notification => {
+    console.log('Mapping notification:', n);
+
+    // Handle actor info - API returns nested Actor object with capital A
+    const actor = n.Actor || n.actor;
+    const actorName = actor?.display_name || actor?.username || n.actor_name || 'Someone';
+    const actorAvatar = actor?.avatar_url;
+
+    // Handle payload - Go's sql.NullString serializes as {String: "...", Valid: true}
+    let rawPayload = n.payload || n.data || {};
+
+    // If payload has String field (from sql.NullString), use that
+    if (rawPayload.String) {
+      rawPayload = rawPayload.String;
+    }
+
+    // Parse payload if it's a string
+    let payload = rawPayload;
+    if (typeof rawPayload === 'string') {
+      try {
+        payload = JSON.parse(rawPayload);
+      } catch (e) {
+        console.error('Failed to parse payload:', e);
+        payload = {};
+      }
+    }
+
+    // Extract content fields
+    const content = {
+      text: payload.text || n.message || '',
+      highlight: payload.highlight,
+      target: payload.target,
+      link: payload.link,
+    };
+
+    return {
+      id: n.id || `temp-${Date.now()}`,
+      type: n.type as any,
+      actor: {
+        name: actorName,
+        avatar: actorAvatar,
+        initials: actorName.charAt(0).toUpperCase(),
+      },
+      content: content,
+      timestamp: n.created_at ? new Date(n.created_at).toLocaleString() : new Date().toLocaleString(),
+      isRead: n.is_read || false,
+    };
+  };
 
   const handleLogout = async () => {
+    socketService.disconnect();
     await logout();
     navigate('/');
   };
@@ -156,7 +257,7 @@ export const Navbar: React.FC = () => {
                       >
                         <span className="material-symbols-outlined icon-filled">notifications</span>
                         {/* Unread indicator */}
-                        {mockNotifications.some(n => !n.isRead) && (
+                        {unreadCount > 0 && (
                           <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-white"></span>
@@ -166,8 +267,9 @@ export const Navbar: React.FC = () => {
                       <NotificationDropdown
                         isOpen={showNotifications}
                         onClose={() => setShowNotifications(false)}
-                        notifications={mockNotifications}
-                        onMarkAllRead={() => console.log('Mark all read')}
+                        notifications={notifications}
+                        onMarkAllRead={handleMarkAllRead}
+                        onNotificationClick={handleNotificationClick}
                       />
                     </div>
 
@@ -253,3 +355,4 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
+

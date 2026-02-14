@@ -6,6 +6,8 @@ import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import './BlogEditor.css';
 
+import { uploadApi } from '@/api/services/uploadApi';
+
 interface BlogEditorProps {
     content: string;
     onChange: (content: string) => void;
@@ -47,7 +49,7 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
         },
         editorProps: {
             attributes: {
-                class: 'prose prose-lg focus:outline-none',
+                class: 'blog-content focus:outline-none',
             },
         },
     });
@@ -63,16 +65,16 @@ export const BlogEditor: React.FC<BlogEditorProps> = ({
         }
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                // Insert image without calling focus() to prevent cursor disappearing
-                editor.chain().setImage({ src: base64String }).run();
-            };
-            reader.readAsDataURL(file);
+            try {
+                const result = await uploadApi.directUpload(file, 'blog_image');
+                editor.chain().setImage({ src: result.public_url }).run();
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Không thể tải lên hình ảnh');
+            }
         }
         // Reset input so the same file can be selected again
         if (imageInputRef.current) {

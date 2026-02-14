@@ -22,13 +22,23 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   useEffect(() => {
     if (isOpen) {
+      // Calculate scrollbar width before hiding it
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+      // Add padding to prevent layout shift
       document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     } else {
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.body.style.removeProperty('--scrollbar-width');
     }
 
     return () => {
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.body.style.removeProperty('--scrollbar-width');
     };
   }, [isOpen]);
 

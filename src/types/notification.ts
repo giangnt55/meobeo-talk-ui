@@ -12,6 +12,7 @@ export interface Notification {
         text?: string;
         highlight?: string;
         target?: string;
+        link?: string;  // URL to navigate to when clicked
     };
     timestamp: string;
     isRead: boolean;

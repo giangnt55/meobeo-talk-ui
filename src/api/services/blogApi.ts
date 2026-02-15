@@ -31,6 +31,7 @@ export interface Blog {
         avatar_url?: string;
         bio?: string;
     };
+    is_liked?: boolean;
 }
 
 export interface CreateBlogRequest {
@@ -61,6 +62,36 @@ export interface BlogListParams {
 
 export interface FeedResponse {
     posts: Blog[];
+    meta: {
+        page: number;
+        limit: number;
+        total: number;
+        total_pages: number;
+    };
+}
+
+export interface Comment {
+    id: string;
+    content: string;
+    user_id: string;
+    blog_id: string;
+    parent_id?: string;
+    created_at: string;
+    updated_at: string;
+    user: {
+        id: string;
+        username: string;
+        display_name?: string;
+        avatar_url?: string;
+    };
+    reaction_count: number;
+    reply_count: number;
+    is_liked?: boolean;
+    replies?: Comment[];
+}
+
+export interface CommentListResponse {
+    comments: Comment[];
     meta: {
         page: number;
         limit: number;
@@ -167,5 +198,156 @@ export const blogApi = {
         }
 
         throw new Error(response.message || 'Failed to fetch user blogs');
+    },
+
+    /**
+     * Get comments for a blog
+     */
+    /**
+     * Get comments for a blog
+     */
+    getComments: async (blogId: string, page: number = 1, limit: number = 10): Promise<CommentListResponse> => {
+        const response = await api.get(`posts/${blogId}/comments`, {
+            searchParams: {
+                page: page.toString(),
+                limit: limit.toString(),
+            },
+        }).json<ApiResponse<any[]> & { meta: any }>();
+
+        if (response.success) {
+            // Transform new API response to match existing frontend structure
+            const commentsData = response.data || [];
+            const commentMap = new Map<string, any>();
+            const rootComments: any[] = [];
+
+            // First pass: Create map of comments
+            commentsData.forEach((c: any) => {
+                const comment = {
+                    id: c.id,
+                    content: c.content,
+                    user_id: c.author?.id || '',
+                    blog_id: c.post_id,
+                    parent_id: c.parent_id,
+                    created_at: c.created_at,
+                    updated_at: c.updated_at,
+                    user: {
+                        id: c.author?.id || '',
+                        username: c.author?.username || 'Unknown',
+                        display_name: c.author?.display_name,
+                        avatar_url: c.author?.avatar_url,
+                    },
+                    reaction_count: c.reaction_count,
+                    reply_count: c.reply_count,
+                    is_liked: c.is_liked,
+                    replies: [] as any[]
+                };
+                commentMap.set(c.id, comment);
+            });
+
+            // Second pass: Build tree
+            commentMap.forEach((comment) => {
+                if (comment.parent_id && commentMap.has(comment.parent_id)) {
+                    commentMap.get(comment.parent_id).replies.push(comment);
+                } else {
+                    rootComments.push(comment);
+                }
+            });
+
+            const transformedComments = rootComments;
+
+            return {
+                comments: transformedComments,
+                meta: {
+                    page: response.meta.page,
+                    limit: response.meta.page_size,
+                    total: response.meta.total_items,
+                    total_pages: response.meta.total_pages,
+                },
+            };
+        }
+
+        throw new Error(response.message || 'Failed to fetch comments');
+    },
+
+    /**
+     * Create a comment
+     */
+    /**
+     * Create a comment
+     */
+    createComment: async (blogId: string, content: string, parentId?: string): Promise<Comment> => {
+        let url = 'interactions/comments';
+        let body: any = { post_id: blogId, content };
+
+        if (parentId) {
+            url = 'interactions/comments/reply';
+            body = { post_id: blogId, parent_id: parentId, content };
+        }
+
+        const response = await api.post(url, { json: body }).json<ApiResponse<any>>();
+
+        if (response.success && response.data) {
+            const c = response.data;
+            return {
+                id: c.id,
+                content: c.content,
+                user_id: c.author?.id || '',
+                blog_id: c.post_id,
+                parent_id: c.parent_id,
+                created_at: c.created_at,
+                updated_at: c.updated_at,
+                user: {
+                    id: c.author?.id || '',
+                    username: c.author?.username || 'Unknown',
+                    display_name: c.author?.display_name,
+                    avatar_url: c.author?.avatar_url,
+                },
+                reaction_count: c.reaction_count,
+                reply_count: c.reply_count,
+                is_liked: c.is_liked,
+                replies: []
+            };
+        }
+
+        throw new Error(response.message || 'Failed to post comment');
+    },
+
+    /**
+     * Like/Unlike a blog
+     */
+    /**
+     * Like/Unlike a blog
+     */
+    toggleBlogLike: async (blogId: string): Promise<{ liked: boolean; count: number }> => {
+        const response = await api.post('interactions/reactions', {
+            json: { target_id: blogId, target_type: 'post', reaction: 'like' }
+        }).json<ApiResponse<{ success: boolean; is_added: boolean; reaction_count: number }>>();
+
+        if (response.success && response.data) {
+            return {
+                liked: response.data.is_added,
+                count: response.data.reaction_count,
+            };
+        }
+
+        throw new Error(response.message || 'Failed to toggle like');
+    },
+
+    /**
+     * Like/Unlike a comment
+     */
+    toggleCommentLike: async (commentId: string): Promise<{ liked: boolean; count: number }> => {
+        const response = await api.post('interactions/reactions', {
+            json: { target_id: commentId, target_type: 'comment', reaction: 'like' }
+        }).json<ApiResponse<{ success: boolean; is_added: boolean; reaction_count: number }>>();
+
+        if (response.success && response.data) {
+            return {
+                liked: response.data.is_added,
+                count: response.data.reaction_count,
+            };
+        }
+
+        throw new Error(response.message || 'Failed to toggle like');
     },
 };

@@ -25,3 +25,15 @@ export interface ApiError {
 }
 
 export type QueryParams = Record<string, string | number | boolean | undefined>;
+
+export interface Pagination {
+  page: number;
+  page_size: number;
+  total_items: number;
+  total_pages: number;
+}
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}

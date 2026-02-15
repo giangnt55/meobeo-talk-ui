@@ -255,7 +255,7 @@ export const Navbar: React.FC = () => {
                         aria-label="Notifications"
                         onClick={() => setShowNotifications(!showNotifications)}
                       >
-                        <span className="material-symbols-outlined icon-filled">notifications</span>
+                        <span className="material-symbols-outlined">notifications</span>
                         {/* Unread indicator */}
                         {unreadCount > 0 && (
                           <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
@@ -279,18 +279,18 @@ export const Navbar: React.FC = () => {
                         onClick={toggleUserMenu}
                         aria-label="User menu"
                       >
-                        {user?.avatar ? (
-                          <img src={user.avatar} alt={user.displayName} className="avatar-image" />
+                        {user?.avatar || user?.avatar_url ? (
+                          <img src={user.avatar || user.avatar_url} alt={user.displayName || user.display_name || user.username} className="avatar-image" />
                         ) : (
                           <div className="avatar-placeholder">
-                            {user?.displayName?.charAt(0).toUpperCase() || 'U'}
+                            {(user?.displayName || user?.display_name || user?.username || 'U').charAt(0).toUpperCase()}
                           </div>
                         )}
                       </button>
                       {isUserMenuOpen && (
                         <div className="user-dropdown">
                           <div className="dropdown-header">
-                            <p className="user-name">{user?.displayName}</p>
+                            <p className="user-name">{user?.displayName || user?.display_name || user?.username}</p>
                             <p className="user-email">{user?.email}</p>
                           </div>
                           <div className="dropdown-divider"></div>

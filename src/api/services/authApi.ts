@@ -11,7 +11,7 @@ interface LoginApiResponse {
   access_token: string;
   refresh_token: string;
   onboarding_completed: boolean;
-  avatar?: string;
+  avatar_url?: string;
   bio?: string;
   interests?: string[];
   following?: string[];
@@ -47,7 +47,7 @@ export const authApi = {
           email: apiData.email,
           username: apiData.username,
           displayName: apiData.display_name,
-          avatar: apiData.avatar,
+          avatar: apiData.avatar_url,
           bio: apiData.bio,
           interests: apiData.interests || [],
           following: apiData.following || [],
@@ -90,7 +90,7 @@ export const authApi = {
           email: apiData.email,
           username: apiData.username,
           displayName: apiData.display_name,
-          avatar: apiData.avatar,
+          avatar: apiData.avatar_url,
           bio: apiData.bio,
           interests: apiData.interests || [],
           following: apiData.following || [],
@@ -137,7 +137,7 @@ export const authApi = {
           email: apiData.email,
           username: apiData.username,
           displayName: apiData.display_name,
-          avatar: apiData.avatar,
+          avatar: apiData.avatar_url,
           bio: apiData.bio,
           interests: apiData.interests || [],
           following: apiData.following || [],
@@ -272,7 +272,7 @@ export const authApi = {
           email: apiData.email,
           username: apiData.username,
           displayName: apiData.display_name,
-          avatar: apiData.avatar,
+          avatar: apiData.avatar_url,
           bio: apiData.bio,
           interests: apiData.interests || [],
           following: apiData.following || [],

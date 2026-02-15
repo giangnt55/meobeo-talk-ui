@@ -144,7 +144,7 @@
     gap: 1rem;
 }
 
-.action-btn {
+.article-action-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -155,11 +155,11 @@
     transition: color var(--transition-fast);
 }
 
-.action-btn:hover {
+.article-action-btn:hover {
     color: var(--primary);
 }
 
-.action-btn .material-symbols-outlined {
+.article-action-btn .material-symbols-outlined {
     font-size: 1.5rem;
 }
 
@@ -397,4 +397,21 @@
     font-size: var(--font-size-sm);
     color: var(--text-subtle);
     font-family: var(--font-sans);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
 }

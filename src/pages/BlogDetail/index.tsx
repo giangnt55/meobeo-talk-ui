@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { SEO } from '@/components/common/SEO/SEO';
 import { blogApi, type Blog, type Comment } from '@/api/services/blogApi';
@@ -18,6 +18,10 @@ const BlogDetailPage: React.FC = () => {
     const [commentText, setCommentText] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+
+    // Pagination
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
 
     // Reply state
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -52,17 +56,61 @@ const BlogDetailPage: React.FC = () => {
         fetchBlog();
     }, [id]);
 
-    const fetchComments = async (blogId: string) => {
+    const fetchComments = async (blogId: string, pageNum = 1) => {
         try {
             setCommentsLoading(true);
-            const data = await blogApi.getComments(blogId, 1, 10);
-            setComments(data.comments);
+            const data = await blogApi.getComments(blogId, pageNum, 10);
+
+            if (pageNum === 1) {
+                setComments(data.comments);
+            } else {
+                setComments(prev => {
+                    const existingIds = new Set(prev.map(c => c.id));
+                    const newComments = data.comments.filter(c => !existingIds.has(c.id));
+                    return [...prev, ...newComments];
+                });
+            }
+
+            setHasMore(data.meta.page < data.meta.total_pages);
+            setPage(pageNum);
         } catch (err) {
             console.error('Error fetching comments:', err);
         } finally {
             setCommentsLoading(false);
         }
     };
+
+    const handleLoadMore = () => {
+        if (blog && hasMore && !commentsLoading) {
+            fetchComments(blog.id, page + 1);
+        }
+    };
+
+    const threadedComments = useMemo(() => {
+        const commentMap = new Map<string, any>();
+        const roots: any[] = [];
+
+        // Deep clone items for tree construction to avoid mutating state items if they are reused
+        // Also initializing replies array
+        const items = comments.map(c => ({ ...c, replies: [] as Comment[] }));
+
+        items.forEach(c => commentMap.set(c.id, c));
+
+        items.forEach(c => {
+            if (c.parent_id && commentMap.has(c.parent_id)) {
+                commentMap.get(c.parent_id).replies.push(c);
+            } else {
+                roots.push(c);
+            }
+        });
+
+        // Optional: Sort roots/replies by date if not already guaranteed by API order preservation
+        // Assuming API returns newest first or generally ordered? 
+        // Typically comments are oldest first (chronological).
+        // Let's rely on API order which is preserved by push.
+
+        return roots;
+    }, [comments]);
 
     const handlePostComment = async () => {
         if (!blog || !commentText.trim()) return;
@@ -143,16 +191,8 @@ const BlogDetailPage: React.FC = () => {
             setReplySubmitting(true);
             const newReply = await blogApi.createComment(blog.id, replyText, parentId);
 
-            setComments(items => items.map(item => {
-                if (item.id === parentId) {
-                    return {
-                        ...item,
-                        replies: [...(item.replies || []), newReply],
-                        reply_count: (item.reply_count || 0) + 1
-                    };
-                }
-                return item;
-            }));
+            // Just append to flat list, useMemo will handle nesting
+            setComments(prev => [...prev, newReply]);
 
             setReplyingTo(null);
             setReplyText('');
@@ -207,7 +247,7 @@ const BlogDetailPage: React.FC = () => {
         );
     }
 
-    const displayedComments = isAuthenticated ? comments : comments.slice(0, 3);
+    const displayedComments = isAuthenticated ? threadedComments : threadedComments.slice(0, 3);
 
     return (
         <>
@@ -216,7 +256,7 @@ const BlogDetailPage: React.FC = () => {
             <main className="blog-detail-container">
                 <article className="blog-detail-article">
                     <div className="article-categories">
-                        {blog.category && <span>{blog.category}</span>}
+                        {blog.category && <span>{blog.category_name || blog.category}</span>}
                     </div>
 
                     <h1 className="article-title">{blog.title}</h1>
@@ -264,7 +304,7 @@ const BlogDetailPage: React.FC = () => {
                     </div>
 
                     {blog.banner_url && (
-                        <div className="hero-image">
+                        <div className="hero-image mb-12">
                             <img src={blog.banner_url} alt={blog.title} />
                         </div>
                     )}
@@ -357,11 +397,7 @@ const BlogDetailPage: React.FC = () => {
                     </div>
 
                     <div className="space-y-12">
-                        {commentsLoading ? (
-                            <div className="flex justify-center py-10">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                            </div>
-                        ) : comments.length > 0 ? (
+                        {comments.length > 0 ? (
                             <>
                                 {displayedComments.map((comment) => (
                                     <div key={comment.id} className="flex gap-4 animate-fade-in">
@@ -453,7 +489,7 @@ const BlogDetailPage: React.FC = () => {
 
                                             {comment.replies && comment.replies.length > 0 && (
                                                 <div className="mt-8 pl-4 border-l border-stone-200 dark:border-stone-800 space-y-8">
-                                                    {comment.replies.map(reply => (
+                                                    {comment.replies.map((reply: any) => (
                                                         <div key={reply.id} className="flex gap-4">
                                                             <div className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-700 flex-shrink-0 overflow-hidden">
                                                                 <img alt={reply.user.username} className="w-full h-full object-cover" src={reply.user.avatar_url || 'https://via.placeholder.com/32'} />
@@ -466,6 +502,18 @@ const BlogDetailPage: React.FC = () => {
                                                                 <p className="text-stone-700 dark:text-stone-300 leading-relaxed font-sans mb-3 text-[15px]">
                                                                     {reply.content}
                                                                 </p>
+                                                                {/* Optional: Add Like/Reply for nested comments here if desired */}
+                                                                {isAuthenticated && (
+                                                                    <button
+                                                                        onClick={() => handleCommentLike(reply.id)}
+                                                                        className={`hover:opacity-80 flex items-center gap-1 transition-opacity ${reply.is_liked ? 'text-primary' : 'text-stone-500 dark:text-stone-400'}`}
+                                                                    >
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={reply.is_liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                                                        </svg>
+                                                                        <span className="text-xs font-sans font-medium">{reply.reaction_count || 0}</span>
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     ))}
@@ -474,6 +522,23 @@ const BlogDetailPage: React.FC = () => {
                                         </div>
                                     </div>
                                 ))}
+
+                                {commentsLoading && (
+                                    <div className="flex justify-center py-6">
+                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                                    </div>
+                                )}
+
+                                {isAuthenticated && hasMore && !commentsLoading && (
+                                    <div className="text-center pt-8">
+                                        <button
+                                            onClick={handleLoadMore}
+                                            className="px-6 py-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-full text-sm font-bold transition-colors"
+                                        >
+                                            Load More Comments
+                                        </button>
+                                    </div>
+                                )}
 
                                 {!isAuthenticated && comments.length > 3 && (
                                     <div className="text-center pt-8 border-t border-stone-200 dark:border-stone-800 mt-6">
@@ -485,7 +550,13 @@ const BlogDetailPage: React.FC = () => {
                                 )}
                             </>
                         ) : (
-                            <p className="text-center text-stone-500 italic">No thoughts shared yet. Be the first!</p>
+                            commentsLoading ? (
+                                <div className="flex justify-center py-10">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                </div>
+                            ) : (
+                                <p className="text-center text-stone-500 italic">No thoughts shared yet. Be the first!</p>
+                            )
                         )}
                     </div>
                 </section>

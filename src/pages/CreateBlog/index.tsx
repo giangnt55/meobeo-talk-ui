@@ -1,15 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import PublishingSidebar from './components/PublishingSidebar.tsx';
 import { BlogEditor } from './components/BlogEditor';
 import { SEO } from '@/components/common/SEO/SEO';
 import { blogApi } from '@/api/services/blogApi';
 import { uploadApi } from '@/api/services/uploadApi';
 import { ConfirmModal, SuccessModal, InfoModal } from '@/components/common/Modal';
+import { useAuth } from '@/hooks/useAuth';
 import './CreateBlog.css';
 
 const CreateBlog: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImage, setCoverImage] = useState<string | null>(null);
@@ -26,7 +28,9 @@ const CreateBlog: React.FC = () => {
     const [showError, setShowError] = useState(false);
     const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
     const [errorMessage, setErrorMessage] = useState({ title: '', message: '' });
-    const lastSaved = '2 phút trước';
+    const { id } = useParams<{ id: string }>();
+    const [blogId, setBlogId] = useState<string | null>(null);
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
     const titleRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +46,41 @@ const CreateBlog: React.FC = () => {
     useEffect(() => {
         autoResize(titleRef.current);
     }, [title]);
+
+    useEffect(() => {
+        if (id) {
+            setBlogId(id);
+            const fetchBlog = async () => {
+                try {
+                    const data = await blogApi.getBlogById(id);
+                    setTitle(data.title);
+                    setBody(data.content_html);
+                    if (data.banner_url) setCoverImage(data.banner_url);
+                    if (data.tags) setTags(data.tags);
+                    if (data.category) setCategory(data.category);
+                    if (data.visibility) setVisibility(data.visibility as any);
+                    setLastSaved(new Date(data.updated_at));
+                } catch (err) {
+                    console.error('Failed to fetch blog:', err);
+                    setErrorMessage({
+                        title: 'Lỗi tải bài viết',
+                        message: 'Không thể tải nội dung bài viết. Vui lòng thử lại sau.'
+                    });
+                    setShowError(true);
+                }
+            };
+            fetchBlog();
+        }
+    }, [id]);
+
+    const formatTimeAgo = (date: Date) => {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+        if (diffInSeconds < 60) return 'Vừa xong';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} phút trước`;
+        return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    };
 
     const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -83,15 +122,22 @@ const CreateBlog: React.FC = () => {
                 uploadedCoverUrl = result.public_url;
             }
 
-            const blog = await blogApi.createBlog({
+            const blogData = {
                 title: title.trim(),
                 content_html: body,
                 category: category || undefined,
                 banner_url: uploadedCoverUrl || undefined,
                 tags,
                 visibility,
-                status: 'published',
-            });
+                status: 'published' as const,
+            };
+
+            let blog;
+            if (blogId) {
+                blog = await blogApi.updateBlog(blogId, blogData);
+            } else {
+                blog = await blogApi.createBlog(blogData);
+            }
 
             // Show success and navigate
             setSuccessMessage({
@@ -141,15 +187,27 @@ const CreateBlog: React.FC = () => {
                 uploadedCoverUrl = result.public_url;
             }
 
-            await blogApi.createBlog({
+            const blogData = {
                 title: title.trim(),
                 content_html: body,
                 category: category || undefined,
                 banner_url: uploadedCoverUrl || undefined,
                 tags,
                 visibility,
-                status: 'draft',
-            });
+                status: 'draft' as const,
+            };
+
+            let savedBlog;
+            if (blogId) {
+                savedBlog = await blogApi.updateBlog(blogId, blogData);
+            } else {
+                savedBlog = await blogApi.createBlog(blogData);
+                setBlogId(savedBlog.id);
+                // Update URL without reload to persist edit state
+                navigate(`/blog/edit/${savedBlog.id}`, { replace: true });
+            }
+
+            setLastSaved(new Date(savedBlog.updated_at));
 
             setSuccessMessage({
                 title: 'Đã lưu bản nháp',
@@ -172,6 +230,15 @@ const CreateBlog: React.FC = () => {
         console.log('Scheduling blog...');
         // TODO: Implement schedule logic
     };
+
+    const readTime = useMemo(() => {
+        const text = body.replace(/<[^>]*>/g, ' ');
+        const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        const imageCount = (body.match(/<img/g) || []).length;
+
+        const seconds = (wordCount / 220) * 60 + (imageCount * 12);
+        return Math.max(1, Math.ceil(seconds / 60));
+    }, [body]);
 
     return (
         <>
@@ -225,10 +292,13 @@ const CreateBlog: React.FC = () => {
                 {/* Center Editor */}
                 <main className="editor-main">
                     {/* Draft Status Indicator */}
-                    <div className="draft-status-bar">
-                        <span className="material-symbols-outlined">edit_note</span>
-                        <span>Bản nháp - Đã lưu {lastSaved}</span>
-                    </div>
+                    {/* Draft Status Indicator */}
+                    {lastSaved && (
+                        <div className="draft-status-bar">
+                            <span className="material-symbols-outlined">edit_note</span>
+                            <span>Bản nháp - Đã lưu {formatTimeAgo(lastSaved)}</span>
+                        </div>
+                    )}
 
                     {/* Cover Image Upload */}
                     <div
@@ -275,13 +345,15 @@ const CreateBlog: React.FC = () => {
                     <div className="author-info">
                         <div className="author-avatar">
                             <img
-                                src="https://via.placeholder.com/40"
+                                src={user?.avatar || user?.avatar_url || 'https://via.placeholder.com/40'}
                                 alt="Author"
                             />
                         </div>
                         <div className="author-details">
-                            <span className="author-name">Alex Meow</span>
-                            <span className="author-meta">Vừa xong · 1 phút đọc</span>
+                            <span className="author-name">{user?.display_name || user?.username || 'Unknown Author'}</span>
+                            <span className="author-meta">
+                                {lastSaved ? formatTimeAgo(lastSaved) : 'Vừa xong'} · {readTime} phút đọc
+                            </span>
                         </div>
                     </div>
 

@@ -4,7 +4,7 @@ import { Dropdown } from '@/components/common/Dropdown/Dropdown';
 interface CategoryDropdownProps {
     value: string;
     onChange: (value: string) => void;
-    categories: string[];
+    categories: { value: string; label: string }[] | string[];
 }
 
 /**

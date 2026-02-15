@@ -103,18 +103,28 @@ export const Navbar: React.FC = () => {
   };
 
   const mapBackendToFrontend = (n: any): Notification => {
-    console.log('Mapping notification:', n);
+    // console.log('Mapping notification:', n);
 
-    // Handle actor info - API returns nested Actor object with capital A
-    const actor = n.Actor || n.actor;
-    const actorName = actor?.display_name || actor?.username || n.actor_name || 'Someone';
-    const actorAvatar = actor?.avatar_url;
+    let source = n;
+    // Check if this is a WebSocket wrapper structure: { type: "...", data: { ... } }
+    // The inner data contains the actual notification fields (id, actor, payload)
+    if (n.data && n.type && (n.data.id || n.data.actor_id)) {
+      source = n.data;
+    }
 
-    // Handle payload - Go's sql.NullString serializes as {String: "...", Valid: true}
-    let rawPayload = n.payload || n.data || {};
+    // Handle actor info - API returns nested Actor object with capital A, WS might return actor (lowercase)
+    // WS from backend now sends `actor` object in wsData
+    const actor = source.Actor || source.actor || n.actor;
+    const actorName = actor?.display_name || actor?.username || actor?.name || n.actor_name || 'Someone';
+    const actorAvatar = actor?.avatar_url || actor?.avatar;
+
+    // Handle payload
+    // API: source.payload could be {String: "...", Valid: true}
+    // WS: source.payload is the actual payload object
+    let rawPayload = source.payload || source.data || {};
 
     // If payload has String field (from sql.NullString), use that
-    if (rawPayload.String) {
+    if (rawPayload && typeof rawPayload === 'object' && 'String' in rawPayload) {
       rawPayload = rawPayload.String;
     }
 
@@ -131,23 +141,23 @@ export const Navbar: React.FC = () => {
 
     // Extract content fields
     const content = {
-      text: payload.text || n.message || '',
+      text: payload.text || source.message || '',
       highlight: payload.highlight,
       target: payload.target,
       link: payload.link,
     };
 
     return {
-      id: n.id || `temp-${Date.now()}`,
-      type: n.type as any,
+      id: source.id || `temp-${Date.now()}`,
+      type: (source.type || n.type) as any,
       actor: {
         name: actorName,
         avatar: actorAvatar,
         initials: actorName.charAt(0).toUpperCase(),
       },
       content: content,
-      timestamp: n.created_at ? new Date(n.created_at).toLocaleString() : new Date().toLocaleString(),
-      isRead: n.is_read || false,
+      timestamp: source.created_at ? new Date(source.created_at).toLocaleString() : new Date().toLocaleString(),
+      isRead: source.is_read || false,
     };
   };
 

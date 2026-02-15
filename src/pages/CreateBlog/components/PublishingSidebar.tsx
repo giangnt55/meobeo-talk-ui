@@ -29,14 +29,17 @@ const PublishingSidebar: React.FC<PublishingSidebarProps> = ({
     isPublishing = false,
 }) => {
     const [newTag, setNewTag] = useState('');
-    const [categories, setCategories] = useState<string[]>([]);
+    const [categories, setCategories] = useState<{ value: string; label: string }[]>([]);
     const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const data = await categoryApi.getCategories();
-                setCategories(data.map(cat => cat.name));
+                setCategories(data.map(cat => ({
+                    value: cat.id,
+                    label: cat.name
+                })));
             } catch (error) {
                 console.error('Failed to fetch categories:', error);
             } finally {

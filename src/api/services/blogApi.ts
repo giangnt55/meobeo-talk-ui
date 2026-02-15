@@ -11,6 +11,7 @@ export interface Blog {
     content_text: string;
     content_preview: string;
     category?: string;
+    category_name?: string;
     read_time_minutes: number;
     banner_url?: string;
     thumbnail_url?: string;
@@ -217,46 +218,30 @@ export const blogApi = {
         if (response.success) {
             // Transform new API response to match existing frontend structure
             const commentsData = response.data || [];
-            const commentMap = new Map<string, any>();
-            const rootComments: any[] = [];
-
-            // First pass: Create map of comments
-            commentsData.forEach((c: any) => {
-                const comment = {
-                    id: c.id,
-                    content: c.content,
-                    user_id: c.author?.id || '',
-                    blog_id: c.post_id,
-                    parent_id: c.parent_id,
-                    created_at: c.created_at,
-                    updated_at: c.updated_at,
-                    user: {
-                        id: c.author?.id || '',
-                        username: c.author?.username || 'Unknown',
-                        display_name: c.author?.display_name,
-                        avatar_url: c.author?.avatar_url,
-                    },
-                    reaction_count: c.reaction_count,
-                    reply_count: c.reply_count,
-                    is_liked: c.is_liked,
-                    replies: [] as any[]
-                };
-                commentMap.set(c.id, comment);
-            });
-
-            // Second pass: Build tree
-            commentMap.forEach((comment) => {
-                if (comment.parent_id && commentMap.has(comment.parent_id)) {
-                    commentMap.get(comment.parent_id).replies.push(comment);
-                } else {
-                    rootComments.push(comment);
-                }
-            });
-
-            const transformedComments = rootComments;
+            
+            // Return flat comments to let frontend handle reconstruction with pagination
+            const commentsResult = commentsData.map((c: any) => ({
+                id: c.id,
+                content: c.content,
+                user_id: c.author?.id || '',
+                blog_id: c.post_id,
+                parent_id: c.parent_id,
+                created_at: c.created_at,
+                updated_at: c.updated_at,
+                user: {
+                    id: c.author?.id || '',
+                    username: c.author?.username || 'Unknown',
+                    display_name: c.author?.display_name,
+                    avatar_url: c.author?.avatar_url,
+                },
+                reaction_count: c.reaction_count,
+                reply_count: c.reply_count,
+                is_liked: c.is_liked,
+                replies: []
+            }));
 
             return {
-                comments: transformedComments,
+                comments: commentsResult,
                 meta: {
                     page: response.meta.page,
                     limit: response.meta.page_size,

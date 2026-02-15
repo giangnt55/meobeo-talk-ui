@@ -80,6 +80,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: 'blog/edit/:id',
+        element: (
+          <ProtectedRoute>
+            <CreateBlog />
+          </ProtectedRoute>
+        ),
+      },
 
       // Memories
       { path: 'memories', element: <MemoriesPage /> },

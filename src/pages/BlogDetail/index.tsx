@@ -364,18 +364,30 @@ const BlogDetailPage: React.FC = () => {
                                 </div>
                                 <div className="flex-1">
                                     <textarea
-                                        className="w-full border-none focus:ring-0 bg-transparent font-sans text-stone-700 dark:text-stone-200 placeholder-stone-400 p-0 mb-4 min-h-[100px] resize-none leading-relaxed focus:outline-none"
-                                        placeholder="Share your thoughts..."
+                                        className="
+                                            w-full
+                                            bg-transparent
+                                            border-none
+                                            outline-none
+                                            focus:outline-none
+                                            focus:ring-0
+                                            resize-none
+                                            min-h-[80px]
+                                            text-sm
+                                            leading-relaxed
+                                            placeholder-stone-400
+                                        "
+                                        placeholder="Chia sẻ suy nghĩ của bạn..."
                                         value={commentText}
                                         onChange={(e) => setCommentText(e.target.value)}
-                                    ></textarea>
+                                    />
                                     <div className="flex justify-end">
                                         <button
                                             onClick={handlePostComment}
                                             disabled={submitting || !commentText.trim()}
                                             className="bg-primary hover:bg-[#b03a12] text-white px-6 py-2 rounded-full text-sm font-bold font-sans transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                            {submitting ? 'Posting...' : 'Post Thought'}
+                                            {submitting ? 'Đang đăng...' : 'Đăng suy nghĩ'}
                                         </button>
                                     </div>
                                 </div>

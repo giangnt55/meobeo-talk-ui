@@ -1,50 +1,59 @@
-.searchbar-container {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  background-color: var(--background-secondary);
-  border-radius: var(--radius-full);
-  padding: var(--spacing-2) var(--spacing-4);
-  min-width: var(--spacing-10);
+.search-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-2) !important;
+  background-color: var(--background-secondary) !important;
+  border-radius: var(--radius-full) !important;
+  padding: var(--spacing-2) var(--spacing-4) !important;
+  min-width: var(--spacing-10) !important;
 }
 
 .search-icon {
-  font-size: var(--font-size-xl);
-  color: var(--text-secondary);
-  flex-shrink: 0;
+  font-size: var(--font-size-xl) !important;
+  color: var(--text-secondary) !important;
+  flex-shrink: 0 !important;
 }
 
 .search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: var(--font-size-sm);
-  outline: none;
-  min-width: 0;
-  color: var(--text-primary);
+  flex: 1 !important;
+  border: none !important;
+  background: transparent !important;
+  font-size: var(--font-size-sm) !important;
+  outline: none !important;
+  min-width: 0 !important;
+  color: var(--text-primary) !important;
+  box-shadow: none !important;
+}
+
+.search-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .search-input::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-secondary) !important;
 }
 
 .search-clear {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--spacing-6);
-  height: var(--spacing-6);
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: var(--font-size-2xl);
-  line-height: 1;
-  padding: 0;
-  border-radius: var(--radius-full);
-  transition: background-color var(--transition-base);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: var(--spacing-6) !important;
+  height: var(--spacing-6) !important;
+  border: none !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  font-size: var(--font-size-2xl) !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  border-radius: var(--radius-full) !important;
+  transition: background-color var(--transition-base) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .search-clear:hover {
-  background-color: var(--background-tertiary);
+  background-color: var(--background-tertiary) !important;
 }

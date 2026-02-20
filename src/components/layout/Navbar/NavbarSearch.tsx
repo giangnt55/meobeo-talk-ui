@@ -89,7 +89,7 @@ export const NavbarSearch: React.FC = () => {
                 <span className="material-symbols-outlined">search</span>
             </button>
 
-            <div className="search-input-wrapper">
+            <div className="search-input-wrapper flex items-center relative">
                 <span className="material-symbols-outlined search-icon">search</span>
                 <input
                     type="text"
@@ -105,11 +105,11 @@ export const NavbarSearch: React.FC = () => {
                         type="button"
                         onClick={clearSearch}
                         className="absolute right-1 top-1 bottom-1 
-             flex items-center justify-center
-             w-8 rounded-full
-             text-slate-400 hover:text-red-500
-             hover:bg-red-100
-             transition-colors"
+                            flex items-center justify-center
+                            w-8 rounded-full
+                            text-slate-400 hover:text-red-500
+                            hover:bg-red-100
+                            transition-colors"
                     >
                         <span className="material-symbols-outlined text-[16px] leading-none block">close</span>
                     </button>

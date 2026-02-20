@@ -21,7 +21,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 }) => {
     const navigate = useNavigate();
 
-    const handleNavigation = (path: string) => {
+    const go = (path: string) => {
         navigate(path);
         onClose();
     };
@@ -40,6 +40,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
             {/* Slide Menu */}
             <div className="mobile-menu">
+
+                {/* Header */}
                 <div className="mobile-menu-header">
                     <h3>Menu</h3>
                     <button className="close-btn" onClick={onClose} aria-label="Close menu">
@@ -48,78 +50,143 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                 </div>
 
                 <div className="mobile-menu-content">
+
+                    {/* User info (authenticated) */}
                     {isAuthenticated && user && (
                         <div className="mobile-user-info">
                             <div className="mobile-avatar">
-                                {user.avatar ? (
-                                    <img src={user.avatar} alt={user.displayName} />
+                                {user.avatar || user.avatar_url ? (
+                                    <img
+                                        src={user.avatar || user.avatar_url}
+                                        alt={user.displayName || user.display_name || user.username}
+                                    />
                                 ) : (
                                     <div className="avatar-placeholder">
-                                        {user.displayName?.charAt(0).toUpperCase() || 'U'}
+                                        {(user.displayName || user.display_name || user.username || 'U').charAt(0).toUpperCase()}
                                     </div>
                                 )}
                             </div>
                             <div className="mobile-user-details">
-                                <p className="user-name">{user.displayName}</p>
-                                <p className="user-email">{user.email}</p>
+                                <p className="user-name">{user.displayName || user.display_name || user.username}</p>
+                                <p className="user-email">@{user.username}</p>
                             </div>
                         </div>
                     )}
 
+                    {/* Navigation links */}
                     <nav className="mobile-nav">
-                        <Link to="/home" className="mobile-nav-link" onClick={() => handleNavigation('/home')}>
-                            <span className="material-symbols-outlined">home</span>
-                            Home
-                        </Link>
-                        <Link to="/blog" className="mobile-nav-link" onClick={() => handleNavigation('/blog')}>
+                        {isAuthenticated && (
+                            <Link to="/home" className="mobile-nav-link" onClick={() => go('/home')}>
+                                <span className="material-symbols-outlined">home</span>
+                                Trang Chủ
+                            </Link>
+                        )}
+                        <Link to="/blog" className="mobile-nav-link" onClick={() => go('/blog')}>
                             <span className="material-symbols-outlined">article</span>
                             Blog
                         </Link>
-                        <Link to="/memories" className="mobile-nav-link" onClick={() => handleNavigation('/memories')}>
+                        <Link to="/memories" className="mobile-nav-link" onClick={() => go('/memories')}>
                             <span className="material-symbols-outlined">history</span>
-                            Memories
+                            Ký Ức
                         </Link>
-                        <Link to="/about" className="mobile-nav-link" onClick={() => handleNavigation('/about')}>
+                        <Link to="/about" className="mobile-nav-link" onClick={() => go('/about')}>
                             <span className="material-symbols-outlined">info</span>
-                            About Us
+                            Về Tụi Mình
                         </Link>
                     </nav>
 
-                    <div className="mobile-menu-actions">
-                        {isAuthenticated ? (
-                            <>
-                                <Link to="/profile" className="mobile-action-link" onClick={() => handleNavigation('/profile')}>
+                    {/* ── Authenticated section ── */}
+                    {isAuthenticated ? (
+                        <>
+                            {/* Create section */}
+                            <div className="mobile-create-section">
+                                <p className="mobile-section-label">Tạo Mới</p>
+                                <div className="mobile-create-grid">
+                                    <Link
+                                        to="/blog/create"
+                                        className="mobile-create-item"
+                                        onClick={() => go('/blog/create')}
+                                    >
+                                        <div className="create-menu-icon create-icon-blog">
+                                            <span className="material-symbols-outlined">edit_note</span>
+                                        </div>
+                                        <div className="create-menu-content">
+                                            <span className="create-menu-title">Blog Mới</span>
+                                            <span className="create-menu-subtitle">Viết câu chuyện</span>
+                                        </div>
+                                    </Link>
+                                    <Link
+                                        to="/memories/create"
+                                        className="mobile-create-item"
+                                        onClick={() => go('/memories/create')}
+                                    >
+                                        <div className="create-menu-icon create-icon-memory">
+                                            <span className="material-symbols-outlined">add_a_photo</span>
+                                        </div>
+                                        <div className="create-menu-content">
+                                            <span className="create-menu-title">Ký Ức Mới</span>
+                                            <span className="create-menu-subtitle">Lưu giữ khoảnh khắc</span>
+                                        </div>
+                                    </Link>
+                                    <Link
+                                        to="/journey/create"
+                                        className="mobile-create-item"
+                                        onClick={() => go('/journey/create')}
+                                    >
+                                        <div className="create-menu-icon create-icon-journey">
+                                            <span className="material-symbols-outlined">flight</span>
+                                        </div>
+                                        <div className="create-menu-content">
+                                            <span className="create-menu-title">Hành Trình</span>
+                                            <span className="create-menu-subtitle">Bắt đầu bộ sưu tập</span>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* Account actions */}
+                            <div className="mobile-menu-actions">
+                                <Link
+                                    to={`/profile/${user?.username}`}
+                                    className="mobile-action-link"
+                                    onClick={() => go(`/profile/${user?.username}`)}
+                                >
                                     <span className="material-symbols-outlined">person</span>
-                                    Profile
+                                    Hồ Sơ Của Tôi
                                 </Link>
-                                <Link to="/settings/profile" className="mobile-action-link" onClick={() => handleNavigation('//settings/profile')}>
+                                <Link
+                                    to="/settings/profile"
+                                    className="mobile-action-link"
+                                    onClick={() => go('/settings/profile')}
+                                >
                                     <span className="material-symbols-outlined">settings</span>
-                                    Settings
+                                    Cài Đặt
                                 </Link>
                                 <button className="mobile-logout-btn" onClick={handleLogout}>
                                     <span className="material-symbols-outlined">logout</span>
-                                    Logout
+                                    Đăng Xuất
                                 </button>
-                            </>
-                        ) : (
-                            <>
-                                <Button
-                                    variant="primary"
-                                    onClick={() => handleNavigation('/signup')}
-                                    className="mobile-action-btn"
-                                >
-                                    Start Your Blog
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => handleNavigation('/login')}
-                                    className="mobile-action-btn"
-                                >
-                                    Log In
-                                </Button>
-                            </>
-                        )}
-                    </div>
+                            </div>
+                        </>
+                    ) : (
+                        /* ── Guest section ── */
+                        <div className="mobile-menu-actions">
+                            <Button
+                                variant="primary"
+                                onClick={() => go('/signup')}
+                                className="mobile-action-btn"
+                            >
+                                Bắt Đầu Viết Blog
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => go('/login')}
+                                className="mobile-action-btn"
+                            >
+                                Đăng Nhập
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

@@ -7,6 +7,7 @@ import { NotificationDropdown } from '@/components/features/Notification/Notific
 import { Notification } from '@/types/notification';
 import { socketService } from '@/api/services/socketService';
 import { notificationApi } from '@/api/services/notificationApi';
+import { NavbarSearch } from './NavbarSearch';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
@@ -210,14 +211,15 @@ export const Navbar: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/home" className="nav-link">Trang Chủ</Link>
                     <Link to="/blog" className="nav-link">Blog</Link>
                     <Link to="/memories" className="nav-link">Ký Ức</Link>
                     <Link to="/about" className="nav-link">Về Tụi Mình</Link>
-                    {/* <Link to="/contact" className="nav-link">Contact</Link> */}
                   </>
                 )}
               </nav>
+
+              {/* Search */}
+              <NavbarSearch />
 
               <div className="navbar-actions">
                 {isAuthenticated ? (
@@ -301,12 +303,12 @@ export const Navbar: React.FC = () => {
                         <div className="user-dropdown">
                           <div className="dropdown-header">
                             <p className="user-name">{user?.displayName || user?.display_name || user?.username}</p>
-                            <p className="user-email">{user?.email}</p>
+                            <p className="user-email">@{user?.username}</p>
                           </div>
                           <div className="dropdown-divider"></div>
-                          <Link to="/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                          <Link to={`/profile/${user?.username}`} className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
                             <span className="material-symbols-outlined">person</span>
-                            Hồ Sơ
+                            Hồ Sơ Của Tôi
                           </Link>
                           <Link to="/settings/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
                             <span className="material-symbols-outlined">settings</span>

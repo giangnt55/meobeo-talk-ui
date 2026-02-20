@@ -1,139 +1,454 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { ProfileCover } from './components/ProfileCover';
-import { ProfileSidebar } from './components/ProfileSidebar';
-import { ProfileContent } from './components/ProfileContent';
-import './Profile.css';
+import { profileApi, type UserProfile } from '@/api/services/profileApi';
+import { blogApi, type Blog } from '@/api/services/blogApi';
+import { api } from '@/lib/ky-client';
+import type { Post } from '@/types/post';
 
+/* ─────────────────────────────────────────
+   Types
+───────────────────────────────────────── */
+type TabId = 'all' | 'blogs' | 'memories' | 'journeys';
+
+type FeedItem =
+    | { kind: 'blog'; data: Blog }
+    | { kind: 'journey'; data: Post };
+
+/* ─────────────────────────────────────────
+   Helpers
+───────────────────────────────────────── */
+const fmt = (n: number) =>
+    n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+
+const fmtDate = (s: string) =>
+    new Date(s).toLocaleDateString('vi-VN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+const DEFAULT_COVER =
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80';
+
+/* ─────────────────────────────────────────
+   Sub-components
+───────────────────────────────────────── */
+const TabButton: React.FC<{
+    id: TabId;
+    active: TabId;
+    icon: string;
+    label: string;
+    onSelect: (id: TabId) => void;
+}> = ({ id, active, icon, label, onSelect }) => (
+    <button
+        onClick={() => onSelect(id)}
+        className={`pb-4 text-sm font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${active === id
+            ? 'border-primary text-primary'
+            : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+    >
+        <span className="material-symbols-outlined text-lg">{icon}</span>
+        {label}
+    </button>
+);
+
+const BlogCard: React.FC<{ blog: Blog }> = ({ blog }) => (
+    <Link
+        to={`/blog/${blog.id}`}
+        className="group flex flex-col md:flex-row gap-6 p-4 bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary/20 hover:shadow-md transition-all"
+    >
+        <div className="w-full md:w-56 h-40 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
+            {blog.banner_url ? (
+                <img
+                    src={blog.banner_url}
+                    alt={blog.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+            ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-4xl text-primary/30">article</span>
+                </div>
+            )}
+        </div>
+        <div className="flex flex-col justify-between py-1 flex-1 min-w-0">
+            <div>
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+                        Blog
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">
+                        {fmtDate(blog.created_at)}
+                        {blog.read_time_minutes > 0 && ` • ${blog.read_time_minutes} min read`}
+                    </span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-2">
+                    {blog.title}
+                </h3>
+                {blog.content_preview && (
+                    <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed text-sm">
+                        {blog.content_preview}
+                    </p>
+                )}
+            </div>
+            <div className="mt-4 flex items-center gap-4">
+                <span className="flex items-center gap-1.5 text-slate-400">
+                    <span className="material-symbols-outlined text-lg">favorite</span>
+                    <span className="text-xs font-semibold">{fmt(blog.reaction_count)}</span>
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-400">
+                    <span className="material-symbols-outlined text-lg">chat_bubble</span>
+                    <span className="text-xs font-semibold">{fmt(blog.comment_count)}</span>
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-400 ml-auto">
+                    <span className="material-symbols-outlined text-lg">bookmark</span>
+                </span>
+            </div>
+        </div>
+    </Link>
+);
+
+const JourneyCard: React.FC<{ journey: Post }> = ({ journey }) => (
+    <Link
+        to={`/journeys/${journey.id}`}
+        className="group flex flex-col md:flex-row gap-6 p-4 bg-primary/5 dark:bg-primary/5 rounded-2xl border border-primary/10 hover:border-primary/30 transition-all"
+    >
+        <div className="w-full md:w-56 h-40 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
+            {journey.banner_url ? (
+                <img
+                    src={journey.banner_url}
+                    alt={journey.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+            ) : (
+                <div className="w-full h-full bg-gradient-to-br from-amber-500/20 to-primary/10 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-4xl text-amber-500/40">explore</span>
+                </div>
+            )}
+        </div>
+        <div className="flex flex-col justify-between py-1 flex-1 min-w-0">
+            <div>
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase tracking-wider">
+                        Journey
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">
+                        {journey.journey_start_date ? fmtDate(journey.journey_start_date) : fmtDate(journey.created_at)}
+                        {journey.journal_count ? ` • ${journey.journal_count} Stories` : ''}
+                    </span>
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-2">
+                    {journey.title}
+                </h3>
+                {journey.content_preview && (
+                    <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed text-sm">
+                        {journey.content_preview}
+                    </p>
+                )}
+            </div>
+            <div className="mt-4 flex items-center gap-4">
+                <button className="px-4 py-1.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition-colors">
+                    View Journey
+                </button>
+                <div className="flex items-center gap-1 text-slate-400 ml-auto">
+                    <span className="material-symbols-outlined text-lg">visibility</span>
+                    <span className="text-xs font-semibold">{fmt(journey.view_count)}</span>
+                </div>
+            </div>
+        </div>
+    </Link>
+);
+
+/* ────────────────────────────────────────────
+   Loading skeleton
+──────────────────────────────────────────── */
+const ProfileSkeleton: React.FC = () => (
+    <div className="min-h-screen bg-[#f8f7f6] dark:bg-[#221810] animate-pulse">
+        <div className="w-full h-[320px] md:h-[400px] bg-slate-200 dark:bg-slate-800" />
+        <div className="max-w-5xl mx-auto px-6 -mt-32 relative z-10 flex flex-col items-center gap-6">
+            <div className="size-40 rounded-full bg-slate-200 dark:bg-slate-700 border-4 border-white" />
+            <div className="h-8 w-48 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+            <div className="h-5 w-72 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+            <div className="h-16 w-80 bg-slate-200 dark:bg-slate-700 rounded-2xl" />
+        </div>
+    </div>
+);
+
+/* ────────────────────────────────────────────
+   Not-found state
+──────────────────────────────────────────── */
+const NotFound: React.FC<{ message: string; onHome: () => void }> = ({ message, onHome }) => (
+    <div className="min-h-screen bg-[#f8f7f6] dark:bg-[#221810] flex items-center justify-center">
+        <div className="text-center space-y-4 p-12">
+            <span className="material-symbols-outlined text-7xl text-slate-300 dark:text-slate-600">person_off</span>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Người dùng không tồn tại</h2>
+            <p className="text-slate-500 max-w-md">{message}</p>
+            <button
+                onClick={onHome}
+                className="mt-4 px-8 py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all"
+            >
+                Quay về trang chủ
+            </button>
+        </div>
+    </div>
+);
+
+/* ────────────────────────────────────────────
+   Main Page
+──────────────────────────────────────────── */
 export const ProfilePage: React.FC = () => {
     const { username } = useParams<{ username: string }>();
     const { user: currentUser } = useAuth();
-    const [activeTab, setActiveTab] = useState<'posts' | 'journal' | 'journeys'>('posts');
-    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState<TabId>('all');
+
+    // Data state
+    const [profileUser, setProfileUser] = useState<UserProfile | null>(null);
+    const [profileLoading, setProfileLoading] = useState(true);
+    const [profileError, setProfileError] = useState<string | null>(null);
+    const [blogPosts, setBlogPosts] = useState<Blog[]>([]);
+    const [journeys, setJourneys] = useState<Post[]>([]);
+    const [contentLoading, setContentLoading] = useState(false);
 
     const isOwnProfile = currentUser?.username === username;
 
-    // Mock data - sẽ được thay thế bằng API calls
-    const userData = {
-        displayName: 'Alex Doe',
-        username: 'alexdoe',
-        bio: 'Nghệ sĩ kỹ thuật số & người kể chuyện. Khám phá sự giao thoa giữa công nghệ và sáng tạo.',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuADweeidT_517mG3XyWhAoqCFDI0uosKBtCLRfeu0CnLr0ca1gHhg4HNEG5XFWyXz8_cM3jvmUt9QqpiJ0iPuLYPGmHCYvwn4ZQN1gsqwsoASJaRam5iR9oUDQ8tuKp7ySIOn6_rmC3PAUlCK_XsyvlIVyPVinQ5CX7Bw4RXW5HzJ-fpYSFwWkh0oRQsQPZBXq2eJijirYxSYPONLlPi4dPvMQcpn6-RmIw_xWGGrOme5_Ennt6spyB5y6jUHSMkCfxUmF-PaC0IuaX',
-        coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBbFsPgQrGC3CsWmzQ4SYHSi2YlCe6ilcMIpLIsyRQRgGQdoHu9RDwHoELY87O0kHSqp_6vSS-RsTKrpY-8ly1RzobGzeaOwpRdN7eGh5Ue3Q-oUlxcA-q-smOd8W7Tz9FgHHk16YxlS2UBTbqBIO4wsky7_hk_UJQ9F0x83zIhxNw59mKxT6VpGCUP_dcthXdDIG73038l_eIt9IcTnuuJS_wyGWQErBM3pxSxxaS24q4L6EIm4_cF4gQ1MwX4mKquTBG-rBgxIUw1',
-        stats: {
-            posts: 128,
-            followers: 1200,
-            following: 345,
-        },
-        socialLinks: [
-            { name: 'Twitter', icon: 'alternate_email', url: '#' },
-            { name: 'Instagram', icon: 'photo_camera', url: '#' },
-            { name: 'Website', icon: 'language', url: '#' },
-        ],
-    };
+    /* fetch profile */
+    useEffect(() => {
+        if (!username) { navigate('/'); return; }
+        setProfileLoading(true);
+        setProfileError(null);
+        profileApi.getProfileByUsername(username)
+            .then(setProfileUser)
+            .catch(() => setProfileError('Không tìm thấy người dùng này.'))
+            .finally(() => setProfileLoading(false));
+    }, [username, navigate]);
 
-    const blogPosts = [
-        {
-            id: '1',
-            title: 'Hành Trình Sáng Tạo Của Tôi',
-            excerpt: 'Khám phá sâu hơn về thế giới nghệ thuật kỹ thuật số và nguồn cảm hứng.',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1fYkZxVo9lPmUaCzxhxE0vnZe1kQeIzbhE3gNQKDEFEcInVgIa3lYTFzwYZdm9HagRUzrinZmrzVRBuNDNId53oQCtsPyw1_a7fM9dl3MH9GUz1p3Yy4PLaYFGVmR3QTVeS33nM9mW_8iiK6txlgP-qNhjNASXXFYwRf7kI5BdBKVkRFJMgtQxFeHnjrYkzHa3wwY4Lt8kcJQPds0I2euN6yXnYBZj-n5HXSYNrRQZHUAEF64vpdTJkAxpKdNeiYdL5CJjcuvu5v-',
-            date: '24 Th10, 2023',
-            readTime: '5 phút đọc',
-            likes: 2100,
-            comments: 152,
-        },
-        {
-            id: '2',
-            title: 'Sự Kết Hợp Giữa Công Nghệ & Thiết Kế',
-            excerpt: 'Công nghệ hiện đại đang định hình lại ngành công nghiệp thiết kế như thế nào.',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCSlviCIj1iY4xMkVENzL03VpDcolWk_-SAe4fEOac8SBvhs_PJNgge14cOk6gScUMiQEaxIFieNQ2VcNaz2NyuvXvX9SLTj_olXae1MqhUUNkwW1a03FyHl8bDZ3wlhb8kDb50qinaGTuAnM3PzoYOMPRUtcshw9hMfXy0Mdzx719WgmZnqfudlGpSEa8x38c9a2DN-q6aN_Qh3tIRixqhxqCCyfLseAY_-rG8JqR4UpT4VGby_1VhR7VWWt4Yw4b9f8w8_VTV2sGg',
-            date: '20 Th10, 2023',
-            readTime: '8 phút đọc',
-            likes: 1800,
-            comments: 98,
-        },
-    ];
+    /* fetch content once profile loaded */
+    const fetchContent = useCallback(async () => {
+        if (!profileUser) return;
+        setContentLoading(true);
+        try {
+            const [blogsRes, journeysRes] = await Promise.allSettled([
+                blogApi.getUserBlogs(profileUser.id),
+                api
+                    .get(`users/${profileUser.id}/journeys`)
+                    .json<{ success: boolean; data: Post[] }>(),
+            ]);
+            if (blogsRes.status === 'fulfilled') setBlogPosts(blogsRes.value.posts || []);
+            if (journeysRes.status === 'fulfilled' && journeysRes.value.success)
+                setJourneys(journeysRes.value.data || []);
+        } finally {
+            setContentLoading(false);
+        }
+    }, [profileUser]);
 
-    const journalEntries = [
-        {
-            id: '1',
-            title: 'Leo Núi Buổi Sáng',
-            date: '02 Th11, 2023',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmq_54oMnOKv57atDxjYizPcwO6xEXtd5FRxNw4hGGCKF2vw5OfTyPsL-azpeLHHCznuLTy1vnQGoHDCFM6PzrHpZU2hWTdrOEHTRcx-Jme-CxaCZhspkXGZ_2mmdLkD4AtZQ_UxAuOG3iy8KBpA3OJjpKlgHm2N7eVmN-aUf46AnBhOHF1jo1oi9bAKFXxO9tWB9C5mkuhx4J7_AmC_jkV8I0uiSXvKCA-IbFXxVNEzJZI7GR8rRzFda-i2xpgiIH6gldLxvOt1dq',
-            tags: [{ icon: 'sunny', label: 'Nắng' }, { icon: 'hiking', label: 'Leo núi' }],
-        },
-        {
-            id: '2',
-            title: 'Cà Phê & Sách',
-            date: '29 Th10, 2023',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAH_nVtKxEp0UUZDGD_hAzMp9bEg7qmFO30xEDUzIdbVRuvn1bYEfvTldWJA-8bLFxgdXkXMPJu_6lVC2jWk3QzWPc7JV3UnKfOn2XNJ-yy6gFFO_JFfe1JMOigFVw-24bwfhqC8rK-7L_Wx2K5lH3Wb6k747gH_dq0rPCW5EW4u9ycSBRAiTS1o0JWq4UM0MZ5wx0-QxI8UU74yZhvUtIMNfbVlFAie-XRklUefugqlIjElaA6iSh1GvMB6_aCB0c8lnIdyND-DyJA',
-            tags: [{ icon: 'local_cafe', label: 'Cà phê' }, { icon: 'menu_book', label: 'Đọc sách' }],
-        },
-        {
-            id: '3',
-            title: 'Ánh Đèn Thành Phố',
-            date: '25 Th10, 2023',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvFK_oY8eIM4V5tcss5WqS8bAJn5j329hHoZ8hvZdG4misjbvEtHFhWPW-FnRqMg2eBPFQmOAZj22RH6hF5AErYOrVPGgg1cRXIazUYMtPMyW5YcuTY5cUVqIZZkYWki-P6Pcidtvc1IvNkLsfi3r8vEUZ_NXfrF9hWT_NeTI9aMMR9vX1brmJBjK6lCPYjQi7x2PhQLm7qBHvt7TT47jddX2-MQq8UaaDwaorg8S6Kl28a9sO8ko9NGWnzxSx4ppj1TFOASWqpH0E',
-            tags: [{ icon: 'nightlight', label: 'Đêm' }, { icon: 'location_city', label: 'Thành phố' }],
-        },
-        {
-            id: '4',
-            title: 'Bạn Bè & Niềm Vui',
-            date: '18 Th10, 2023',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBf8a4kvIBmC3HLlXOg_w-TnRjFidHjoPyHjXdW9iExROeTULRnUO1fyOZa4ZYz0Fzz1TEj51_1Y8wzif33qYi3DupH8mFX5L0QTUwiUu8X6nX4tF1Ie7bi2Y4fJwQf9x1evaGiwvMtdYw9Q6zTvpgjxSYVfq5tUPfgVzlGY0J6syCN0csdjZ2qtVkyw_iuxA5nuJmkwlG9Uwnr1WfyIq-rTlmoicE20DUjQutGUdy7VvMrzolbWAdG0wN4XqcayzGQZxoYtaRsWnS_',
-            tags: [{ icon: 'sentiment_satisfied', label: 'Vui vẻ' }, { icon: 'groups', label: 'Bạn bè' }],
-        },
-    ];
+    useEffect(() => { fetchContent(); }, [fetchContent]);
 
-    const journeys = [
-        {
-            id: '1',
-            title: 'Mùa Hè Châu Âu 2023',
-            description: 'Một chuyến phiêu lưu ba lô kéo dài một tháng qua Pháp, Ý và Tây Ban Nha. Những khoảnh khắc được ghi lại từ quán cà phê đường phố đến những đỉnh núi.',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGdH1PIj7YljSCb96dV1M35GrD1fMJ10KSkiwn3ZGD2_hb8Plu3zBPL9uKsakn31qychl7l5BPjL_bItqSmOlBbC70qxsbY8D0Ifz72bGACsWTJ20k1KD5Ei9ti7mmctMq1dfMK5XdhNALfgEc7mZUyymko67rxB8X2XymPc3R05LESLMwU0-yBtAaDNrO0hYRyhJ7Jk1czxZX0VCNvNlVhvDw_kRFCWZUxkt1vMBlUpezMa3GwOPfj0fd9lBJUtYgYSp7LW2JyIpk',
-            category: 'Du lịch',
-            categoryColor: '#ad2bee',
-            entriesCount: 14,
-        },
-        {
-            id: '2',
-            title: 'Thử Nghiệm Nấu Ăn',
-            description: 'Hành trình học nấu các món ăn châu Á chuẩn vị của tôi. Từ những chiếc bánh bao hỏng đến nước dùng ramen hoàn hảo.',
-            coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCsklvNCpyfWaFIsaKRUjdM_YP8ZCRF5Dx9KBNra7W6ItF7_xavEMDjvjQ3O60LuVt0KkjUdcysyf8gHbhXpwsV7joet4TtTP7q67dQVmYmKsWfJ5xAgoABOySkNRIzNdgaqCEc8icLECSRIh1KOOUFGgEI8TPcABxXreHA04xHKYLBG2vBsqX0VghcH4JmBdCOsFKSE0xpB5yOj_sz3T1yTto-y6_FwMz86xFSdMxA9iPzybGxAxHgfdAnM2w-GgssrLp3wh4UWHVi',
-            category: 'Nấu nướng',
-            categoryColor: '#f97316',
-            entriesCount: 8,
-        },
-    ];
+    /* build feed for "All" tab */
+    const allFeed: FeedItem[] = [
+        ...blogPosts.map((b): FeedItem => ({ kind: 'blog', data: b })),
+        ...journeys.map((j): FeedItem => ({ kind: 'journey', data: j })),
+    ].sort((a, b) => {
+        const dateA = a.kind === 'blog' ? a.data.created_at : (a.data as Post).created_at;
+        const dateB = b.kind === 'blog' ? b.data.created_at : (b.data as Post).created_at;
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+    });
 
+    /* ── early returns ── */
+    if (profileLoading) return <ProfileSkeleton />;
+    if (profileError || !profileUser)
+        return <NotFound message={profileError || 'Không tìm thấy hồ sơ.'} onHome={() => navigate('/')} />;
+
+    const displayName = profileUser.display_name || profileUser.full_name || profileUser.username;
+    const avatar = profileUser.avatar;
+
+    /* ── render ── */
     return (
-        <div className="profile-page">
-            <ProfileCover
-                coverImage={userData.coverImage}
-                avatar={userData.avatar}
-                isOwnProfile={isOwnProfile}
-            />
+        <div className="relative flex min-h-screen flex-col bg-[#f8f7f6] dark:bg-[#221810] text-slate-900 dark:text-slate-100 font-display">
 
-            <div className="profile-content">
-                <div className="profile-grid">
-                    <ProfileSidebar
-                        userData={userData}
-                        isOwnProfile={isOwnProfile}
-                    />
+            {/* ── Hero Banner ── */}
+            <div className="relative w-full h-[320px] md:h-[400px] overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{
+                        backgroundImage: `url('${DEFAULT_COVER}')`,
+                        filter: 'brightness(0.9) saturate(1.1)',
+                    }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#f8f7f6] dark:from-[#221810] via-transparent to-transparent" />
+            </div>
 
-                    <ProfileContent
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                        blogPosts={blogPosts}
-                        journalEntries={journalEntries}
-                        journeys={journeys}
-                    />
+            {/* ── Profile Card ── */}
+            <div className="max-w-5xl mx-auto w-full px-6 -mt-32 relative z-10">
+                <div className="flex flex-col items-center text-center">
+
+                    {/* Avatar */}
+                    <div className="relative group">
+                        <div className="size-36 md:size-44 rounded-full border-4 border-[#f8f7f6] dark:border-[#221810] overflow-hidden bg-white shadow-xl">
+                            {avatar ? (
+                                <img
+                                    src={avatar}
+                                    alt={displayName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-primary/30 to-primary flex items-center justify-center">
+                                    <span className="text-white text-5xl font-bold">
+                                        {displayName.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Name & Bio */}
+                    <div className="mt-6 space-y-2">
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+                            {displayName}
+                        </h1>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                            @{profileUser.username}
+                        </p>
+                        {profileUser.bio && (
+                            <p className="text-slate-600 dark:text-slate-400 italic max-w-md text-base mt-1">
+                                "{profileUser.bio}"
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Stats + Action Row */}
+                    <div className="mt-8 flex flex-col md:flex-row items-center gap-6 md:gap-12 w-full justify-center">
+                        {/* Stats pill */}
+                        <div className="flex gap-8 md:gap-12 py-4 px-8 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                            <div className="text-center">
+                                <span className="block text-2xl font-bold text-primary">
+                                    {profileUser.post_count}
+                                </span>
+                                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                                    Stories
+                                </span>
+                            </div>
+                            <div className="w-px h-10 bg-slate-100 dark:bg-slate-800" />
+                            <div className="text-center">
+                                <span className="block text-2xl font-bold text-primary">
+                                    {profileUser.follower_count}
+                                </span>
+                                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                                    Followers
+                                </span>
+                            </div>
+                            <div className="w-px h-10 bg-slate-100 dark:bg-slate-800" />
+                            <div className="text-center">
+                                <span className="block text-2xl font-bold text-primary">
+                                    {profileUser.following_count}
+                                </span>
+                                <span className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">
+                                    Following
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* CTA */}
+                        {isOwnProfile ? (
+                            <Link
+                                to="/settings/profile"
+                                className="w-full md:w-auto px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-95 text-center"
+                            >
+                                Chỉnh Sửa Hồ Sơ
+                            </Link>
+                        ) : (
+                            <button className="w-full md:w-auto px-10 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-95">
+                                Theo Dõi
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* ── Tabs & Search ── */}
+                <div className="mt-16 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-6 overflow-x-auto no-scrollbar">
+                    <div className="flex gap-10 min-w-max">
+                        <TabButton id="all" active={activeTab} onSelect={setActiveTab} icon="grid_view" label="All Feed" />
+                        <TabButton id="blogs" active={activeTab} onSelect={setActiveTab} icon="article" label="Blogs" />
+                        <TabButton id="memories" active={activeTab} onSelect={setActiveTab} icon="auto_awesome" label="Memories" />
+                        <TabButton id="journeys" active={activeTab} onSelect={setActiveTab} icon="explore" label="Journeys" />
+                    </div>
+
+                    <div className="hidden lg:flex max-w-[280px] w-full items-center bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-2 mb-2 border border-transparent focus-within:border-primary/20 transition-all">
+                        <span className="material-symbols-outlined text-slate-400 text-[20px]">search</span>
+                        <input
+                            className="bg-transparent border-none focus:ring-0 focus:outline-none focus:border-transparent focus:shadow-none text-sm w-full placeholder:text-slate-400/60 text-slate-900 dark:text-slate-100 ml-2"
+                            placeholder="Search in profile..."
+                            type="text"
+                        />
+                    </div>
+                </div>
+
+                {/* ── Content Feed ── */}
+                <div className="mt-8 space-y-6 pb-24">
+                    {contentLoading ? (
+                        /* skeleton cards */
+                        [1, 2, 3].map(i => (
+                            <div
+                                key={i}
+                                className="flex gap-6 p-4 bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 animate-pulse"
+                            >
+                                <div className="w-56 h-40 flex-shrink-0 rounded-xl bg-slate-200 dark:bg-slate-700" />
+                                <div className="flex-1 space-y-3 py-2">
+                                    <div className="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+                                    <div className="h-5 w-3/4 bg-slate-200 dark:bg-slate-700 rounded" />
+                                    <div className="h-4 w-full bg-slate-200 dark:bg-slate-700 rounded" />
+                                    <div className="h-4 w-2/3 bg-slate-200 dark:bg-slate-700 rounded" />
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                            {/* ALL TAB */}
+                            {activeTab === 'all' && (
+                                allFeed.length === 0 ? (
+                                    <EmptyState icon="inbox" text="Chưa có nội dung nào." />
+                                ) : (
+                                    allFeed.map(item =>
+                                        item.kind === 'blog'
+                                            ? <BlogCard key={`b-${item.data.id}`} blog={item.data} />
+                                            : <JourneyCard key={`j-${item.data.id}`} journey={item.data} />
+                                    )
+                                )
+                            )}
+
+                            {/* BLOGS TAB */}
+                            {activeTab === 'blogs' && (
+                                blogPosts.length === 0 ? (
+                                    <EmptyState icon="article" text="Chưa có bài blog nào." />
+                                ) : (
+                                    blogPosts.map(b => <BlogCard key={b.id} blog={b} />)
+                                )
+                            )}
+
+                            {/* MEMORIES TAB */}
+                            {activeTab === 'memories' && (
+                                <EmptyState icon="auto_awesome" text="Chưa có ký ức nào." />
+                            )}
+
+                            {/* JOURNEYS TAB */}
+                            {activeTab === 'journeys' && (
+                                journeys.length === 0 ? (
+                                    <EmptyState icon="explore" text="Chưa có hành trình nào." />
+                                ) : (
+                                    journeys.map(j => <JourneyCard key={j.id} journey={j} />)
+                                )
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </div>
     );
 };
+
+/* ─────────────────────────────────────────
+   Empty state helper
+───────────────────────────────────────── */
+const EmptyState: React.FC<{ icon: string; text: string }> = ({ icon, text }) => (
+    <div className="flex flex-col items-center gap-3 py-24 text-slate-400 dark:text-slate-600">
+        <span className="material-symbols-outlined text-6xl opacity-40">{icon}</span>
+        <p className="text-base font-medium">{text}</p>
+    </div>
+);

@@ -1,0 +1,251 @@
+.navbar-search-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Mobile Toggle */
+.mobile-search-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.mobile-search-toggle:hover {
+    background-color: var(--bg-warm);
+}
+
+/* Search Input Wrapper */
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 280px;
+    height: 2.5rem;
+    background-color: var(--background-secondary, #f0f2f5);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 1.25rem !important;
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    padding: 0 2.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    outline: none;
+    font-family: inherit;
+}
+
+.search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.search-input-wrapper:focus-within {
+    background-color: var(--background-white);
+    box-shadow: 0 0 0 2px var(--primary-light, rgba(238, 124, 43, 0.2));
+}
+
+
+/* Dropdown */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + var(--spacing-2));
+    left: 0;
+    width: 100%;
+    min-width: 320px;
+    background-color: var(--background-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    z-index: var(--z-dropdown);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-status {
+    padding: var(--spacing-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
+
+.search-status.error {
+    color: var(--error);
+}
+
+.search-status.empty {
+    color: var(--text-tertiary);
+}
+
+.search-loader {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--border-light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.search-section {
+    padding: var(--spacing-2) 0;
+}
+
+.search-section:not(:last-child) {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.search-section-title {
+    padding: 0 var(--spacing-3);
+    margin-bottom: var(--spacing-1);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) var(--spacing-3);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.search-result-item:hover {
+    background-color: var(--bg-warm, #fff7ed);
+}
+
+.result-avatar,
+.result-avatar-placeholder,
+.result-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-avatar {
+    object-fit: cover;
+}
+
+.result-avatar-placeholder {
+    background-color: var(--primary);
+    color: white;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
+}
+
+.result-icon {
+    background-color: rgba(238, 124, 43, 0.1);
+    color: var(--primary);
+}
+
+.result-icon .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.result-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.result-name,
+.result-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.result-sub {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+    .mobile-search-toggle {
+        display: none;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+    .navbar-search-container {
+        margin: 0;
+    }
+
+    .search-input-wrapper {
+        display: none;
+        position: absolute;
+        top: -4px;
+        left: 0;
+        right: -3rem;
+        /* extend over the menu toggle */
+        width: auto;
+        z-index: 10;
+        box-shadow: var(--shadow-md);
+    }
+
+    .navbar-search-container.mobile-open .search-input-wrapper {
+        display: flex;
+    }
+
+    .navbar-search-container.mobile-open .mobile-search-toggle {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .search-dropdown {
+        width: calc(100vw - 2rem);
+        min-width: unset;
+        left: -3rem;
+        right: 0;
+    }
+}

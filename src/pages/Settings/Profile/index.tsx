@@ -1,184 +1,335 @@
 import React, { useState } from 'react';
-import { Avatar } from '@/components/common/Avatar/Avatar';
-import { Button } from '@/components/common/Button/Button';
-import { Input } from '@/components/common/Input/Input';
-import { Toggle } from '@/components/common/Toggle/Toggle';
 import './ProfileSettings.css';
 
+type TabType = 'profile' | 'account' | 'privacy' | 'notifications';
+
 export const ProfileSettingsPage: React.FC = () => {
-    const [preferences, setPreferences] = useState({
-        profileVisibility: true,
-        marketingEmails: false,
-    });
+    const [activeTab, setActiveTab] = useState<TabType>('profile');
 
     return (
-        <div className="settings-page">
-            <div className="settings-main-container">
-                <div className="settings-content-wrapper">
-                    <div className="settings-grid">
-                        {/* Sidebar */}
-                        <aside className="settings-sidebar">
-                            <div className="sidebar-sticky">
-                                <div className="user-summary">
-                                    <Avatar size="lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHe7e7ibZPOyFiOFQTFYY4swStrm_3wKvH5Npifm6o6DLq6XdAjkxz3R9Gt2HdAuJDFV1d1-J3XfDMx8-CO0hATiLjPyr_5aoR3xxLFQf1U8q50iNhCBDN06zu_EFcinQltETKUyBSVQQ9bAFRZyrqV8Fhy_08_SW5Z5kciLFT4EWVxIcD-FMLQEIacru0Tvya27YQe7Jn-nk029xRnjpeHEx53JzIblrERtxQQhvBc4G20iYpKPsnC3Su-IO-ENcyr6lpJWSX1t7_" />
-                                    <div className="user-info">
-                                        <h1>Jane Doe</h1>
-                                        <p>@janedoe</p>
-                                    </div>
-                                </div>
-                                <nav className="sidebar-nav">
-                                    <a className="sidebar-link active" href="#">
-                                        <span className="material-symbols-outlined">person</span>
-                                        <span className="link-text">Tài khoản</span>
-                                    </a>
-                                    <a className="sidebar-link" href="#">
-                                        <span className="material-symbols-outlined">security</span>
-                                        <span className="link-text">Riêng tư & An toàn</span>
-                                    </a>
-                                    <a className="sidebar-link" href="#">
-                                        <span className="material-symbols-outlined">notifications</span>
-                                        <span className="link-text">Thông báo</span>
-                                    </a>
-                                    <a className="sidebar-link" href="#">
-                                        <span className="material-symbols-outlined">palette</span>
-                                        <span className="link-text">Giao diện</span>
-                                    </a>
-                                    <a className="sidebar-link" href="#">
-                                        <span className="material-symbols-outlined">extension</span>
-                                        <span className="link-text">Ứng dụng kết nối</span>
-                                    </a>
-                                </nav>
-                            </div>
-                        </aside>
+        <div className="flex-1 flex max-w-7xl mx-auto w-full px-6 lg:px-20 py-10 gap-10">
+            {/* Sidebar */}
+            <aside className="w-64 flex-shrink-0 hidden md:block">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 px-4">
+                    Settings
+                </h3>
+                <nav className="space-y-1">
+                    <button
+                        onClick={() => setActiveTab('profile')}
+                        className={`w-full text-left ${activeTab === 'profile'
+                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            }`}
+                    >
+                        <span className="material-symbols-outlined text-xl">person</span>
+                        Profile Info
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('account')}
+                        className={`w-full text-left ${activeTab === 'account'
+                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            }`}
+                    >
+                        <span className="material-symbols-outlined text-xl">manage_accounts</span>
+                        Account Settings
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('privacy')}
+                        className={`w-full text-left ${activeTab === 'privacy'
+                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            }`}
+                    >
+                        <span className="material-symbols-outlined text-xl">lock</span>
+                        Privacy
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('notifications')}
+                        className={`w-full text-left ${activeTab === 'notifications'
+                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            }`}
+                    >
+                        <span className="material-symbols-outlined text-xl">notifications</span>
+                        Notifications
+                    </button>
 
-                        {/* Main Content */}
-                        <main className="settings-main">
-                            <div className="settings-card">
-                                <div className="section-heading">
-                                    <h2>Cài đặt tài khoản</h2>
-                                    <p>Quản lý thông tin cá nhân và bảo mật tài khoản.</p>
-                                </div>
-
-                                <section className="profile-header-card">
-                                    <div className="avatar-wrapper">
-                                        <Avatar className="profile-lg-avatar" size="xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQHQ2YCIRGk655XQhpybTzeGXZC2mFKHxZAZn5xSQMQvnXL_h2gabd3P-Lt377YTDWZkPPFOIuQqNT_MxgXT3Cv6ENcIYWkRpz4ZLQcI1eDB6mZlDhlk2LzkN6Z450UYR8lVX-LS8t_77Bz50kT2pjTDoPV5iLmWX3oEcDfJPF4I2Q2AP7W3VFX7xc0qMYLmNB3-IGPd1LKAYke3ehbxf2Aunfnm5hYjNIkEQfZAAPp-Z3Nrk865Ul5qPb2D1KuNtq2ANXygGgB9xz" />
-                                        <div className="avatar-overlay">
-                                            <span className="material-symbols-outlined text-white">edit</span>
-                                        </div>
-                                    </div>
-                                    <div className="profile-info">
-                                        <div>
-                                            <h3 className="profile-name">Jane Doe</h3>
-                                            <p className="profile-meta">Thành viên từ tháng 9, 2023</p>
-                                        </div>
-                                        <div className="profile-actions">
-                                            <Button variant="outline" size="sm" rounded="full">Đổi ảnh đại diện</Button>
-                                            <Button variant="ghost" size="sm" rounded="full" className="text-error hover:bg-error-light">Xóa</Button>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section className="form-section">
-                                    <h3 className="section-title">Thông tin cá nhân</h3>
-                                    <div className="form-grid">
-                                        <Input
-                                            label="Tên hiển thị"
-                                            value="Jane Doe"
-                                            fullWidth
-                                            endIcon={<span className="material-symbols-outlined text-[#896f61]">edit</span>}
-                                            readOnly
-                                        />
-                                        <Input
-                                            label="Tên đăng nhập"
-                                            value="@janedoe"
-                                            fullWidth
-                                            endIcon={<span className="material-symbols-outlined text-green-500">check_circle</span>}
-                                            readOnly
-                                        />
-                                        <div className="col-span-full" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            <label className="text-sm font-bold ml-2">Giới thiệu</label>
-                                            <textarea
-                                                className="textarea-field"
-                                                placeholder="Kể cho chúng tớ nghe một chút về bạn..."
-                                                defaultValue="Digital nomad, coffee enthusiast, and lover of all things design. Creating stories on Meobeo Talk."
-                                            />
-                                            <span className="text-xs text-[#896f61] text-right mr-2">120/160 ký tự</span>
-                                        </div>
-                                        <div className="col-span-full relative">
-                                            <Input
-                                                label="Địa chỉ Email"
-                                                type="email"
-                                                value="jane.doe@example.com"
-                                                fullWidth
-                                                readOnly
-                                            />
-                                            <Button size="sm" variant="secondary" rounded="full" className="absolute right-2 top-[2rem] z-10 h-8 text-xs">Xác thực</Button>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section className="form-section">
-                                    <h3 className="section-title">Tùy chọn</h3>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="pref-item">
-                                            <div className="flex items-center gap-4">
-                                                <div className="pref-icon-wrapper">
-                                                    <span className="material-symbols-outlined">visibility</span>
-                                                </div>
-                                                <div className="pref-label">
-                                                    <h4>Hiển thị hồ sơ</h4>
-                                                    <p>Cho phép tìm thấy hồ sơ của bạn trên trang tìm kiếm</p>
-                                                </div>
-                                            </div>
-                                            <Toggle
-                                                checked={preferences.profileVisibility}
-                                                onChange={(checked) => setPreferences(prev => ({ ...prev, profileVisibility: checked }))}
-                                                aria-label="Profile Visibility"
-                                            />
-                                        </div>
-
-                                        <div className="pref-item">
-                                            <div className="flex items-center gap-4">
-                                                <div className="pref-icon-wrapper">
-                                                    <span className="material-symbols-outlined">mark_email_unread</span>
-                                                </div>
-                                                <div className="pref-label">
-                                                    <h4>Email quảng cáo</h4>
-                                                    <p>Nhận thông tin về các cập nhật mới nhất</p>
-                                                </div>
-                                            </div>
-                                            <Toggle
-                                                checked={preferences.marketingEmails}
-                                                onChange={(checked) => setPreferences(prev => ({ ...prev, marketingEmails: checked }))}
-                                                aria-label="Marketing Emails"
-                                            />
-                                        </div>
-
-                                        <div className="pref-item">
-                                            <div className="flex items-center gap-4">
-                                                <div className="pref-icon-wrapper">
-                                                    <span className="material-symbols-outlined">verified_user</span>
-                                                </div>
-                                                <div className="pref-label">
-                                                    <h4>Xác thực 2 yếu tố</h4>
-                                                    <p>Bảo vệ tài khoản với 2FA</p>
-                                                </div>
-                                            </div>
-                                            <Button variant="ghost" size="sm" className="text-primary font-bold">Thiết lập</Button>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <div className="settings-footer">
-                                    <a href="#" className="deactivate-link">Vô hiệu hóa tài khoản</a>
-                                    <div className="footer-btn-group">
-                                        <Button variant="outline" rounded="full" className="flex-1 sm:flex-none">Hủy</Button>
-                                        <Button variant="primary" rounded="full" className="flex-1 sm:flex-none shadow-lg shadow-primary/30">Lưu thay đổi</Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </main>
+                    <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800">
+                        <button className="flex w-full items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all text-left text-sm font-semibold">
+                            <span className="material-symbols-outlined text-xl">logout</span>
+                            Sign Out
+                        </button>
                     </div>
+                </nav>
+            </aside>
+
+            {/* Main Content Area */}
+            {activeTab === 'profile' && <ProfileTab />}
+            {activeTab === 'account' && <AccountTab />}
+            {(activeTab === 'privacy' || activeTab === 'notifications') && (
+                <div className="flex-1 max-w-3xl flex items-center justify-center text-slate-400">
+                    Coming Soon / In Development
+                </div>
+            )}
+        </div>
+    );
+};
+
+// ---------------------------------------------------------------------------
+// SUBCOMPONENTS: Profile Tab
+// ---------------------------------------------------------------------------
+const ProfileTab: React.FC = () => {
+    return (
+        <div className="flex-1 max-w-3xl">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden">
+                {/* Cover Image */}
+                <div className="relative h-48 w-full group overflow-hidden">
+                    <div
+                        className="absolute inset-0 bg-cover bg-center soft-focus-bg"
+                        style={{
+                            backgroundImage:
+                                "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAe7IHXGGrSres7jzXnFVOfQaAppE7WngacMvJU3hri21Qb07gAmYe2I3Rw3s3jXmkx7rCC7OX2kRTMC6mGjSf8MZbAj4U6bQNxB3FDPNx9BmOfr1Hz4DIEwjMEBTaysRq2tN_XUd8XSqNTg4Ljy31nzfH1TtX-Ln5FxgBqjkEnphOBhVa4PyvbArGMUX8NHZxzxSa-vjfLjiauCc36GOsnq5TsmH4aetnnP53easFX8kAOnI5zHLSrXGr6vT6JhUtyhWV2a-op-_s')",
+                        }}
+                    ></div>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                        <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-xl border border-white/30 transition-all font-semibold text-sm cursor-pointer">
+                            <span className="material-symbols-outlined text-lg">photo_camera</span>
+                            Change Cover
+                        </button>
+                    </div>
+                </div>
+
+                {/* Profile Form Content */}
+                <div className="p-8 md:p-10 -mt-16 relative">
+                    <div className="flex items-end gap-6 mb-10">
+                        <div className="relative group">
+                            <div className="size-32 rounded-full border-4 border-white dark:border-slate-900 overflow-hidden shadow-lg bg-white">
+                                <img
+                                    alt="Profile Avatar"
+                                    className="w-full h-full object-cover"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6M1LYtraa9g5BogU6U3BbAR3iMOlyks0gfrIDagPbzme7pavYFBLEHn4CpCjviUDFQ4mHrX0xyhjMLOGOOv7Yzr-IbF6istejIDkSNT_ox_wdyxiuHwuTa0XES5n5f2RZhKhVmEYYGKkvE5Nk-ZHkEO9i15dk4L_kf3GvO2yglEFLygXtxdU9r5kr4sB_u_3JUDa0srMNwm2zywDGcIpypSQcs5r1WhlIOIAK9Vkf95DBSOZDM52xBL0gLTBMuKHVXdIU9lPRDTg"
+                                />
+                            </div>
+                            <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                <span className="material-symbols-outlined text-white">photo_camera</span>
+                            </label>
+                        </div>
+                        <div className="pb-2">
+                            <button className="text-sm font-bold text-primary hover:underline cursor-pointer bg-transparent border-none p-0">
+                                Change Avatar
+                            </button>
+                            <p className="text-xs text-slate-400 mt-1">JPG, GIF or PNG. Max size of 800K</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-8">
+                        <div className="space-y-2">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                                Display Name
+                            </label>
+                            <input
+                                className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100"
+                                placeholder="Enter your display name"
+                                type="text"
+                                defaultValue="MeoBeo"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                                Poetic Bio
+                            </label>
+                            <textarea
+                                className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100 resize-none italic"
+                                placeholder="Share a piece of your soul..."
+                                rows={3}
+                                defaultValue={'"Collecting moments, one story at a time."'}
+                            />
+                            <p className="text-[10px] text-slate-400 text-right uppercase tracking-widest font-bold">
+                                42 / 160 characters
+                            </p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                                Social Links
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span className="material-symbols-outlined text-slate-400 text-lg">link</span>
+                                    </div>
+                                    <input
+                                        className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 focus:ring-primary focus:border-primary transition-all text-sm text-slate-900 dark:text-slate-100"
+                                        placeholder="Website URL"
+                                        type="text"
+                                        defaultValue="https://meobeo.talk/journal"
+                                    />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span className="material-symbols-outlined text-slate-400 text-lg">
+                                            alternate_email
+                                        </span>
+                                    </div>
+                                    <input
+                                        className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 focus:ring-primary focus:border-primary transition-all text-sm text-slate-900 dark:text-slate-100"
+                                        placeholder="Instagram handle"
+                                        type="text"
+                                        defaultValue="@meobeo_moments"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-6 flex items-center justify-end gap-4 border-t border-slate-100 dark:border-slate-800">
+                            <button className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors bg-transparent border-none cursor-pointer">
+                                Cancel
+                            </button>
+                            <button className="px-8 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 border-none cursor-pointer">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ---------------------------------------------------------------------------
+// SUBCOMPONENTS: Account Tab
+// ---------------------------------------------------------------------------
+const AccountTab: React.FC = () => {
+    return (
+        <div className="flex-1 max-w-2xl">
+            <header className="mb-10">
+                <h1 className="text-3xl font-bold text-deep-espresso dark:text-white">Account Settings</h1>
+                <p className="text-slate-500 mt-2">Manage your account details and privacy preferences.</p>
+            </header>
+
+            <div className="space-y-12">
+                {/* Email Address */}
+                <section>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Email Address</h2>
+                    <div className="space-y-4">
+                        <div className="relative">
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                Current Email
+                            </label>
+                            <input
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
+                                type="email"
+                                defaultValue="meobeo.talks@gmail.com"
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Password Change */}
+                <section>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Password Change</h2>
+                    <div className="space-y-4">
+                        <div className="relative">
+                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                Current Password
+                            </label>
+                            <input
+                                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
+                                placeholder="••••••••"
+                                type="password"
+                            />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="relative">
+                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    New Password
+                                </label>
+                                <input
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
+                                    placeholder="Enter new password"
+                                    type="password"
+                                />
+                            </div>
+                            <div className="relative">
+                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                                    Confirm Password
+                                </label>
+                                <input
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
+                                    placeholder="Confirm new password"
+                                    type="password"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Language Preferences */}
+                <section>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">
+                        Language Preferences
+                    </h2>
+                    <div className="relative">
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                            Display Language
+                        </label>
+                        <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary appearance-none text-slate-900 dark:text-slate-100">
+                            <option value="en">English (US)</option>
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="fr">Français</option>
+                            <option value="jp">日本語</option>
+                        </select>
+                    </div>
+                </section>
+
+                {/* Privacy */}
+                <section className="pt-8 border-t border-slate-200 dark:border-slate-800">
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Privacy</h2>
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
+                                    Private Account
+                                </h4>
+                                <p className="text-xs text-slate-500 mt-1 m-0">
+                                    Only followers can see your stories and memories.
+                                </p>
+                            </div>
+                            <input className="custom-toggle" type="checkbox" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
+                                    Show Mood Tags on Profile
+                                </h4>
+                                <p className="text-xs text-slate-500 mt-1 m-0">
+                                    Display your recent emotional journey markers.
+                                </p>
+                            </div>
+                            <input className="custom-toggle" type="checkbox" defaultChecked />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
+                                    Allow Comments from Everyone
+                                </h4>
+                                <p className="text-xs text-slate-500 mt-1 m-0">
+                                    Enable interaction from the whole community.
+                                </p>
+                            </div>
+                            <input className="custom-toggle" type="checkbox" defaultChecked />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Save Button */}
+                <div className="pt-8 flex justify-end sticky bottom-6 z-10">
+                    <button className="px-10 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2 border-none cursor-pointer">
+                        <span className="material-symbols-outlined text-xl">check_circle</span>
+                        Save Changes
+                    </button>
                 </div>
             </div>
         </div>

@@ -71,7 +71,8 @@
 
   /* Typography */
   --font-display: 'Epilogue', sans-serif;
-  --font-body: 'Epilogue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
   /* Font Sizes */
   --font-size-xs: 0.75rem;

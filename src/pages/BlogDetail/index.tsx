@@ -461,7 +461,7 @@ const BlogDetailPage: React.FC = () => {
                                                             <div className="relative">
                                                                 <textarea
                                                                     className="w-full bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all resize-none min-h-[80px]"
-                                                                    placeholder={`Reply to ${comment.user.display_name || comment.user.username}...`}
+                                                                    placeholder={`Trả lời ${comment.user.display_name || comment.user.username}...`}
                                                                     value={replyText}
                                                                     onChange={(e) => setReplyText(e.target.value)}
                                                                     autoFocus
@@ -471,14 +471,14 @@ const BlogDetailPage: React.FC = () => {
                                                                         onClick={() => setReplyingTo(null)}
                                                                         className="px-3 py-1.5 text-xs font-medium text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
                                                                     >
-                                                                        Cancel
+                                                                        Hủy
                                                                     </button>
                                                                     <button
                                                                         onClick={() => handleReplySubmit(comment.id)}
                                                                         disabled={replySubmitting || !replyText.trim()}
                                                                         className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50"
                                                                     >
-                                                                        {replySubmitting ? 'Replying...' : 'Reply'}
+                                                                        {replySubmitting ? 'Đang trả lời...' : 'Trả lời'}
                                                                     </button>
                                                                 </div>
                                                             </div>

@@ -1,12 +1,15 @@
 import React from 'react';
-import FeedMasonry from './components/FeedMasonry';
 import { SEO } from '@/components/common/SEO/SEO';
+import StreamFeed from './components/StreamFeed';
 
 const Home: React.FC = () => {
     return (
         <>
-            <SEO />
-            <FeedMasonry />
+            <SEO
+                title="Trang Chủ"
+                description="Khám phá những câu chuyện, kỷ niệm và hành trình tuyệt vời từ cộng đồng Meobeo Talk."
+            />
+            <StreamFeed />
         </>
     );
 };

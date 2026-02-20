@@ -1,48 +1,87 @@
-import { apiGet, apiPut, apiPost } from '@/lib/ky-client';
-import type {
-    Profile,
-    ProfileResponse,
-    UpdateProfile,
-} from '@/schemas/onboarding.schema';
+import { api } from '@/lib/ky-client';
+import type { ApiResponse } from '@/types/api';
+
+export interface UserProfile {
+    id: string;
+    username: string;
+    email: string;
+    full_name: string;
+    display_name?: string;
+    avatar?: string;
+    bio?: string;
+    post_count: number;
+    follower_count: number;
+    following_count: number;
+    is_active: boolean;
+    created_at: string;
+}
+
+export interface UpdateProfile {
+    display_name?: string;
+    bio?: string;
+}
 
 export const profileApi = {
     /**
-     * Get current user's profile
+     * Get the current authenticated user's profile
      */
-    getProfile: async (): Promise<Profile> => {
-        const response = await apiGet<ProfileResponse>('users/me/profile');
-        if (!response.data) {
-            throw new Error('No profile data received');
+    getMyProfile: async (): Promise<UserProfile> => {
+        const response = await api
+            .get('users/me')
+            .json<ApiResponse<UserProfile>>();
+
+        if (response.success && response.data) {
+            return response.data;
         }
-        return response.data;
+
+        throw new Error(response.message || 'Failed to fetch profile');
     },
 
     /**
-     * Update user profile
+     * Get a user profile by username (public endpoint)
      */
-    updateProfile: async (data: UpdateProfile): Promise<Profile> => {
-        const response = await apiPut<ProfileResponse>('users/me/profile', data);
-        if (!response.data) {
-            throw new Error('No profile data received');
+    getProfileByUsername: async (username: string): Promise<UserProfile> => {
+        const response = await api
+            .get(`users/by-username/${username}`)
+            .json<ApiResponse<UserProfile>>();
+
+        if (response.success && response.data) {
+            return response.data;
         }
-        return response.data;
+
+        throw new Error(response.message || 'User not found');
     },
 
     /**
-     * Upload avatar
+     * Update the current user's profile
+     */
+    updateProfile: async (data: UpdateProfile): Promise<UserProfile> => {
+        const response = await api
+            .put('users/me', { json: data })
+            .json<ApiResponse<UserProfile>>();
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+
+        throw new Error(response.message || 'Failed to update profile');
+    },
+
+    /**
+     * Upload a new avatar image
      */
     uploadAvatar: async (file: File): Promise<{ avatar_url: string }> => {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        const response = await apiPost<{ success: boolean; data: { avatar_url: string } }>(
-            'users/me/avatar',
-            formData
-        );
+        const response = await api
+            .post('users/me/avatar', { body: formData })
+            .json<ApiResponse<{ avatar_url: string }>>();
 
-        if (!response.data) {
-            throw new Error('No avatar URL received');
+        if (response.success && response.data) {
+            return response.data;
         }
-        return response.data;
+
+        throw new Error(response.message || 'Failed to upload avatar');
     },
 };

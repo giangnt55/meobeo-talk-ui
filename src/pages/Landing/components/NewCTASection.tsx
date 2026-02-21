@@ -1,6 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const NewCTASection: React.FC = () => {
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+
+    const handleCtaClick = () => {
+        if (isAuthenticated) {
+            navigate('/home');
+        } else {
+            navigate('/signup');
+        }
+    };
+
     return (
         <div className="w-full px-6 py-20 bg-sage/5 dark:bg-sage/10">
             <div className="max-w-[720px] mx-auto text-center flex flex-col gap-6 items-center">
@@ -11,8 +24,11 @@ const NewCTASection: React.FC = () => {
                 <p className="text-[#897261] dark:text-gray-300">
                     Tham gia cùng hàng ngàn thành viên đang lưu giữ di sản của họ, từng ký ức một.
                 </p>
-                <button className="mt-4 flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-8 bg-primary hover:bg-orange-600 text-white text-base font-bold shadow-lg transition-all hover:scale-105">
-                    Tạo Tài Khoản Miễn Phí
+                <button
+                    onClick={handleCtaClick}
+                    className="mt-4 flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-8 bg-primary hover:bg-orange-600 text-white text-base font-bold shadow-lg transition-all hover:scale-105"
+                >
+                    {isAuthenticated ? 'Về Trang Của Mình' : 'Tạo Tài Khoản Miễn Phí'}
                 </button>
             </div>
         </div>

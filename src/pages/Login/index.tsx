@@ -135,7 +135,11 @@ export const LoginPage: React.FC = () => {
         navigate("/home");
       }, 300);
     } catch (err: any) {
-      error("Login Failed", err.message || "Invalid credentials");
+      if (err.code === 'INVALID_CREDENTIALS') {
+        error("Meo meo, sai gòi nè!", "Nhập lại xíu xiu nghen, email hoặc mật khẩu bị trật nhịp rồi đó");
+      } else {
+        error("Trùi ui, lỗi gòi!", err.message || "Tự nhiên bị lỗi ngang, ráng thử lại nha!");
+      }
     } finally {
       setIsLoading(false);
     }

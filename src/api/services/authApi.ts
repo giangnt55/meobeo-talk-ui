@@ -70,7 +70,12 @@ export const authApi = {
       return authResponse;
     }
 
-    throw new Error(response.message || 'Login failed');
+    const errorMsg = response.error?.message || response.message || 'Login failed';
+    const err: any = new Error(errorMsg);
+    if (response.error?.code) {
+      err.code = response.error.code;
+    }
+    throw err;
   },
 
   /**

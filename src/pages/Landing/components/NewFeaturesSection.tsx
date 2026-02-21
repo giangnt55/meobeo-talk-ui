@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NewFeaturesSection: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleFeaturesClick = () => {
+        navigate('/about');
+    };
+
     return (
         <div className="w-full bg-white dark:bg-[#1a120b] py-20">
             <div className="max-w-[960px] mx-auto px-6">
@@ -46,7 +53,10 @@ const NewFeaturesSection: React.FC = () => {
                     </div>
 
                     <div className="flex justify-center mt-4">
-                        <button className="flex items-center gap-2 text-primary font-bold text-sm hover:underline">
+                        <button
+                            onClick={handleFeaturesClick}
+                            className="flex items-center gap-2 text-primary font-bold text-sm hover:underline"
+                        >
                             Xem hết tính năng luôn <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </button>
                     </div>

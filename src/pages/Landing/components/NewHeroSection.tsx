@@ -1,6 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const NewHeroSection: React.FC = () => {
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+
+    const handleShareClick = () => {
+        if (isAuthenticated) {
+            navigate('/blog/create');
+        } else {
+            navigate('/login');
+        }
+    };
+
+    const handleExploreClick = () => {
+        navigate('/blog');
+    };
+
     return (
         <div className="w-full max-w-[1200px] px-6 lg:px-10 py-12 lg:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -31,10 +48,16 @@ const NewHeroSection: React.FC = () => {
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-4 pt-2">
-                        <button className="flex items-center justify-center rounded-xl h-12 px-8 bg-primary hover:bg-orange-600 text-white text-base font-bold shadow-lg shadow-orange-200 dark:shadow-none transition-all hover:-translate-y-0.5">
+                        <button
+                            onClick={handleShareClick}
+                            className="flex items-center justify-center rounded-xl h-12 px-8 bg-primary hover:bg-orange-600 text-white text-base font-bold shadow-lg shadow-orange-200 dark:shadow-none transition-all hover:-translate-y-0.5"
+                        >
                             Bắt đầu chia sẻ nè
                         </button>
-                        <button className="flex items-center justify-center rounded-xl h-12 px-8 bg-white dark:bg-[#382a20] border border-[#e6e0db] dark:border-gray-700 text-[#181411] dark:text-white text-base font-bold hover:bg-gray-50 dark:hover:bg-[#443328] transition-all">
+                        <button
+                            onClick={handleExploreClick}
+                            className="flex items-center justify-center rounded-xl h-12 px-8 bg-white dark:bg-[#382a20] border border-[#e6e0db] dark:border-gray-700 text-[#181411] dark:text-white text-base font-bold hover:bg-gray-50 dark:hover:bg-[#443328] transition-all"
+                        >
                             Khám phá các câu chuyện
                         </button>
                     </div>

@@ -156,11 +156,21 @@ export const api = ky.create({
           try {
             const body = (await response.json()) as {
               message?: string;
+              error?: { code?: string; message?: string };
               errors?: Record<string, string[]> | unknown;
             };
 
             errorLog.responseBody = body;
-            error.message = body.message || error.message;
+            
+            // Parse nested error object if present
+            const backendMessage = body.error?.message || body.message;
+            if (backendMessage) {
+              error.message = backendMessage;
+            }
+
+            if (body.error?.code) {
+              (error as any).code = body.error.code;
+            }
 
             if (body.errors) {
               (error as any).errors = body.errors;

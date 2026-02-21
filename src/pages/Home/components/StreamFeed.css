@@ -181,10 +181,26 @@
 .stream-tabs {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.25rem;
     border-bottom: 1px solid #e7e5e4;
     padding-bottom: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.stream-tabs::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+@media (min-width: 640px) {
+    .stream-tabs {
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
 }
 
 .stream-tab {
@@ -395,6 +411,28 @@
     font-weight: 500;
 }
 
+/* Like button — interactive, can be toggled */
+.stream-like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 150ms ease, transform 150ms ease;
+}
+
+.stream-like-btn:hover {
+    color: #ef4444;
+    transform: scale(1.1);
+}
+
+.stream-like-btn.active {
+    color: #ef4444;
+}
+
+.stream-like-btn.active .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+}
+
 .stream-bookmark-btn {
     margin-left: auto;
     background: none;
@@ -404,7 +442,7 @@
     padding: 0;
     display: flex;
     align-items: center;
-    transition: color 150ms ease;
+    transition: color 150ms ease, transform 150ms ease;
 }
 
 .stream-bookmark-btn .material-symbols-outlined {
@@ -413,6 +451,15 @@
 
 .stream-bookmark-btn:hover {
     color: var(--primary);
+    transform: scale(1.1);
+}
+
+.stream-bookmark-btn.active {
+    color: var(--primary);
+}
+
+.stream-bookmark-btn.active .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
 }
 
 /* Thumbnail */
@@ -652,4 +699,139 @@
     .stream-fab {
         display: none;
     }
+}
+
+/* ── Trending window selector ── */
+.stream-window-selector {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: auto;
+    align-items: center;
+    flex-shrink: 0;
+    /* Prevents the whole block from shrinking */
+}
+
+.stream-window-btn {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color, #e5e5e5);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted, #888);
+    transition: all 150ms ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.stream-window-btn.active {
+    background: var(--primary, #ee7c2b);
+    color: #fff;
+    border-color: var(--primary, #ee7c2b);
+}
+
+.stream-window-btn:hover:not(.active) {
+    background: var(--bg-hover, #f5f5f5);
+}
+
+/* ── Trending score badge ── */
+.stream-trending-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary, #ee7c2b);
+    background: rgba(238, 124, 43, 0.1);
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+}
+
+/* ── Save count in footer ── */
+.stream-save-count {
+    color: var(--text-muted, #999);
+    font-size: 0.78rem;
+    gap: 0.2rem;
+}
+
+/* ── Collections grid ── */
+.stream-collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    padding-top: 0.5rem;
+}
+
+.stream-collection-card {
+    border: 1px solid var(--border-color, #e5e5e5);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: var(--card-bg, #fff);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+    cursor: pointer;
+}
+
+.stream-collection-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.stream-collection-previews {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 120px;
+    background: var(--bg-hover, #f5f5f5);
+}
+
+.stream-collection-thumb {
+    background-size: cover;
+    background-position: center;
+    background-color: var(--border-color, #e5e5e5);
+}
+
+.stream-collection-thumb--empty {
+    background: linear-gradient(135deg, var(--primary, #ee7c2b) 0%, #f5a263 100%);
+    grid-column: 1 / -1;
+}
+
+.stream-collection-meta {
+    padding: 0.75rem 1rem 1rem;
+}
+
+.stream-collection-name {
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0 0 0.25rem;
+    color: var(--text-primary, #1a1a1a);
+}
+
+.stream-collection-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted, #888);
+    margin: 0 0 0.4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+.stream-collection-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary, #ee7c2b);
+}
+
+/* ── Auth prompt (following tab when logged out) ── */
+.stream-auth-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    gap: 0.75rem;
+}
+
+.stream-auth-icon {
+    font-size: 3.5rem;
+    color: var(--primary, #ee7c2b);
+    opacity: 0.6;
 }

@@ -12,8 +12,8 @@ interface SEOProps {
 }
 
 const DEFAULT_SEO = {
-    title: 'MeoInk',
-    description: 'Không phải chuyện gì cũng nhớ, nên phải viết ra. MeoInk giúp bạn viết blog, lưu kỷ niệm và tạo hành trình ký ức để mai này đọc lại còn cười.',
+    title: 'MeowMuc',
+    description: 'Không phải chuyện gì cũng nhớ, nên phải viết ra. MeowMuc giúp bạn viết blog, lưu kỷ niệm và tạo hành trình ký ức để mai này đọc lại còn cười.',
     image: 'https://meobeo-talk-ui.pages.dev/logo/img-totuong.jpg',
     url: 'https://meobeo-talk-ui.pages.dev/',
     type: 'website' as const,
@@ -30,7 +30,7 @@ export const SEO: React.FC<SEOProps> = ({
     modifiedTime,
 }) => {
     const seo = {
-        title: title ? `${title} | MeoInk` : DEFAULT_SEO.title,
+        title: title ? `${title} | MeowMuc` : DEFAULT_SEO.title,
         description: description || DEFAULT_SEO.description,
         image: image || DEFAULT_SEO.image,
         url: url || DEFAULT_SEO.url,

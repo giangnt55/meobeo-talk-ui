@@ -5,6 +5,7 @@ import { BlogPostsGrid } from './BlogPostsGrid';
 import { MemoryJournalGrid } from './MemoryJournalGrid';
 import { MemoryJourneysList } from './MemoryJourneysList';
 import type { Blog } from '@/api/services/blogApi';
+import { getContentPreview } from '@/api/services/blogApi';
 import type { Post } from '@/types/post';
 import '@/pages/Profile/Profile.css';
 
@@ -34,7 +35,7 @@ export const ProfileContent: React.FC<ProfileContentProps> = ({
         ? blogPosts.filter(
             (p) =>
                 p.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                p.content_preview?.toLowerCase().includes(searchQuery.toLowerCase())
+                getContentPreview(p.content_html || '').toLowerCase().includes(searchQuery.toLowerCase())
         )
         : blogPosts;
 
@@ -43,7 +44,7 @@ export const ProfileContent: React.FC<ProfileContentProps> = ({
         ? journeys.filter(
             (j) =>
                 j.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                j.content_preview?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                j.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 j.journey_location?.toLowerCase().includes(searchQuery.toLowerCase())
         )
         : journeys;

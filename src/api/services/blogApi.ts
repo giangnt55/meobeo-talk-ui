@@ -1,15 +1,26 @@
 import { api } from '@/lib/ky-client';
 import type { ApiResponse } from '@/types/api';
 
-// Blog types
+// ─── Blog types ──────────────────────────────────────────────────────────────
+
+/**
+ * Blog represents a full feed post returned by the backend.
+ * Note: `content_preview` is NOT a backend field for the feed.
+ * The frontend derives preview from `content_html` / `content_text`.
+ */
 export interface Blog {
     id: string;
     author_id: string;
     post_type: string;
     title: string;
     content_html: string;
-    content_text: string;
-    content_preview: string;
+    content_text?: string;
+    /**
+     * Plain-text preview ≤160 chars.
+     * Populated by the backend at write-time from content_html.
+     * Falls back to client-side getContentPreview(content_html) if missing.
+     */
+    content_preview?: string;
     category?: string;
     category_name?: string;
     read_time_minutes: number;
@@ -22,6 +33,8 @@ export interface Blog {
     is_sensitive: boolean;
     comment_count: number;
     reaction_count: number;
+    /** Denormalized bookmark count — incremented/decremented in transaction */
+    save_count: number;
     view_count: number;
     created_at: string;
     updated_at: string;
@@ -32,7 +45,9 @@ export interface Blog {
         avatar_url?: string;
         bio?: string;
     };
-    is_liked?: boolean;
+    // User interaction state (populated when authenticated)
+    is_liked: boolean;
+    is_saved: boolean;
 }
 
 export interface CreateBlogRequest {
@@ -101,6 +116,26 @@ export interface CommentListResponse {
     };
 }
 
+export interface SaveBlogResponse {
+    saved: boolean;
+    post_id: string;
+}
+
+// ─── API helpers ─────────────────────────────────────────────────────────────
+
+/**
+ * Derives a short content preview (≤150 chars) from raw HTML.
+ * Strips all HTML tags and trims whitespace.
+ */
+export function getContentPreview(html?: string | null, maxLength = 160): string {
+    if (!html) return '';
+    const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trimEnd() + '...';
+}
+
+// ─── blogApi ──────────────────────────────────────────────────────────────────
+
 export const blogApi = {
     /**
      * Create a new blog post
@@ -157,11 +192,12 @@ export const blogApi = {
     },
 
     /**
-     * Get all blogs with optional filters
+     * Get all blogs with optional filters.
+     * Backend returns is_liked / is_saved if user is authenticated (cookie/token).
      */
     getBlogs: async (params: BlogListParams = {}): Promise<FeedResponse> => {
         const searchParams: Record<string, string> = {};
-        
+
         if (params.category) searchParams.category = params.category;
         if (params.page) searchParams.page = params.page.toString();
         if (params.limit) searchParams.limit = params.limit.toString();
@@ -204,9 +240,6 @@ export const blogApi = {
     /**
      * Get comments for a blog
      */
-    /**
-     * Get comments for a blog
-     */
     getComments: async (blogId: string, page: number = 1, limit: number = 10): Promise<CommentListResponse> => {
         const response = await api.get(`posts/${blogId}/comments`, {
             searchParams: {
@@ -216,10 +249,8 @@ export const blogApi = {
         }).json<ApiResponse<any[]> & { meta: any }>();
 
         if (response.success) {
-            // Transform new API response to match existing frontend structure
             const commentsData = response.data || [];
-            
-            // Return flat comments to let frontend handle reconstruction with pagination
+
             const commentsResult = commentsData.map((c: any) => ({
                 id: c.id,
                 content: c.content,
@@ -237,7 +268,7 @@ export const blogApi = {
                 reaction_count: c.reaction_count,
                 reply_count: c.reply_count,
                 is_liked: c.is_liked,
-                replies: []
+                replies: [],
             }));
 
             return {
@@ -255,10 +286,7 @@ export const blogApi = {
     },
 
     /**
-     * Create a comment
-     */
-    /**
-     * Create a comment
+     * Create a comment or reply
      */
     createComment: async (blogId: string, content: string, parentId?: string): Promise<Comment> => {
         let url = 'interactions/comments';
@@ -290,7 +318,7 @@ export const blogApi = {
                 reaction_count: c.reaction_count,
                 reply_count: c.reply_count,
                 is_liked: c.is_liked,
-                replies: []
+                replies: [],
             };
         }
 
@@ -298,14 +326,11 @@ export const blogApi = {
     },
 
     /**
-     * Like/Unlike a blog
-     */
-    /**
-     * Like/Unlike a blog
+     * Toggle like on a blog post
      */
     toggleBlogLike: async (blogId: string): Promise<{ liked: boolean; count: number }> => {
         const response = await api.post('interactions/reactions', {
-            json: { target_id: blogId, target_type: 'post', reaction: 'like' }
+            json: { target_id: blogId, target_type: 'post', reaction: 'like' },
         }).json<ApiResponse<{ success: boolean; is_added: boolean; reaction_count: number }>>();
 
         if (response.success && response.data) {
@@ -319,11 +344,11 @@ export const blogApi = {
     },
 
     /**
-     * Like/Unlike a comment
+     * Toggle like on a comment
      */
     toggleCommentLike: async (commentId: string): Promise<{ liked: boolean; count: number }> => {
         const response = await api.post('interactions/reactions', {
-            json: { target_id: commentId, target_type: 'comment', reaction: 'like' }
+            json: { target_id: commentId, target_type: 'comment', reaction: 'like' },
         }).json<ApiResponse<{ success: boolean; is_added: boolean; reaction_count: number }>>();
 
         if (response.success && response.data) {
@@ -334,5 +359,21 @@ export const blogApi = {
         }
 
         throw new Error(response.message || 'Failed to toggle like');
+    },
+
+    /**
+     * Toggle save (bookmark) on a blog post
+     * POST /api/v1/blogs/:id/save
+     */
+    toggleSaveBlog: async (blogId: string): Promise<SaveBlogResponse> => {
+        const response = await api
+            .post(`blogs/${blogId}/save`)
+            .json<ApiResponse<SaveBlogResponse>>();
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+
+        throw new Error(response.message || 'Failed to toggle save');
     },
 };

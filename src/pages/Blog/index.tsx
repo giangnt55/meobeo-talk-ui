@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { blogApi, type Blog } from '@/api/services/blogApi';
+import { blogApi, getContentPreview, type Blog } from '@/api/services/blogApi';
 import { BLOG_CATEGORIES } from '@/constants/blog';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -202,7 +202,7 @@ const BlogPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <p className="text-warm-taupe text-base leading-relaxed line-clamp-3">
-                                        {post.content_preview || 'No preview available'}
+                                        {post.content_preview || getContentPreview(post.content_html, 200) || 'No preview available'}
                                     </p>
                                     <div className="flex items-center gap-6 mt-2">
                                         <div className="flex items-center gap-1.5 text-warm-taupe/60">

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from '@/hooks/useDebounce';
-import { searchApi, SearchResult } from '@/api/services/searchApi';
+import { feedApi, type SearchPost } from '@/api/services/feedApi';
+import { getContentPreview } from '@/api/services/blogApi';
 import './NavbarSearch.css';
 
 export const NavbarSearch: React.FC = () => {
     const [query, setQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-    const [results, setResults] = useState<SearchResult | null>(null);
+    const [results, setResults] = useState<SearchPost[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
@@ -41,8 +42,8 @@ export const NavbarSearch: React.FC = () => {
             setIsSearching(true);
             setError(null);
             try {
-                const data = await searchApi.searchGlobally(debouncedQuery);
-                setResults(data);
+                const data = await feedApi.searchPosts(debouncedQuery, { limit: 6 });
+                setResults(data.posts || []);
                 setIsDropdownOpen(true);
             } catch (err: any) {
                 setError(err.message || 'Có lỗi xảy ra khi tìm kiếm');
@@ -76,7 +77,7 @@ export const NavbarSearch: React.FC = () => {
         setQuery('');
     };
 
-    const hasNoResults = results && results.users.length === 0 && results.posts.length === 0;
+    const hasNoResults = results && results.length === 0;
 
     return (
         <div className={`navbar-search-container ${isMobileSearchOpen ? 'mobile-open' : ''}`} ref={searchContainerRef}>
@@ -129,35 +130,10 @@ export const NavbarSearch: React.FC = () => {
                         <div className="search-status empty">Không tìm thấy kết quả nào cho "{query}"</div>
                     ) : (
                         <div className="search-results-content">
-                            {results?.users && results.users.length > 0 && (
-                                <div className="search-section">
-                                    <h4 className="search-section-title">Mọi người</h4>
-                                    {results.users.map(user => (
-                                        <div
-                                            key={user.id}
-                                            className="search-result-item"
-                                            onClick={() => handleResultClick(`/profile/${user.username}`)}
-                                        >
-                                            {user.avatar ? (
-                                                <img src={user.avatar} alt={user.username} className="result-avatar" />
-                                            ) : (
-                                                <div className="result-avatar-placeholder">
-                                                    {(user.display_name || user.username).charAt(0).toUpperCase()}
-                                                </div>
-                                            )}
-                                            <div className="result-info">
-                                                <span className="result-name">{user.display_name || user.username}</span>
-                                                <span className="result-sub">@{user.username}</span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {results?.posts && results.posts.length > 0 && (
+                            {results && results.length > 0 && (
                                 <div className="search-section">
                                     <h4 className="search-section-title">Bài viết</h4>
-                                    {results.posts.map(post => (
+                                    {results.map(post => (
                                         <div
                                             key={post.id}
                                             className="search-result-item"
@@ -167,7 +143,9 @@ export const NavbarSearch: React.FC = () => {
                                                 <span className="material-symbols-outlined">article</span>
                                             </div>
                                             <div className="result-info">
-                                                <span className="result-title">{post.title || post.contentPreview}</span>
+                                                <span className="result-title">
+                                                    {post.title || post.content_preview || getContentPreview(post.content_html, 40) || 'Không có tiêu đề'}
+                                                </span>
                                             </div>
                                         </div>
                                     ))}

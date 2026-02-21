@@ -1,17 +1,37 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { blogApi, type Blog } from '@/api/services/blogApi';
+import { blogApi, getContentPreview, type Blog } from '@/api/services/blogApi';
+import { feedApi, type TrendingPost, type Collection } from '@/api/services/feedApi';
 import { followApi } from '@/api/services/followApi';
+import { categoryApi, type Category } from '@/api/services/categoryApi';
 import type { SuggestedUser } from '@/schemas/onboarding.schema';
+import { useAuth } from '@/hooks/useAuth';
 import './StreamFeed.css';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Tab definition ───────────────────────────────────────────────────────────
 
+/** Each tab hits a different backend route with different data logic. */
 type FeedTab = 'following' | 'trending' | 'collections';
 
+interface TabDef {
+    key: FeedTab;
+    label: string;
+    requiresAuth?: boolean;
+}
+
+const TABS: TabDef[] = [
+    { key: 'following', label: 'Đang theo dõi', requiresAuth: true },
+    { key: 'trending', label: 'Thịnh hành' },
+    { key: 'collections', label: 'Bộ sưu tập' },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 function formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short' });
+    return new Date(dateStr).toLocaleDateString('vi-VN', {
+        day: 'numeric',
+        month: 'short',
+    });
 }
 
 function formatCount(n: number): string {
@@ -19,15 +39,15 @@ function formatCount(n: number): string {
     return String(n);
 }
 
-function getTypeLabel(blog: Blog): string {
-    if (blog.post_type === 'memory') return 'Ký Ức';
-    if (blog.post_type === 'journey') return 'Hành Trình';
+function getTypeLabel(postType: string): string {
+    if (postType === 'memory') return 'Ký Ức';
+    if (postType === 'journey') return 'Hành Trình';
     return 'Blog';
 }
 
-function getTypeBadgeClass(blog: Blog): string {
-    if (blog.post_type === 'memory') return 'memory';
-    if (blog.post_type === 'journey') return 'journey';
+function getTypeBadgeClass(postType: string): string {
+    if (postType === 'memory') return 'memory';
+    if (postType === 'journey') return 'journey';
     return 'blog';
 }
 
@@ -44,24 +64,30 @@ function initials(name: string): string {
 
 interface ArticleCardProps {
     blog: Blog;
+    trendingScore?: number;
+    onLikeToggle: (id: string) => void;
+    onSaveToggle: (id: string) => void;
 }
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ blog }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({
+    blog,
+    trendingScore,
+    onLikeToggle,
+    onSaveToggle,
+}) => {
     const navigate = useNavigate();
-    const authorName =
-        blog.author.display_name || blog.author.username;
+    const authorName = blog.author.display_name || blog.author.username;
     const hasImage = !!(blog.banner_url || blog.thumbnail_url);
     const imgSrc = blog.banner_url || blog.thumbnail_url || '';
     const isPolaroid = blog.post_type === 'memory';
 
-    const handleClick = () => {
-        navigate(`/blog/${blog.id}`);
-    };
+    // Derive preview from HTML on the frontend — no separate DB field needed in list resp
+    const preview = getContentPreview(blog.content_html || '', 160);
 
     return (
         <article
             className={`stream-article${!hasImage ? ' no-image' : ''}`}
-            onClick={handleClick}
+            onClick={() => navigate(`/blog/${blog.id}`)}
         >
             {/* Body */}
             <div className="stream-article-body">
@@ -73,20 +99,28 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ blog }) => {
                             style={{ backgroundImage: `url(${blog.author.avatar_url})` }}
                         />
                     ) : (
-                        <div className="stream-meta-avatar">
-                            {initials(authorName)}
-                        </div>
+                        <div className="stream-meta-avatar">{initials(authorName)}</div>
                     )}
                     <span className="stream-meta-author">{authorName}</span>
-                    <span className={`stream-type-badge ${getTypeBadgeClass(blog)}`}>
-                        {getTypeLabel(blog)}
+                    <span className={`stream-type-badge ${getTypeBadgeClass(blog.post_type)}`}>
+                        {getTypeLabel(blog.post_type)}
                     </span>
                     <span className="stream-meta-dot">•</span>
                     <span className="stream-meta-date">{formatDate(blog.created_at)}</span>
                     {blog.read_time_minutes > 0 && (
                         <>
                             <span className="stream-meta-dot">•</span>
-                            <span className="stream-meta-date">{blog.read_time_minutes} phút đọc</span>
+                            <span className="stream-meta-date">
+                                {blog.read_time_minutes} phút đọc
+                            </span>
+                        </>
+                    )}
+                    {trendingScore !== undefined && (
+                        <>
+                            <span className="stream-meta-dot">•</span>
+                            <span className="stream-trending-badge">
+                                🔥 {trendingScore.toFixed(1)}
+                            </span>
                         </>
                     )}
                 </div>
@@ -94,27 +128,47 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ blog }) => {
                 {/* Title + Excerpt */}
                 <div>
                     <h2 className="stream-article-title">{blog.title}</h2>
-                    {blog.content_preview && (
-                        <p className="stream-article-excerpt">{blog.content_preview}</p>
+                    {/* content_preview is populated by backend at write-time.
+                        Fall back to client-side extraction if missing (e.g. older posts). */}
+                    {(blog.content_preview || preview) && (
+                        <p className="stream-article-excerpt">
+                            {blog.content_preview || preview}
+                        </p>
                     )}
                 </div>
 
                 {/* Footer stats */}
                 <div className="stream-article-footer">
-                    <div className="stream-footer-stat">
-                        <span className="material-symbols-outlined">favorite</span>
+                    <button
+                        className={`stream-footer-stat stream-like-btn${blog.is_liked ? ' active' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); onLikeToggle(blog.id); }}
+                        aria-label={blog.is_liked ? 'Bỏ thích' : 'Thích'}
+                    >
+                        <span className="material-symbols-outlined">
+                            {blog.is_liked ? 'favorite' : 'favorite_border'}
+                        </span>
                         <span>{formatCount(blog.reaction_count)}</span>
-                    </div>
+                    </button>
+
                     <div className="stream-footer-stat">
                         <span className="material-symbols-outlined">chat_bubble</span>
                         <span>{formatCount(blog.comment_count)}</span>
                     </div>
+
+                    {/* save_count shown alongside bookmark icon */}
+                    <div className="stream-footer-stat stream-save-count">
+                        <span className="material-symbols-outlined">bookmark_border</span>
+                        <span>{formatCount(blog.save_count)}</span>
+                    </div>
+
                     <button
-                        className="stream-bookmark-btn"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label="Lưu bài"
+                        className={`stream-bookmark-btn${blog.is_saved ? ' active' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); onSaveToggle(blog.id); }}
+                        aria-label={blog.is_saved ? 'Bỏ lưu' : 'Lưu bài'}
                     >
-                        <span className="material-symbols-outlined">bookmark</span>
+                        <span className="material-symbols-outlined">
+                            {blog.is_saved ? 'bookmark' : 'bookmark_add'}
+                        </span>
                     </button>
                 </div>
             </div>
@@ -122,12 +176,40 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ blog }) => {
             {/* Thumbnail */}
             {hasImage && (
                 <div className={`stream-article-thumb${isPolaroid ? ' stream-polaroid' : ''}`}>
-                    <img src={imgSrc} alt={blog.title} loading="lazy" />
+                    <img src={imgSrc} alt={blog.title || ''} loading="lazy" />
                 </div>
             )}
         </article>
     );
 };
+
+// ─── Collections placeholder card ─────────────────────────────────────────────
+
+const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) => (
+    <div className="stream-collection-card">
+        <div className="stream-collection-previews">
+            {collection.preview_posts.slice(0, 3).map((p) => (
+                <div
+                    key={p.id}
+                    className="stream-collection-thumb"
+                    style={p.banner_url ? { backgroundImage: `url(${p.banner_url})` } : undefined}
+                />
+            ))}
+            {collection.preview_posts.length === 0 && (
+                <div className="stream-collection-thumb stream-collection-thumb--empty" />
+            )}
+        </div>
+        <div className="stream-collection-meta">
+            <h3 className="stream-collection-name">{collection.name}</h3>
+            {collection.description && (
+                <p className="stream-collection-desc">{collection.description}</p>
+            )}
+            <span className="stream-collection-count">
+                {collection.post_count} bài viết
+            </span>
+        </div>
+    </div>
+);
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
@@ -138,7 +220,10 @@ const SkeletonArticle: React.FC = () => (
             <div className="stream-skeleton-line" style={{ height: '1.25rem', width: '85%' }} />
             <div className="stream-skeleton-line" style={{ height: '1rem', width: '70%' }} />
             <div className="stream-skeleton-line" style={{ height: '1rem', width: '60%' }} />
-            <div className="stream-skeleton-line" style={{ height: '0.75rem', width: '30%', marginTop: '0.5rem' }} />
+            <div
+                className="stream-skeleton-line"
+                style={{ height: '0.75rem', width: '30%', marginTop: '0.5rem' }}
+            />
         </div>
         <div
             className="stream-skeleton-line stream-skeleton-thumb"
@@ -149,23 +234,21 @@ const SkeletonArticle: React.FC = () => (
 
 // ─── Left Sidebar ─────────────────────────────────────────────────────────────
 
-interface SidebarProps {
-    suggestedUsers: SuggestedUser[];
-    followingIds: Set<string>;
-    onFollow: (userId: string) => void;
-}
-
 const COLLECTIONS = [
     { icon: 'auto_stories', label: 'Blog của tôi' },
     { icon: 'image', label: 'Ký ức của tôi' },
     { icon: 'flight', label: 'Hành trình của tôi' },
 ];
 
-const TAGS = ['#Nhiếp ảnh', '#Du lịch', '#Ẩm thực', '#Nhật ký', '#Thiên nhiên'];
+interface SidebarProps {
+    suggestedUsers: SuggestedUser[];
+    followingIds: Set<string>;
+    categories: Category[];
+    onFollow: (id: string) => void;
+}
 
-const Sidebar: React.FC<SidebarProps> = ({ suggestedUsers, followingIds, onFollow }) => (
+const Sidebar: React.FC<SidebarProps> = ({ suggestedUsers, followingIds, categories, onFollow }) => (
     <aside className="stream-sidebar">
-        {/* Collections */}
         <div className="stream-sidebar-section">
             <h3 className="stream-sidebar-heading">Bộ sưu tập</h3>
             <nav className="stream-sidebar-nav">
@@ -182,19 +265,15 @@ const Sidebar: React.FC<SidebarProps> = ({ suggestedUsers, followingIds, onFollo
             </nav>
         </div>
 
-        {/* Tags */}
         <div className="stream-sidebar-section">
-            <h3 className="stream-sidebar-heading">Chủ đề yêu thích</h3>
+            <h3 className="stream-sidebar-heading">Chủ đề</h3>
             <div className="stream-tags-list">
-                {TAGS.map((tag) => (
-                    <button key={tag} className="stream-tag-pill">
-                        {tag}
-                    </button>
+                {categories.slice(0, 5).map((cat) => (
+                    <button key={cat.id} className="stream-tag-pill">#{cat.name}</button>
                 ))}
             </div>
         </div>
 
-        {/* Suggested users */}
         {suggestedUsers.length > 0 && (
             <div className="stream-sidebar-section">
                 <h3 className="stream-sidebar-heading">Gợi ý theo dõi</h3>
@@ -238,84 +317,198 @@ const Sidebar: React.FC<SidebarProps> = ({ suggestedUsers, followingIds, onFollo
 
 const StreamFeed: React.FC = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
 
-    const [activeTab, setActiveTab] = useState<FeedTab>('following');
-    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [activeTab, setActiveTab] = useState<FeedTab>('trending');
+    const [blogs, setBlogs] = useState<TrendingPost[]>([]); // trending extends Blog
+    const [collections, setCollections] = useState<Collection[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
+    const [trendingWindow, setTrendingWindow] = useState<'day' | 'week' | 'month'>('week');
 
     const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
     const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
+    const [categories, setCategories] = useState<Category[]>([]);
 
-    // ── fetch blogs ──
-    const fetchBlogs = useCallback(async (pageNum: number, replace = false) => {
-        try {
-            if (replace) setLoading(true);
-            else setLoadingMore(true);
-            setError(null);
+    // ── Fetch logic per tab ──────────────────────────────────────────────────
 
-            const res = await blogApi.getBlogs({ page: pageNum, limit: 10 });
+    const fetchTab = useCallback(
+        async (tab: FeedTab, pageNum: number, isReplace: boolean) => {
+            try {
+                if (isReplace) setLoading(true);
+                else setLoadingMore(true);
+                setError(null);
 
-            setBlogs((prev) => (replace ? res.posts : [...prev, ...res.posts]));
-            setHasMore(res.meta.page < res.meta.total_pages);
-            setPage(pageNum);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Không tải được bài viết');
-        } finally {
-            setLoading(false);
-            setLoadingMore(false);
-        }
-    }, []);
+                if (tab === 'following') {
+                    if (!isAuthenticated) {
+                        setBlogs([]);
+                        setHasMore(false);
+                        return;
+                    }
+                    const res = await feedApi.getFollowingFeed({ page: pageNum, limit: 10 });
+                    setBlogs((prev) =>
+                        isReplace ? (res.posts as TrendingPost[]) : [...prev, ...res.posts as TrendingPost[]]
+                    );
+                    setHasMore(pageNum < res.meta.total_pages);
 
-    // ── fetch sidebar data ──
-    const fetchSidebar = useCallback(async () => {
-        try {
-            const users = await followApi.getSuggestedUsers(4);
-            setSuggestedUsers(users);
-        } catch {
-            // sidebar data is non-critical, fail silently
-        }
-    }, []);
+                } else if (tab === 'trending') {
+                    const res = await feedApi.getTrendingFeed({
+                        page: pageNum,
+                        limit: 10,
+                        window: trendingWindow,
+                    });
+                    setBlogs((prev) =>
+                        isReplace ? res.posts : [...prev, ...res.posts]
+                    );
+                    setHasMore(pageNum < res.meta.total_pages);
+
+                } else {
+                    // collections
+                    const res = await feedApi.getCollectionsFeed({ page: pageNum, limit: 12 });
+                    setCollections((prev) =>
+                        isReplace ? res.collections : [...prev, ...res.collections]
+                    );
+                    setHasMore(pageNum < res.meta.total_pages);
+                }
+
+                setPage(pageNum);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Không tải được bài viết');
+            } finally {
+                setLoading(false);
+                setLoadingMore(false);
+            }
+        },
+        [activeTab, isAuthenticated, trendingWindow]
+    );
+
+    // ── Initial + tab-change fetch ────────────────────────────────────────────
 
     useEffect(() => {
-        fetchBlogs(1, true);
-        fetchSidebar();
-    }, [fetchBlogs, fetchSidebar]);
+        setBlogs([]);
+        setCollections([]);
+        setPage(1);
+        setHasMore(false);
+        fetchTab(activeTab, 1, true);
+    }, [activeTab, trendingWindow]);
+
+    // ── Sidebar data ─────────────────────────────────────────────────────────
+
+    useEffect(() => {
+        followApi.getSuggestedUsers(4)
+            .then(setSuggestedUsers)
+            .catch(() => { });
+
+        categoryApi.getCategories()
+            .then(setCategories)
+            .catch(() => { });
+    }, []);
+
+    // ── Actions ───────────────────────────────────────────────────────────────
 
     const handleLoadMore = () => {
-        if (!loadingMore && hasMore) fetchBlogs(page + 1, false);
+        if (!loadingMore && hasMore) fetchTab(activeTab, page + 1, false);
     };
 
     const handleFollow = async (userId: string) => {
         try {
             await followApi.followUser(userId);
             setFollowingIds((prev) => new Set([...prev, userId]));
-        } catch {
-            // ignore
-        }
+        } catch { }
     };
 
-    // ── Tab change – re-fetch feed ──
-    const handleTabChange = async (tab: FeedTab) => {
+    const handleTabChange = (tab: FeedTab) => {
         if (tab === activeTab) return;
         setActiveTab(tab);
-        // For now all tabs hit same API; extend when endpoints differ
-        fetchBlogs(1, true);
     };
 
-    // ── Render states ──
-    const renderFeed = () => {
-        if (loading) {
-            return (
-                <>
-                    {[1, 2, 3, 4].map((i) => (
-                        <SkeletonArticle key={i} />
-                    ))}
-                </>
+    // ── Like — optimistic update + server reconcile ───────────────────────────
+
+    const handleLikeToggle = useCallback(async (blogId: string) => {
+        setBlogs((prev) =>
+            prev.map((b) =>
+                b.id !== blogId ? b : {
+                    ...b,
+                    is_liked: !b.is_liked,
+                    reaction_count: b.is_liked ? b.reaction_count - 1 : b.reaction_count + 1,
+                }
+            )
+        );
+        try {
+            const result = await blogApi.toggleBlogLike(blogId);
+            setBlogs((prev) =>
+                prev.map((b) =>
+                    b.id !== blogId ? b : { ...b, is_liked: result.liked, reaction_count: result.count }
+                )
             );
+        } catch {
+            // Revert
+            setBlogs((prev) =>
+                prev.map((b) =>
+                    b.id !== blogId ? b : {
+                        ...b,
+                        is_liked: !b.is_liked,
+                        reaction_count: b.is_liked ? b.reaction_count - 1 : b.reaction_count + 1,
+                    }
+                )
+            );
+        }
+    }, []);
+
+    // ── Save — optimistic update + server reconcile ───────────────────────────
+
+    const handleSaveToggle = useCallback(async (blogId: string) => {
+        setBlogs((prev) =>
+            prev.map((b) =>
+                b.id !== blogId ? b : {
+                    ...b,
+                    is_saved: !b.is_saved,
+                    save_count: b.is_saved ? b.save_count - 1 : b.save_count + 1,
+                }
+            )
+        );
+        try {
+            const result = await blogApi.toggleSaveBlog(blogId);
+            setBlogs((prev) =>
+                prev.map((b) =>
+                    b.id !== blogId ? b : { ...b, is_saved: result.saved }
+                )
+            );
+        } catch {
+            // Revert
+            setBlogs((prev) =>
+                prev.map((b) =>
+                    b.id !== blogId ? b : {
+                        ...b,
+                        is_saved: !b.is_saved,
+                        save_count: b.is_saved ? b.save_count - 1 : b.save_count + 1,
+                    }
+                )
+            );
+        }
+    }, []);
+
+    // ── Render states ─────────────────────────────────────────────────────────
+
+    const renderFollowingPrompt = () => (
+        <div className="stream-auth-prompt">
+            <div className="stream-auth-icon material-symbols-outlined">people</div>
+            <h3 className="stream-empty-title">Đăng nhập để xem feed của bạn</h3>
+            <p className="stream-empty-text">
+                Theo dõi người dùng yêu thích để thấy nội dung của họ tại đây.
+            </p>
+            <button className="stream-retry-btn" onClick={() => navigate('/login')}>
+                Đăng nhập
+            </button>
+        </div>
+    );
+
+    const renderFeedContent = () => {
+        if (loading) {
+            return <>{[1, 2, 3, 4].map((i) => <SkeletonArticle key={i} />)}</>;
         }
 
         if (error) {
@@ -324,21 +517,54 @@ const StreamFeed: React.FC = () => {
                     <div className="stream-error-icon">😕</div>
                     <h3 className="stream-error-title">Không tải được bài viết</h3>
                     <p className="stream-error-text">{error}</p>
-                    <button className="stream-retry-btn" onClick={() => fetchBlogs(1, true)}>
+                    <button
+                        className="stream-retry-btn"
+                        onClick={() => fetchTab(activeTab, 1, true)}
+                    >
                         Thử lại
                     </button>
                 </div>
             );
         }
 
+        // Collections tab
+        if (activeTab === 'collections') {
+            if (collections.length === 0) {
+                return (
+                    <div className="stream-empty">
+                        <div className="stream-empty-icon material-symbols-outlined">collections_bookmark</div>
+                        <h3 className="stream-empty-title">Chưa có bộ sưu tập nào</h3>
+                        <p className="stream-empty-text">
+                            Bộ sưu tập sẽ sớm xuất hiện ở đây.
+                        </p>
+                    </div>
+                );
+            }
+            return (
+                <div className="stream-collections-grid">
+                    {collections.map((col) => (
+                        <CollectionCard key={col.id} collection={col} />
+                    ))}
+                </div>
+            );
+        }
+
+        // Following tab — not authenticated
+        if (activeTab === 'following' && !isAuthenticated) {
+            return renderFollowingPrompt();
+        }
+
+        // Blog feeds (following + trending)
         if (blogs.length === 0) {
+            const emptyMsg =
+                activeTab === 'following'
+                    ? 'Chưa có bài viết từ những người bạn đang theo dõi.'
+                    : 'Không có bài viết thịnh hành trong khoảng thời gian này.';
             return (
                 <div className="stream-empty">
                     <div className="stream-empty-icon material-symbols-outlined">article</div>
                     <h3 className="stream-empty-title">Chưa có bài viết nào</h3>
-                    <p className="stream-empty-text">
-                        Hãy là người đầu tiên chia sẻ câu chuyện của bạn!
-                    </p>
+                    <p className="stream-empty-text">{emptyMsg}</p>
                 </div>
             );
         }
@@ -346,10 +572,15 @@ const StreamFeed: React.FC = () => {
         return (
             <>
                 {blogs.map((blog) => (
-                    <ArticleCard key={blog.id} blog={blog} />
+                    <ArticleCard
+                        key={blog.id}
+                        blog={blog}
+                        trendingScore={activeTab === 'trending' ? blog.trending_score : undefined}
+                        onLikeToggle={handleLikeToggle}
+                        onSaveToggle={handleSaveToggle}
+                    />
                 ))}
 
-                {/* Load more */}
                 {hasMore && (
                     <div className="stream-load-more">
                         {loadingMore ? (
@@ -364,7 +595,6 @@ const StreamFeed: React.FC = () => {
                         )}
                     </div>
                 )}
-
                 {!hasMore && blogs.length > 0 && (
                     <p className="stream-end-text">Hết rồi nè. Quay lại sau nhé! 🎉</p>
                 )}
@@ -372,22 +602,15 @@ const StreamFeed: React.FC = () => {
         );
     };
 
-    const TABS: { key: FeedTab; label: string }[] = [
-        { key: 'following', label: 'Đang theo dõi' },
-        { key: 'trending', label: 'Thịnh hành' },
-        { key: 'collections', label: 'Bộ sưu tập' },
-    ];
-
     return (
         <div className="stream-layout">
-            {/* Left Sidebar */}
             <Sidebar
                 suggestedUsers={suggestedUsers}
                 followingIds={followingIds}
+                categories={categories}
                 onFollow={handleFollow}
             />
 
-            {/* Main Feed */}
             <main className="stream-feed">
                 {/* Tab bar */}
                 <div className="stream-tabs" role="tablist">
@@ -402,10 +625,24 @@ const StreamFeed: React.FC = () => {
                             {t.label}
                         </button>
                     ))}
+
+                    {/* Trending window selector */}
+                    {activeTab === 'trending' && (
+                        <div className="stream-window-selector">
+                            {(['day', 'week', 'month'] as const).map((w) => (
+                                <button
+                                    key={w}
+                                    className={`stream-window-btn${trendingWindow === w ? ' active' : ''}`}
+                                    onClick={() => setTrendingWindow(w)}
+                                >
+                                    {w === 'day' ? 'Hôm nay' : w === 'week' ? 'Tuần này' : 'Tháng này'}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                {/* Articles */}
-                {renderFeed()}
+                {renderFeedContent()}
             </main>
 
             {/* Mobile FAB */}

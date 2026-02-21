@@ -105,8 +105,10 @@ const MemoryJourneysListComponent: React.FC<MemoryJourneysListProps> = ({ journe
                             </div>
 
                             <h3 className="profile-journey-title">{journey.title}</h3>
-                            {journey.content_preview && (
-                                <p className="profile-journey-description">{journey.content_preview}</p>
+                            {journey.content && (
+                                <p className="profile-journey-description">
+                                    {journey.content.replace(/<[^>]+>/g, '').slice(0, 150)}
+                                </p>
                             )}
 
                             <div className="profile-journey-footer">

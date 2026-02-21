@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { profileApi, type UserProfile } from '@/api/services/profileApi';
-import { blogApi, type Blog } from '@/api/services/blogApi';
+import { blogApi, getContentPreview, type Blog } from '@/api/services/blogApi';
 import { api } from '@/lib/ky-client';
 import type { Post } from '@/types/post';
 
@@ -81,9 +81,9 @@ const BlogCard: React.FC<{ blog: Blog }> = ({ blog }) => (
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-2">
                     {blog.title}
                 </h3>
-                {blog.content_preview && (
+                {blog.content_html && (
                     <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed text-sm">
-                        {blog.content_preview}
+                        {getContentPreview(blog.content_html, 150)}
                     </p>
                 )}
             </div>
@@ -136,9 +136,9 @@ const JourneyCard: React.FC<{ journey: Post }> = ({ journey }) => (
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors line-clamp-2">
                     {journey.title}
                 </h3>
-                {journey.content_preview && (
+                {journey.content && (
                     <p className="mt-2 text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed text-sm">
-                        {journey.content_preview}
+                        {getContentPreview(journey.content, 150)}
                     </p>
                 )}
             </div>

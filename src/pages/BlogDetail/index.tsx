@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { SEO } from '@/components/common/SEO/SEO';
-import { blogApi, type Blog, type Comment } from '@/api/services/blogApi';
+import { blogApi, getContentPreview, type Blog, type Comment } from '@/api/services/blogApi';
 import { useAuth } from '@/hooks/useAuth';
 import './BlogDetail.css';
 
@@ -261,8 +261,8 @@ const BlogDetailPage: React.FC = () => {
 
                     <h1 className="article-title">{blog.title}</h1>
 
-                    {blog.content_preview && (
-                        <p className="article-subtitle">{blog.content_preview}</p>
+                    {blog.content_html && (
+                        <p className="article-subtitle">{getContentPreview(blog.content_html, 250)}</p>
                     )}
 
                     <div className="article-meta">

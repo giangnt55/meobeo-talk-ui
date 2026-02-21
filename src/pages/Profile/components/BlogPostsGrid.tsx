@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Blog } from '@/api/services/blogApi';
+import { getContentPreview } from '@/api/services/blogApi';
 import '@/pages/Profile/Profile.css';
 
 interface BlogPostsGridProps {
@@ -65,8 +66,8 @@ export const BlogPostsGrid: React.FC<BlogPostsGridProps> = ({ posts, loading }) 
                             <span className="blog-post-card__category">{post.category_name}</span>
                         )}
                         <h3 className="blog-post-card__title">{post.title}</h3>
-                        {post.content_preview && (
-                            <p className="blog-post-card__excerpt">{post.content_preview}</p>
+                        {post.content_html && (
+                            <p className="blog-post-card__excerpt">{getContentPreview(post.content_html, 120)}</p>
                         )}
                         <div className="blog-post-card__meta">
                             <span className="blog-post-card__date">{formatDate(post.created_at)}</span>

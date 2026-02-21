@@ -174,7 +174,7 @@
   z-index: 50;
 }
 
-.create-dropdown-wrapper:hover .create-dropdown-menu {
+.create-dropdown-menu.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);

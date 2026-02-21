@@ -10,14 +10,30 @@ import { notificationApi } from '@/api/services/notificationApi';
 import { NavbarSearch } from './NavbarSearch';
 import './Navbar.css';
 
+type DropdownType = 'create' | 'notifications' | 'user' | 'mobile' | null;
+
 export const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout, accessToken } = useAuth();
   const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+
+  // Single source of truth for all navbar dropdowns
+  const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      // If clicking inside ANY dropdown container, let the onClick handler of that specific container manage it
+      if (target.closest('.navbar-dropdown-container')) return;
+      setActiveDropdown(null);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated && accessToken) {
@@ -87,7 +103,7 @@ export const Navbar: React.FC = () => {
       const link = notification.content?.link;
       if (link) {
         navigate(link);
-        setShowNotifications(false);
+        setActiveDropdown(null);
       }
     } catch (error) {
       console.error('Failed to handle notification click:', error);
@@ -163,17 +179,14 @@ export const Navbar: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    setActiveDropdown(null);
     socketService.disconnect();
     await logout();
     navigate('/');
   };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleUserMenu = () => {
-    setIsUserMenuOpen(!isUserMenuOpen);
+  const toggleDropdown = (dropdown: DropdownType) => {
+    setActiveDropdown(prev => (prev === dropdown ? null : dropdown));
   };
 
   return (
@@ -225,13 +238,17 @@ export const Navbar: React.FC = () => {
                 {isAuthenticated ? (
                   <>
                     {/* Create+ Dropdown */}
-                    <div className="create-dropdown-wrapper">
-                      <button className="create-dropdown-btn">
+                    <div className="create-dropdown-wrapper navbar-dropdown-container">
+                      <button
+                        className="create-dropdown-btn"
+                        onClick={() => toggleDropdown('create')}
+                        aria-expanded={activeDropdown === 'create'}
+                      >
                         <span>Tạo Mới</span>
                         <span className="material-symbols-outlined">expand_more</span>
                       </button>
-                      <div className="create-dropdown-menu">
-                        <Link to="/blog/create" className="create-menu-item">
+                      <div className={`create-dropdown-menu ${activeDropdown === 'create' ? 'show' : ''}`}>
+                        <Link to="/blog/create" className="create-menu-item" onClick={() => setActiveDropdown(null)}>
                           <div className="create-menu-icon create-icon-blog">
                             <span className="material-symbols-outlined">edit_note</span>
                           </div>
@@ -240,7 +257,7 @@ export const Navbar: React.FC = () => {
                             <span className="create-menu-subtitle">Viết câu chuyện</span>
                           </div>
                         </Link>
-                        <Link to="/memories/create" className="create-menu-item">
+                        <Link to="/memories/create" className="create-menu-item" onClick={() => setActiveDropdown(null)}>
                           <div className="create-menu-icon create-icon-memory">
                             <span className="material-symbols-outlined">add_a_photo</span>
                           </div>
@@ -249,7 +266,7 @@ export const Navbar: React.FC = () => {
                             <span className="create-menu-subtitle">Lưu giữ khoảnh khắc</span>
                           </div>
                         </Link>
-                        <Link to="/journey/create" className="create-menu-item">
+                        <Link to="/journey/create" className="create-menu-item" onClick={() => setActiveDropdown(null)}>
                           <div className="create-menu-icon create-icon-journey">
                             <span className="material-symbols-outlined">flight</span>
                           </div>
@@ -261,11 +278,12 @@ export const Navbar: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="relative">
+                    <div className="relative navbar-dropdown-container">
                       <button
                         className="notification-btn"
                         aria-label="Notifications"
-                        onClick={() => setShowNotifications(!showNotifications)}
+                        onClick={() => toggleDropdown('notifications')}
+                        aria-expanded={activeDropdown === 'notifications'}
                       >
                         <span className="material-symbols-outlined">notifications</span>
                         {/* Unread indicator */}
@@ -277,19 +295,20 @@ export const Navbar: React.FC = () => {
                         )}
                       </button>
                       <NotificationDropdown
-                        isOpen={showNotifications}
-                        onClose={() => setShowNotifications(false)}
+                        isOpen={activeDropdown === 'notifications'}
+                        onClose={() => setActiveDropdown(null)}
                         notifications={notifications}
                         onMarkAllRead={handleMarkAllRead}
                         onNotificationClick={handleNotificationClick}
                       />
                     </div>
 
-                    <div className="user-menu-wrapper">
+                    <div className="user-menu-wrapper navbar-dropdown-container">
                       <button
                         className="user-avatar-btn"
-                        onClick={toggleUserMenu}
+                        onClick={() => toggleDropdown('user')}
                         aria-label="User menu"
+                        aria-expanded={activeDropdown === 'user'}
                       >
                         {user?.avatar || user?.avatar_url ? (
                           <img src={user.avatar || user.avatar_url} alt={user.displayName || user.display_name || user.username} className="avatar-image" />
@@ -299,18 +318,18 @@ export const Navbar: React.FC = () => {
                           </div>
                         )}
                       </button>
-                      {isUserMenuOpen && (
+                      {activeDropdown === 'user' && (
                         <div className="user-dropdown">
                           <div className="dropdown-header">
                             <p className="user-name">{user?.displayName || user?.display_name || user?.username}</p>
                             <p className="user-email">@{user?.username}</p>
                           </div>
                           <div className="dropdown-divider"></div>
-                          <Link to={`/profile/${user?.username}`} className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                          <Link to={`/profile/${user?.username}`} className="dropdown-item" onClick={() => setActiveDropdown(null)}>
                             <span className="material-symbols-outlined">person</span>
                             Hồ Sơ Của Tôi
                           </Link>
-                          <Link to="/settings/profile" className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                          <Link to="/settings/profile" className="dropdown-item" onClick={() => setActiveDropdown(null)}>
                             <span className="material-symbols-outlined">settings</span>
                             Cài Đặt
                           </Link>
@@ -346,9 +365,10 @@ export const Navbar: React.FC = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="mobile-menu-btn"
-              onClick={toggleMobileMenu}
+              className="mobile-menu-btn navbar-dropdown-container"
+              onClick={() => toggleDropdown('mobile')}
               aria-label="Toggle menu"
+              aria-expanded={activeDropdown === 'mobile'}
             >
               <span className="material-symbols-outlined">menu</span>
             </button>
@@ -358,8 +378,8 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
+        isOpen={activeDropdown === 'mobile'}
+        onClose={() => setActiveDropdown(null)}
         isAuthenticated={isAuthenticated}
         user={user}
         onLogout={handleLogout}

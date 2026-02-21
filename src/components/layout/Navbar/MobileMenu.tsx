@@ -39,7 +39,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
             <div className="mobile-menu-backdrop" onClick={onClose} />
 
             {/* Slide Menu */}
-            <div className="mobile-menu">
+            <div className="mobile-menu navbar-dropdown-container">
 
                 {/* Header */}
                 <div className="mobile-menu-header">

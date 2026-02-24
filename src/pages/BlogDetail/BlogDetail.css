@@ -290,6 +290,11 @@
     padding-left: 0.5rem;
 }
 
+.article-body li p {
+    margin-bottom: 0;
+    display: inline-block;
+}
+
 /* Code Blocks */
 .article-body pre {
     background-color: #1e293b;

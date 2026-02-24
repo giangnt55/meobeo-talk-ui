@@ -36,13 +36,13 @@
 }
 
 .search-icon {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-tertiary);
+    position: absolute !important;
+    left: 0.75rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--text-tertiary) !important;
     font-size: 1.25rem !important;
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
 .search-input {

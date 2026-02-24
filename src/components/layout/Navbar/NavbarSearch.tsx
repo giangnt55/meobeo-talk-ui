@@ -91,7 +91,7 @@ export const NavbarSearch: React.FC = () => {
             </button>
 
             <div className="search-input-wrapper flex items-center relative">
-                <span className="material-symbols-outlined search-icon">search</span>
+                <span className="material-symbols-outlined search-icon !absolute !left-3 !top-1/2 !-translate-y-1/2 !pointer-events-none">search</span>
                 <input
                     type="text"
                     className="search-input"

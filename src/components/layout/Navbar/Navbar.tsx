@@ -224,8 +224,8 @@ export const Navbar: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/blog" className="nav-link">Blog</Link>
-                    <Link to="/memories" className="nav-link">Ký Ức</Link>
+                    <Link to="/explore" className="nav-link">Explore</Link>
+                    {/* <Link to="/memories" className="nav-link">Ký Ức</Link> */}
                     <Link to="/about" className="nav-link">Về Tụi Mình</Link>
                   </>
                 )}

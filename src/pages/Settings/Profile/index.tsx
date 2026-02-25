@@ -17,8 +17,8 @@ export const ProfileSettingsPage: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('profile')}
                         className={`w-full text-left ${activeTab === 'profile'
-                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
-                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                            : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">person</span>
@@ -27,8 +27,8 @@ export const ProfileSettingsPage: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('account')}
                         className={`w-full text-left ${activeTab === 'account'
-                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
-                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                            : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">manage_accounts</span>
@@ -37,8 +37,8 @@ export const ProfileSettingsPage: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('privacy')}
                         className={`w-full text-left ${activeTab === 'privacy'
-                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
-                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                            : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">lock</span>
@@ -47,8 +47,8 @@ export const ProfileSettingsPage: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('notifications')}
                         className={`w-full text-left ${activeTab === 'notifications'
-                                ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
-                                : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
+                            ? 'sidebar-item-active flex items-center gap-3 px-4 py-3 text-sm font-bold rounded-l-xl transition-all'
+                            : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-500 hover:bg-white dark:hover:bg-slate-800 rounded-l-xl transition-all'
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">notifications</span>

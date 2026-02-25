@@ -3,6 +3,8 @@ import { MainLayout } from '@/layouts/MainLayout';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
+import { GuestRoute } from '@/components/common/GuestRoute';
+
 // Pages
 import Landing from '@/pages/Landing';
 import Home from '@/pages/Home';
@@ -12,6 +14,7 @@ import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import { WelcomePage } from '@/pages/Welcome';
 import { AboutPage } from '@/pages/About';
 import { NotFoundPage } from '@/pages/NotFound';
+import ExplorePage from '@/pages/Explore';
 
 // Onboarding
 import { ProfileSetupPage } from '@/pages/Onboarding/ProfileSetup';
@@ -58,6 +61,16 @@ export const router = createBrowserRouter([
       <PublicLayout>
         <AboutPage />
       </PublicLayout>
+    ),
+  },
+  {
+    path: '/explore',
+    element: (
+      <GuestRoute>
+        <PublicLayout>
+          <ExplorePage />
+        </PublicLayout>
+      </GuestRoute>
     ),
   },
 

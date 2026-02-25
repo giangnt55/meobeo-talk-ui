@@ -15,7 +15,7 @@ const NewHeroSection: React.FC = () => {
     };
 
     const handleExploreClick = () => {
-        navigate('/blog');
+        navigate('/explore');
     };
 
     return (

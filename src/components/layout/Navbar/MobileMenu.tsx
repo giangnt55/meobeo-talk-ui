@@ -81,10 +81,17 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                                 Trang Chủ
                             </Link>
                         )}
-                        <Link to="/blog" className="mobile-nav-link" onClick={() => go('/blog')}>
-                            <span className="material-symbols-outlined">article</span>
-                            Blog
-                        </Link>
+                        {isAuthenticated ? (
+                            <Link to="/blog" className="mobile-nav-link" onClick={() => go('/blog')}>
+                                <span className="material-symbols-outlined">article</span>
+                                Blog
+                            </Link>
+                        ) : (
+                            <Link to="/explore" className="mobile-nav-link" onClick={() => go('/explore')}>
+                                <span className="material-symbols-outlined">explore</span>
+                                Explore
+                            </Link>
+                        )}
                         <Link to="/memories" className="mobile-nav-link" onClick={() => go('/memories')}>
                             <span className="material-symbols-outlined">history</span>
                             Ký Ức

@@ -5,7 +5,7 @@ import { useExploreBlogs } from './hooks/useExploreBlogs';
 
 const ExplorePage: React.FC = () => {
     const navigate = useNavigate();
-    const [showSignupPopup, setShowSignupPopup] = useState(true);
+    const [showSignupPopup] = useState(true);
 
     const {
         blogs,

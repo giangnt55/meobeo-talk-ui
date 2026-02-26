@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { blogApi, type Blog } from '@/api/services/blogApi';
-import { feedApi } from '@/api/services/feedApi';
+import type { Blog } from '@/api/services/blogApi';
+import { exploreApi } from '@/api/services/exploreApi';
 
 export type ExploreTab = 'Trending' | 'Recent' | 'Editors’ Choice';
 
@@ -31,15 +31,7 @@ export const useExploreBlogs = (): UseExploreBlogsReturn => {
         try {
             setError(null);
             
-            let response;
-            if (tab === 'Trending') {
-                response = await feedApi.getTrendingFeed({ window: 'all', page: pageNum, limit: 12 });
-            } else if (tab === 'Recent') {
-                response = await blogApi.getBlogs({ page: pageNum, limit: 12 });
-            } else {
-                // Fallback for Editors' Choice for now
-                response = await blogApi.getBlogs({ page: pageNum, limit: 12 });
-            }
+            const response = await exploreApi.getExploreFeed(tab, pageNum, 12);
             
             if (pageNum === 1) {
                 setBlogs(response.posts);

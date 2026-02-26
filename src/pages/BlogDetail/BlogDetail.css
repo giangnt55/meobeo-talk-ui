@@ -218,13 +218,13 @@
 
 /* Automatic Drop Cap for the first paragraph */
 .article-body>p:first-of-type::first-letter {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: var(--primary);
-    float: left;
-    line-height: 0.8;
-    margin-right: 0.75rem;
-    margin-top: 0.25rem;
+    /* font-size: 1.5rem;
+    font-weight: 500; */
+    /* color: var(--primary); */
+    /* float: left; */
+    /* line-height: 0.8; */
+    /* margin-right: 0.75rem;
+    margin-top: 0.25rem; */
 }
 
 /* Headings */

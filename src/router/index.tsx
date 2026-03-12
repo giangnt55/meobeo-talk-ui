@@ -12,6 +12,7 @@ import { LoginPage } from '@/pages/Login';
 import { RegisterPage } from '@/pages/Register';
 import { VerifyEmailPage } from '@/pages/VerifyEmail';
 import { WelcomePage } from '@/pages/Welcome';
+import { OAuthCallbackPage } from '@/pages/OAuthCallback';
 import { AboutPage } from '@/pages/About';
 import { NotFoundPage } from '@/pages/NotFound';
 import ExplorePage from '@/pages/Explore';
@@ -43,6 +44,8 @@ export const router = createBrowserRouter([
   { path: '/signup', element: <RegisterPage /> },
   { path: '/verify-email', element: <VerifyEmailPage /> },
   { path: '/welcome', element: <WelcomePage /> },
+  // Google OAuth callback - handles redirect from backend after Google login
+  { path: '/auth/callback', element: <OAuthCallbackPage /> },
 
   // --- Onboarding Routes ---
   {
@@ -80,7 +83,12 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Landing /> },
-      { path: 'home', element: <Home /> },
+      {
+        path: 'home', element:
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+      },
 
       // Blog
       { path: 'blog', element: <BlogPage /> },
@@ -127,7 +135,12 @@ export const router = createBrowserRouter([
 
       // Profile & Settings
       { path: 'profile/:username', element: <ProfilePage /> },
-      { path: 'settings/profile', element: <ProfileSettingsPage /> },
+      {
+        path: 'settings/profile', element:
+          <ProtectedRoute>
+            <ProfileSettingsPage />
+          </ProtectedRoute>
+      },
     ],
   },
 

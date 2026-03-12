@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useSignup } from '@/hooks/queries/useAuth';
 import { Button } from '@/components/common/Button/Button';
 import { Input } from '@/components/common/Input/Input';
-import { formatErrorForToast, getFormErrors } from '@/utils/apiErrorHandler';
+import { getFormErrors } from '@/utils/apiErrorHandler';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import './Register.css';
@@ -53,37 +53,37 @@ export const RegisterPage: React.FC = () => {
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Cho mình xin cái email nghen';
       isValid = false;
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Email này sai sai á, nhập lại nha';
       isValid = false;
     }
 
     // Validate name
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = 'Cậu tên gì dợ, đừng bỏ trống nha';
       isValid = false;
     } else if (formData.name.trim().length < 3) {
-      newErrors.name = 'Name must be at least 3 characters';
+      newErrors.name = 'Tên gì ngắn quá dạ, ráng 3 ký tự nhen';
       isValid = false;
     }
 
     // Validate password
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Cho mình xin mật khẩu bí mật đi';
       isValid = false;
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'Mật khẩu phải từ 8 ký tự trở lên nha';
       isValid = false;
     }
 
     // Validate confirm password
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'Xác nhận lại mật khẩu xíu nè';
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Ủa, hai mật khẩu hổng giống nhau kìa';
       isValid = false;
     }
 
@@ -111,7 +111,7 @@ export const RegisterPage: React.FC = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      error('Validation Error', 'Please check all fields and try again');
+      error('Lỗi xíu xiu', 'Điền sai mất tiêu gòi, kiểm tra lại thử nha!');
       return;
     }
 
@@ -124,7 +124,7 @@ export const RegisterPage: React.FC = () => {
 
     signup(payload, {
       onSuccess: () => {
-        success('Success!', 'Account created! Please check your email for verification code.');
+        success('Thành công gòi!', 'Tuyệt cú mèo! Cậu ngó email để lấy mã xác nhận nha.');
         setTimeout(() => {
           // Navigate to verify email page with email in state
           navigate('/verify-email', {
@@ -141,22 +141,19 @@ export const RegisterPage: React.FC = () => {
             ...serverErrors,
           }));
         }
-
-        // Show toast with error message
-        const message = formatErrorForToast(err);
-        error('Registration Failed', message);
       },
     });
   };
 
+  const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL || `${import.meta.env.VITE_API_URL}/auth/google`;
+
   const handleGoogleSignup = () => {
-    success('Redirecting...', 'Signing up with Google');
+    window.location.href = GOOGLE_AUTH_URL;
   };
 
   return (
     <div className="register-page">
       <ToastContainer toasts={toasts} onClose={removeToast} />
-
       <div className="register-container">
         {/* Left side - Illustration */}
         <div className="register-left">

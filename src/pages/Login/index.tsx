@@ -18,23 +18,7 @@ const GoogleIcon = () => (
   </svg>
 );
 
-// Declare Google Identity Services types
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: {
-            client_id: string;
-            callback: (response: { credential: string }) => void;
-            auto_select?: boolean;
-          }) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
-}
+
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -48,73 +32,27 @@ export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Google Client ID from environment variable
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  // Google OAuth endpoint from environment
+  const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL || `${import.meta.env.VITE_API_URL}/auth/google`;
 
-  // Load Google Identity Services script
+  // Show OAuth error if redirected back with ?error= param
   useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) {
-      console.error('Google Client ID not found in environment variables');
-      return;
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get('error');
+    if (oauthError) {
+      const msg = oauthError === 'oauth_state_mismatch'
+        ? 'Phiên đăng nhập Google hết hạn, thử lại nha!'
+        : decodeURIComponent(oauthError);
+      error('Đăng nhập Google thất bại', msg);
+      // Clean the URL
+      window.history.replaceState({}, '', '/login');
     }
+  }, []);
 
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleCallback,
-        });
-      }
-    };
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, [GOOGLE_CLIENT_ID]);
-
-  const handleGoogleCallback = async (_response: { credential: string }) => {
-    setIsGoogleLoading(true);
-
-    try {
-      // Call your backend API to verify Google token
-      // const result = await authApi.googleLogin(response.credential);
-
-      // // Handle successful login (save token, update auth context, etc.)
-      // success('Success!', `Welcome ${result.user?.name || 'back'}!`);
-
-      // // Navigate to home or dashboard
-      // setTimeout(() => {
-      //   navigate('/home');
-      // }, 500);
-
-    } catch (err: any) {
-      console.error('Google login error:', err);
-      error('Login Failed', err.message || 'Google login failed. Please try again.');
-    } finally {
-      setIsGoogleLoading(false);
-    }
-  };
-
+  // Redirect to backend Google OAuth endpoint
   const handleGoogleLogin = () => {
-    if (!GOOGLE_CLIENT_ID) {
-      error('Error', 'Google login is not configured');
-      return;
-    }
-
-    if (window.google) {
-      setIsGoogleLoading(true);
-      window.google.accounts.id.prompt();
-    } else {
-      error('Error', 'Google Sign-In is not available');
-    }
+    setIsGoogleLoading(true);
+    window.location.href = GOOGLE_AUTH_URL;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

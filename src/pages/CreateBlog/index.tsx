@@ -58,7 +58,9 @@ const CreateBlog: React.FC = () => {
                     if (data.banner_url) setCoverImage(data.banner_url);
                     if (data.tags) setTags(data.tags);
                     if (data.category) setCategory(data.category);
-                    if (data.visibility) setVisibility(data.visibility as any);
+                    if (data.visibility && ['public', 'private', 'followers'].includes(data.visibility)) {
+                        setVisibility(data.visibility as 'public' | 'private' | 'followers');
+                    }
                     setLastSaved(new Date(data.updated_at));
                 } catch (err) {
                     console.error('Failed to fetch blog:', err);

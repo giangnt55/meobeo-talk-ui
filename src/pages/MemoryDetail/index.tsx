@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { mockMemories } from '@/mock/memoryData';
@@ -22,22 +22,19 @@ const REFERENCE_MEMORY = {
 export const MemoryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [memory, setMemory] = useState<any | null>(null);
 
-  useEffect(() => {
-    // Try to find in mock data, otherwise use reference data for demo if ID matches 'ref' or fall back to it
+  const memory = useMemo(() => {
     const found = mockMemories.find((m) => m.id === id);
     if (found) {
-      setMemory({
+      return {
         ...found,
-        location: 'Paris, France', // Default if missing
-        likes_count: 12, // Default
-        views_count: 45 // Default
-      });
-    } else {
-      // Fallback to reference memory for demo purposes if ID not found (or for this specific test case)
-      setMemory(REFERENCE_MEMORY);
+        location: found.location || 'Paris, France',
+        likes_count: found.likes_count ?? 12,
+        views_count: found.views_count ?? 45,
+      };
     }
+
+    return REFERENCE_MEMORY;
   }, [id]);
 
   if (!memory) {

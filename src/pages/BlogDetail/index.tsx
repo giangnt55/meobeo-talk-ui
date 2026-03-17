@@ -87,8 +87,8 @@ const BlogDetailPage: React.FC = () => {
     };
 
     const threadedComments = useMemo(() => {
-        const commentMap = new Map<string, any>();
-        const roots: any[] = [];
+        const commentMap = new Map<string, Comment>();
+        const roots: Comment[] = [];
 
         // Deep clone items for tree construction to avoid mutating state items if they are reused
         // Also initializing replies array
@@ -501,7 +501,7 @@ const BlogDetailPage: React.FC = () => {
 
                                             {comment.replies && comment.replies.length > 0 && (
                                                 <div className="mt-8 pl-4 border-l border-stone-200 dark:border-stone-800 space-y-8">
-                                                    {comment.replies.map((reply: any) => (
+                                                    {comment.replies.map((reply: Comment) => (
                                                         <div key={reply.id} className="flex gap-4">
                                                             <div className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-700 flex-shrink-0 overflow-hidden">
                                                                 <img alt={reply.user.username} className="w-full h-full object-cover" src={reply.user.avatar_url || 'https://via.placeholder.com/32'} />

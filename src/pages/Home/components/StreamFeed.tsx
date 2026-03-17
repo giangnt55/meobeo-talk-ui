@@ -400,11 +400,15 @@ const StreamFeed: React.FC = () => {
     useEffect(() => {
         followApi.getSuggestedUsers(4)
             .then(setSuggestedUsers)
-            .catch(() => { });
+            .catch((err) => {
+                console.warn('Failed to load suggested users', err);
+            });
 
         categoryApi.getCategories()
             .then(setCategories)
-            .catch(() => { });
+            .catch((err) => {
+                console.warn('Failed to load categories', err);
+            });
     }, []);
 
     // ── Actions ───────────────────────────────────────────────────────────────
@@ -417,7 +421,9 @@ const StreamFeed: React.FC = () => {
         try {
             await followApi.followUser(userId);
             setFollowingIds((prev) => new Set([...prev, userId]));
-        } catch { }
+        } catch (err) {
+            console.warn('Failed to follow user', err);
+        }
     };
 
     const handleTabChange = (tab: FeedTab) => {

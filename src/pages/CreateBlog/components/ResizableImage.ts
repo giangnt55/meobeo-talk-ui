@@ -5,7 +5,7 @@ import ResizableImageNodeView from './ResizableImageNodeView.tsx';
 export interface ResizableImageOptions {
     inline: boolean;
     allowBase64: boolean;
-    HTMLAttributes: Record<string, any>;
+    HTMLAttributes: Record<string, unknown>;
 }
 
 declare module '@tiptap/core' {
@@ -106,8 +106,8 @@ export const ResizableImage = Node.create<ResizableImageOptions>({
     addCommands() {
         return {
             setImage:
-                (options: any) =>
-                ({ commands }: any) => {
+                (options: { src: string; alt?: string; title?: string; width?: string | number; height?: string | number; align?: string; display?: string; borderRadius?: number }) =>
+                ({ commands }: { commands: { insertContent: (content: { type: string; attrs: unknown }) => boolean } }) => {
                     return commands.insertContent({
                         type: this.name,
                         attrs: options,

@@ -71,7 +71,7 @@ export const authApi = {
     }
 
     const errorMsg = response.error?.message || response.message || 'Login failed';
-    const err: any = new Error(errorMsg);
+    const err = new Error(errorMsg) as Error & { code?: string };
     if (response.error?.code) {
       err.code = response.error.code;
     }
@@ -301,5 +301,47 @@ export const authApi = {
     }
 
     throw new Error(response.message || 'Failed to refresh token');
+  },
+
+  /**
+   * Google OAuth Code Exchange
+   */
+  googleExchange: async (code: string, state: string): Promise<AuthResponse> => {
+    const response = await api.post('auth/google/exchange', {
+      json: { code, state },
+    }).json<ApiResponse<LoginApiResponse>>();
+
+    if (response.success && response.data) {
+      const apiData = response.data;
+
+      const authResponse: AuthResponse = {
+        user: {
+          id: apiData.user_id,
+          email: apiData.email,
+          username: apiData.username,
+          displayName: apiData.display_name,
+          avatar: apiData.avatar_url,
+          bio: apiData.bio,
+          interests: apiData.interests || [],
+          following: apiData.following || [],
+          followers: apiData.followers || [],
+          createdAt: apiData.created_at || new Date().toISOString(),
+          created_at: apiData.created_at || new Date().toISOString(),
+          updated_at: apiData.updated_at || new Date().toISOString(),
+          is_active: apiData.is_active ?? true,
+          email_verified: apiData.email_verified ?? false,
+          post_count: apiData.post_count ?? 0,
+          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
+          following_count: apiData.following_count ?? (apiData.following?.length || 0),
+          onboardingCompleted: apiData.onboarding_completed,
+        },
+        accessToken: apiData.access_token,
+        refreshToken: apiData.refresh_token,
+      };
+
+      return authResponse;
+    }
+
+    throw new Error(response.message || 'Google exchange failed');
   },
 };

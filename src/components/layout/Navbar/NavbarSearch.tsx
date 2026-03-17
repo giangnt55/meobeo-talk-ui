@@ -45,8 +45,9 @@ export const NavbarSearch: React.FC = () => {
                 const data = await feedApi.searchPosts(debouncedQuery, { limit: 6 });
                 setResults(data.posts || []);
                 setIsDropdownOpen(true);
-            } catch (err: any) {
-                setError(err.message || 'Có lỗi xảy ra khi tìm kiếm');
+            } catch (errorUnknown) {
+                const error = errorUnknown as Error;
+                setError(error?.message || 'Có lỗi xảy ra khi tìm kiếm');
                 setResults(null);
                 setIsDropdownOpen(true);
             } finally {

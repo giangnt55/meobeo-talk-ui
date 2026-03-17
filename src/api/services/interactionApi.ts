@@ -53,10 +53,14 @@ export interface ReactionResponse {
 export const interactionApi = {
     // Comments
     getPostComments: async (postId: string, params?: PaginationParams): Promise<PaginatedCommentsResponse> => {
+        const queryParams: Record<string, string> = {};
+        if (params?.page !== undefined) queryParams.page = String(params.page);
+        if (params?.limit !== undefined) queryParams.limit = String(params.limit);
+
         const response = await api
-            .get(`posts/${postId}/comments`, { searchParams: params as any })
-            .json<ApiResponse<Comment[]>>();
-        
+            .get(`posts/${postId}/comments`, { searchParams: queryParams })
+            .json<ApiResponse<Comment[]> & { meta?: Pagination }>();
+
         // Transform standard API response to paginated format if needed or assume backend returns paginated shape directly
         // Based on backend implementation:
         /*
@@ -66,11 +70,11 @@ export const interactionApi = {
             "meta":    response.Pagination,
         })
         */
-        
+
         if (response.success && response.data) {
              return {
                  data: response.data,
-                 pagination: (response as any).meta
+                 pagination: response.meta ?? { page: 1, page_size: 0, total_items: 0, total_pages: 0 }
              };
         }
         

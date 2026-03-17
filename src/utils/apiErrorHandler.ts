@@ -35,8 +35,10 @@ export const getFormErrors = (error: unknown): FormErrors => {
   const formErrors: FormErrors = {};
   
   if (error && typeof error === 'object' && 'errors' in error) {
-    const apiErrors = (error as any).errors as Record<string, string[]>;
+    const apiErrors = (error as { errors?: Record<string, string[]> }).errors;
     
+    if (!apiErrors) return formErrors;
+
     Object.keys(apiErrors).forEach((field) => {
       const messages = apiErrors[field];
       if (messages && messages.length > 0) {

@@ -13,8 +13,12 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
 
     useEffect(() => {
         if (location !== displayLocation) {
-            setTransitionStage('fadeOut');
+            const rafId = window.requestAnimationFrame(() => {
+                setTransitionStage('fadeOut');
+            });
+            return () => window.cancelAnimationFrame(rafId);
         }
+        return;
     }, [location, displayLocation]);
 
     return (

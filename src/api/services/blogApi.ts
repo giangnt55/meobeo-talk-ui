@@ -304,7 +304,7 @@ export const blogApi = {
         const response = await api.post(url, { json: body }).json<ApiResponse<Comment>>();
 
         if (response.success && response.data) {
-            const c = response.data;
+            const c = response.data as any;
             return {
                 id: c.id,
                 content: c.content,

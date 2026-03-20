@@ -98,7 +98,7 @@ const BlogDetailPage: React.FC = () => {
 
         items.forEach(c => {
             if (c.parent_id && commentMap.has(c.parent_id)) {
-                commentMap.get(c.parent_id).replies.push(c);
+                commentMap.get(c.parent_id)!.replies!.push(c);
             } else {
                 roots.push(c);
             }

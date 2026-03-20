@@ -26,11 +26,12 @@ export const MemoryDetailPage: React.FC = () => {
   const memory = useMemo(() => {
     const found = mockMemories.find((m) => m.id === id);
     if (found) {
+      const fAny = found as any;
       return {
         ...found,
-        location: found.location || 'Paris, France',
-        likes_count: found.likes_count ?? 12,
-        views_count: found.views_count ?? 45,
+        location: fAny.location || 'Paris, France',
+        likes_count: fAny.likes_count ?? 12,
+        views_count: fAny.views_count ?? 45,
       };
     }
 

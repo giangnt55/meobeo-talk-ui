@@ -29,7 +29,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (editorRef.current && editorRef.current.innerHTML !== value) {
       editorRef.current.innerHTML = value;
     }
-  }, []);
+  }, [value]);
 
   const handleInput = () => {
     if (editorRef.current) {

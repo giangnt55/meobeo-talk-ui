@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/common/Button/Button';
@@ -22,6 +22,90 @@ export const Navbar: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  type RecordData = Record<string, unknown>;
+
+  const toRecord = useCallback((value: unknown): RecordData =>
+    typeof value === 'object' && value !== null ? (value as RecordData) : {},
+  []);
+
+  const mapBackendToFrontend = useCallback((n: unknown): Notification => {
+    const incoming = toRecord(n);
+    const dataCandidate = toRecord(incoming.data);
+    const hasDataWrapper = Boolean(incoming.type && (dataCandidate.id || dataCandidate.actor_id));
+
+    const source = hasDataWrapper ? dataCandidate : incoming;
+    const sourceRecord = toRecord(source);
+
+    const actorCandidate = toRecord(sourceRecord.Actor || sourceRecord.actor || incoming.actor);
+
+    const actorName =
+      (actorCandidate.display_name as string) ||
+      (actorCandidate.username as string) ||
+      (actorCandidate.name as string) ||
+      (incoming.actor_name as string) ||
+      'Someone';
+
+    const actorAvatar = (actorCandidate.avatar_url as string) || (actorCandidate.avatar as string) || '';
+
+    const rawPayload = sourceRecord.payload ?? sourceRecord.data ?? {};
+    const payloadRecord = toRecord(rawPayload);
+
+    const parsedPayload:
+      | RecordData
+      | string =
+      typeof rawPayload === 'string'
+        ? (() => {
+            try {
+              return JSON.parse(rawPayload);
+            } catch {
+              return {};
+            }
+          })()
+        : payloadRecord;
+
+    const content = {
+      text: (parsedPayload as RecordData).text as string | undefined || (sourceRecord.message as string) || '',
+      highlight: (parsedPayload as RecordData).highlight as string | undefined,
+      target: (parsedPayload as RecordData).target as string | undefined,
+      link: (parsedPayload as RecordData).link as string | undefined,
+    };
+
+    return {
+      id: (sourceRecord.id as string) || `temp-${Date.now()}`,
+      type: ((sourceRecord.type as Notification['type']) || (incoming.type as Notification['type']) || 'info') as Notification['type'],
+      actor: {
+        name: actorName,
+        avatar: actorAvatar,
+        initials: actorName.charAt(0).toUpperCase(),
+      },
+      content,
+      timestamp: sourceRecord.created_at
+        ? new Date(sourceRecord.created_at as string).toLocaleString()
+        : new Date().toLocaleString(),
+      isRead: Boolean(sourceRecord.is_read),
+    };
+  }, [toRecord]);
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const data = await notificationApi.getNotifications();
+      const notificationsList = data.notifications || [];
+      const formattedNotifications = notificationsList.map(mapBackendToFrontend);
+      setNotifications(formattedNotifications);
+      setUnreadCount(data.unread_count || 0);
+    } catch (error) {
+      console.error('Failed to fetch notifications', error);
+      setNotifications([]);
+      setUnreadCount(0);
+    }
+  }, [mapBackendToFrontend]);
+
+  const handleNewNotification = useCallback((data: unknown) => {
+    const newNotification = mapBackendToFrontend(data);
+    setNotifications(prev => [newNotification, ...prev]);
+    setUnreadCount(prev => prev + 1);
+  }, [mapBackendToFrontend]);
+
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,41 +125,24 @@ export const Navbar: React.FC = () => {
       socketService.connect(accessToken);
 
       // 2. Fetch initial notifications
-      fetchNotifications();
+      const rafId = window.requestAnimationFrame(() => fetchNotifications());
 
       // 3. Listen for new notifications
-      const unsubscribe = socketService.onMessage((data: any) => {
-        if (data.type) {
+      const unsubscribe = socketService.onMessage((data: unknown) => {
+        const wsData = data as { type?: string };
+        if (wsData.type) {
           handleNewNotification(data);
         }
       });
 
       return () => {
+        cancelAnimationFrame(rafId);
         unsubscribe();
         socketService.disconnect();
       };
     }
-  }, [isAuthenticated, accessToken]);
-
-  const fetchNotifications = async () => {
-    try {
-      const data = await notificationApi.getNotifications();
-      // Transform backend data to frontend model if necessary
-      // Backend returns: { notifications: [], total: 0, unread_count: 0 }
-      // Each notification: { id, type, actor: { name, avatar... }, payload: { text... }, created_at, is_read }
-
-      // Handle null or undefined notifications array
-      const notificationsList = data.notifications || [];
-      const formattedNotifications = notificationsList.map(mapBackendToFrontend);
-      setNotifications(formattedNotifications);
-      setUnreadCount(data.unread_count || 0);
-    } catch (error) {
-      console.error('Failed to fetch notifications', error);
-      // Set empty state on error
-      setNotifications([]);
-      setUnreadCount(0);
-    }
-  };
+    return;
+  }, [isAuthenticated, accessToken, fetchNotifications, handleNewNotification]);
 
   const handleMarkAllRead = async () => {
     try {
@@ -108,74 +175,6 @@ export const Navbar: React.FC = () => {
     } catch (error) {
       console.error('Failed to handle notification click:', error);
     }
-  };
-
-  const handleNewNotification = (data: any) => {
-    console.log('New notification received:', data);
-    const newNotification = mapBackendToFrontend(data);
-    console.log('Transformed notification:', newNotification);
-
-    setNotifications(prev => [newNotification, ...prev]);
-    setUnreadCount(prev => prev + 1);
-  };
-
-  const mapBackendToFrontend = (n: any): Notification => {
-    // console.log('Mapping notification:', n);
-
-    let source = n;
-    // Check if this is a WebSocket wrapper structure: { type: "...", data: { ... } }
-    // The inner data contains the actual notification fields (id, actor, payload)
-    if (n.data && n.type && (n.data.id || n.data.actor_id)) {
-      source = n.data;
-    }
-
-    // Handle actor info - API returns nested Actor object with capital A, WS might return actor (lowercase)
-    // WS from backend now sends `actor` object in wsData
-    const actor = source.Actor || source.actor || n.actor;
-    const actorName = actor?.display_name || actor?.username || actor?.name || n.actor_name || 'Someone';
-    const actorAvatar = actor?.avatar_url || actor?.avatar;
-
-    // Handle payload
-    // API: source.payload could be {String: "...", Valid: true}
-    // WS: source.payload is the actual payload object
-    let rawPayload = source.payload || source.data || {};
-
-    // If payload has String field (from sql.NullString), use that
-    if (rawPayload && typeof rawPayload === 'object' && 'String' in rawPayload) {
-      rawPayload = rawPayload.String;
-    }
-
-    // Parse payload if it's a string
-    let payload = rawPayload;
-    if (typeof rawPayload === 'string') {
-      try {
-        payload = JSON.parse(rawPayload);
-      } catch (e) {
-        console.error('Failed to parse payload:', e);
-        payload = {};
-      }
-    }
-
-    // Extract content fields
-    const content = {
-      text: payload.text || source.message || '',
-      highlight: payload.highlight,
-      target: payload.target,
-      link: payload.link,
-    };
-
-    return {
-      id: source.id || `temp-${Date.now()}`,
-      type: (source.type || n.type) as any,
-      actor: {
-        name: actorName,
-        avatar: actorAvatar,
-        initials: actorName.charAt(0).toUpperCase(),
-      },
-      content: content,
-      timestamp: source.created_at ? new Date(source.created_at).toLocaleString() : new Date().toLocaleString(),
-      isRead: source.is_read || false,
-    };
   };
 
   const handleLogout = async () => {

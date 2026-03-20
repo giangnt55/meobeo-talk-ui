@@ -1,11 +1,12 @@
-export const camelize = (obj: any): any => {
+export const camelize = (obj: unknown): unknown => {
     if (Array.isArray(obj)) {
         return obj.map(v => camelize(v));
     }
-    if (obj !== null && obj.constructor === Object) {
-        return Object.keys(obj).reduce((result: any, key) => {
+    if (obj !== null && typeof obj === 'object' && !Array.isArray(obj)) {
+        const record = obj as Record<string, unknown>;
+        return Object.keys(record).reduce<Record<string, unknown>>((result, key) => {
             const camelKey = key.replace(/_([a-z])/g, g => g[1].toUpperCase());
-            result[camelKey] = camelize(obj[key]);
+            result[camelKey] = camelize(record[key]);
             return result;
         }, {});
     }

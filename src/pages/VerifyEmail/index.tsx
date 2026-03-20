@@ -101,7 +101,8 @@ export const VerifyEmailPage: React.FC = () => {
                     navigate('/onboarding/profile');
                 }
             }, 1000);
-        } catch (err: any) {
+        } catch (errorUnknown) {
+            const err = errorUnknown as Error;
             error('Verification Failed', err.message || 'Invalid or expired code');
         } finally {
             setIsLoading(false);
@@ -120,7 +121,8 @@ export const VerifyEmailPage: React.FC = () => {
             // Clear current OTP
             setOtp(['', '', '', '', '', '']);
             inputRefs.current[0]?.focus();
-        } catch (err: any) {
+        } catch (errorUnknown) {
+            const err = errorUnknown as Error;
             error('Resend Failed', err.message || 'Failed to resend code');
         }
     };
@@ -129,11 +131,13 @@ export const VerifyEmailPage: React.FC = () => {
         navigate('/signup');
     };
 
-    if (!email) {
-        // Redirect if no email in state
-        useEffect(() => {
+    useEffect(() => {
+        if (!email) {
             navigate('/signup');
-        }, []);
+        }
+    }, [email, navigate]);
+
+    if (!email) {
         return null;
     }
 

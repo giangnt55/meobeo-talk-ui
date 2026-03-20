@@ -1,7 +1,7 @@
 // Base URL configuration - support both env variable names for compatibility
 const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 
-type MessageHandler = (data: any) => void;
+type MessageHandler = (data: unknown) => void;
 
 class SocketService {
     private socket: WebSocket | null = null;

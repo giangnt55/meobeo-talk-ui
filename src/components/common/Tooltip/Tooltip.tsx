@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './Tooltip.css';
 
 export interface TooltipProps {
@@ -33,7 +33,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         setIsVisible(false);
     };
 
-    const updatePosition = () => {
+    const updatePosition = useCallback(() => {
         if (!triggerRef.current || !tooltipRef.current) return;
 
         const triggerRect = triggerRef.current.getBoundingClientRect();
@@ -62,14 +62,18 @@ export const Tooltip: React.FC<TooltipProps> = ({
         }
 
         setCoords({ top, left });
-    };
+    }, [position]);
 
     // Update position when tooltip becomes visible
     useEffect(() => {
         if (isVisible) {
-            updatePosition();
+            const rafId = window.requestAnimationFrame(() => {
+                updatePosition();
+            });
+            return () => window.cancelAnimationFrame(rafId);
         }
-    }, [isVisible]);
+        return;
+    }, [isVisible, updatePosition]);
 
     useEffect(() => {
         return () => {

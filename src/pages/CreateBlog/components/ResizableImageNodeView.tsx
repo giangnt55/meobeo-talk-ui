@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 import {
     AlignLeft,
@@ -18,7 +18,7 @@ export default function ResizableImageNodeView({
     const [isResizing, setIsResizing] = useState(false);
     const [aspectRatio, setAspectRatio] = useState(1);
 
-    const [showToolbar, setShowToolbar] = useState(false);
+    const showToolbar = selected;
     const [showSettings, setShowSettings] = useState(false);
 
     const imgRef = useRef<HTMLImageElement>(null);
@@ -29,14 +29,6 @@ export default function ResizableImageNodeView({
         ? width
         : parseInt(width || '0') || '100%';
 
-    useEffect(() => {
-        if (!selected) {
-            setShowToolbar(false);
-            setShowSettings(false);
-        } else {
-            setShowToolbar(true);
-        }
-    }, [selected]);
 
     const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
         const target = e.target as HTMLImageElement;

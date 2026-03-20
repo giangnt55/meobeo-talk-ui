@@ -3,6 +3,14 @@
  * Use these functions in browser console for debugging
  */
 
+interface ApiLogEntry {
+    type: 'REQUEST' | 'RESPONSE' | 'ERROR';
+    device?: 'MOBILE' | 'DESKTOP';
+    url?: string;
+    networkError?: boolean;
+    [key: string]: unknown;
+}
+
 export const debugUtils = {
     /**
      * Get all API logs
@@ -22,8 +30,8 @@ export const debugUtils = {
      * Get logs by type
      */
     getLogsByType: (type: 'REQUEST' | 'RESPONSE' | 'ERROR') => {
-        const logs = debugUtils.getLogs();
-        const filtered = logs.filter((log: any) => log.type === type);
+        const logs = debugUtils.getLogs() as ApiLogEntry[];
+        const filtered = logs.filter((log) => log.type === type);
         console.table(filtered);
         return filtered;
     },
@@ -39,8 +47,8 @@ export const debugUtils = {
      * Get mobile-specific logs
      */
     getMobileLogs: () => {
-        const logs = debugUtils.getLogs();
-        const mobile = logs.filter((log: any) => log.device === 'MOBILE');
+        const logs = debugUtils.getLogs() as ApiLogEntry[];
+        const mobile = logs.filter((log) => log.device === 'MOBILE');
         console.table(mobile);
         return mobile;
     },
@@ -83,9 +91,9 @@ export const debugUtils = {
      * Get logs for specific URL
      */
     getLogsByUrl: (urlPattern: string) => {
-        const logs = debugUtils.getLogs();
-        const filtered = logs.filter((log: any) =>
-            log.url && log.url.includes(urlPattern)
+        const logs = debugUtils.getLogs() as ApiLogEntry[];
+        const filtered = logs.filter((log) =>
+            typeof log.url === 'string' && log.url.includes(urlPattern)
         );
         console.table(filtered);
         return filtered;
@@ -95,8 +103,8 @@ export const debugUtils = {
      * Get network error logs
      */
     getNetworkErrors: () => {
-        const logs = debugUtils.getLogs();
-        const networkErrors = logs.filter((log: any) => log.networkError === true);
+        const logs = debugUtils.getLogs() as ApiLogEntry[];
+        const networkErrors = logs.filter((log) => log.networkError === true);
         console.table(networkErrors);
         return networkErrors;
     },
@@ -105,15 +113,15 @@ export const debugUtils = {
      * Get logs summary
      */
     getSummary: () => {
-        const logs = debugUtils.getLogs();
+        const logs = debugUtils.getLogs() as ApiLogEntry[];
         const summary = {
             total: logs.length,
-            requests: logs.filter((l: any) => l.type === 'REQUEST').length,
-            responses: logs.filter((l: any) => l.type === 'RESPONSE').length,
-            errors: logs.filter((l: any) => l.type === 'ERROR').length,
-            networkErrors: logs.filter((l: any) => l.networkError === true).length,
-            mobileRequests: logs.filter((l: any) => l.device === 'MOBILE').length,
-            desktopRequests: logs.filter((l: any) => l.device === 'DESKTOP').length,
+            requests: logs.filter((l) => l.type === 'REQUEST').length,
+            responses: logs.filter((l) => l.type === 'RESPONSE').length,
+            errors: logs.filter((l) => l.type === 'ERROR').length,
+            networkErrors: logs.filter((l) => l.networkError === true).length,
+            mobileRequests: logs.filter((l) => l.device === 'MOBILE').length,
+            desktopRequests: logs.filter((l) => l.device === 'DESKTOP').length,
         };
         console.table(summary);
         return summary;
@@ -174,6 +182,7 @@ Examples:
 
 // Make it available globally for console access
 if (typeof window !== 'undefined') {
-    (window as any).debugUtils = debugUtils;
+    const win = window as Window & { debugUtils?: typeof debugUtils };
+    win.debugUtils = debugUtils;
     console.log('🐛 Debug utils loaded! Type "debugUtils.help()" for available commands');
 }

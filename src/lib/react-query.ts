@@ -11,8 +11,9 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
     },
     mutations: {
-      onError: (error: any) => {
-        const message = error?.response?.data?.message || error.message;
+      onError: (error: unknown) => {
+        const err = error as { response?: { data?: { message?: string } }; message?: string };
+        const message = err?.response?.data?.message || err?.message || 'Unexpected error';
         toast.error(message);
       },
     },
@@ -24,7 +25,7 @@ export const queryKeys = {
   memories: {
     all: ['memories'] as const,
     lists: () => [...queryKeys.memories.all, 'list'] as const,
-    list: (filters: Record<string, any>) =>
+    list: (filters: Record<string, unknown>) =>
       [...queryKeys.memories.lists(), filters] as const,
     details: () => [...queryKeys.memories.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.memories.details(), id] as const,

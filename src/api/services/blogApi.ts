@@ -246,38 +246,43 @@ export const blogApi = {
                 page: page.toString(),
                 limit: limit.toString(),
             },
-        }).json<ApiResponse<any[]> & { meta: any }>();
+        }).json<ApiResponse<Comment[]> & { meta: { page: number; page_size: number; total_items: number; total_pages: number } }>();
 
         if (response.success) {
-            const commentsData = response.data || [];
+            const commentsData = (response.data ?? []) as unknown[];
 
-            const commentsResult = commentsData.map((c: any) => ({
-                id: c.id,
-                content: c.content,
-                user_id: c.author?.id || '',
-                blog_id: c.post_id,
-                parent_id: c.parent_id,
-                created_at: c.created_at,
-                updated_at: c.updated_at,
-                user: {
-                    id: c.author?.id || '',
-                    username: c.author?.username || 'Unknown',
-                    display_name: c.author?.display_name,
-                    avatar_url: c.author?.avatar_url,
-                },
-                reaction_count: c.reaction_count,
-                reply_count: c.reply_count,
-                is_liked: c.is_liked,
-                replies: [],
-            }));
+            const commentsResult = commentsData.map(comment => {
+                const c = comment as Record<string, unknown>;
+                const author = (c.author as Record<string, unknown> | undefined) ?? {};
+
+                return {
+                    id: String(c.id ?? ''),
+                    content: String(c.content ?? ''),
+                    user_id: String(author.id ?? ''),
+                    blog_id: String(c.post_id ?? ''),
+                    parent_id: c.parent_id ? String(c.parent_id) : undefined,
+                    created_at: String(c.created_at ?? ''),
+                    updated_at: String(c.updated_at ?? ''),
+                    user: {
+                        id: String(author.id ?? ''),
+                        username: String(author.username ?? 'Unknown'),
+                        display_name: author.display_name as string | undefined,
+                        avatar_url: author.avatar_url as string | undefined,
+                    },
+                    reaction_count: Number(c.reaction_count ?? 0),
+                    reply_count: Number(c.reply_count ?? 0),
+                    is_liked: Boolean(c.is_liked),
+                    replies: [] as Comment[],
+                };
+            });
 
             return {
                 comments: commentsResult,
                 meta: {
-                    page: response.meta.page,
-                    limit: response.meta.page_size,
-                    total: response.meta.total_items,
-                    total_pages: response.meta.total_pages,
+                    page: Number(response.meta.page),
+                    limit: Number(response.meta.page_size),
+                    total: Number(response.meta.total_items),
+                    total_pages: Number(response.meta.total_pages),
                 },
             };
         }
@@ -289,18 +294,17 @@ export const blogApi = {
      * Create a comment or reply
      */
     createComment: async (blogId: string, content: string, parentId?: string): Promise<Comment> => {
-        let url = 'interactions/comments';
-        let body: any = { post_id: blogId, content };
+        const url = parentId ? 'interactions/comments/reply' : 'interactions/comments';
+        const body: Record<string, unknown> = {
+            post_id: blogId,
+            content,
+            ...(parentId ? { parent_id: parentId } : {}),
+        };
 
-        if (parentId) {
-            url = 'interactions/comments/reply';
-            body = { post_id: blogId, parent_id: parentId, content };
-        }
-
-        const response = await api.post(url, { json: body }).json<ApiResponse<any>>();
+        const response = await api.post(url, { json: body }).json<ApiResponse<Comment>>();
 
         if (response.success && response.data) {
-            const c = response.data;
+            const c = response.data as any;
             return {
                 id: c.id,
                 content: c.content,

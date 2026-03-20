@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { memoryService } from '../../api/services/memory.service';
 import { queryKeys } from '../../lib/react-query';
-import type { CreateMemoryInput, UpdateMemoryInput } from '../../schemas/memory.schema';
+import type { CreateMemoryInput, UpdateMemoryInput, Memory } from '../../schemas/memory.schema';
 import { toast } from 'react-hot-toast';
 
 /**
@@ -115,11 +115,11 @@ export function useLikeMemory() {
       );
 
       // Optimistically update
-      queryClient.setQueryData(queryKeys.memories.detail(id), (old: any) => {
+      queryClient.setQueryData(queryKeys.memories.detail(id), (old: { data?: Memory } | undefined) => {
         if (!old?.data) return old;
         return {
           ...old,
-          data: { ...old.data, likes: old.data.likes + 1 },
+          data: { ...old.data, likes: (old.data as Memory & { likes?: number }).likes ? (old.data as Memory & { likes: number }).likes + 1 : 1 },
         };
       });
 
@@ -147,7 +147,7 @@ export function useLikeMemory() {
 export function useUploadImage() {
   return useMutation({
     mutationFn: (file: File) => memoryService.uploadImage(file),
-    onSuccess: (_response) => {
+    onSuccess: () => {
       toast.success('Image uploaded successfully!');
     },
   });

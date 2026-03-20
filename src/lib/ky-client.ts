@@ -1,4 +1,4 @@
-import ky from 'ky';
+import ky, { Options } from 'ky';
 
 // Base URL configuration - support both env variable names for compatibility
 const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
@@ -7,10 +7,20 @@ const BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_U
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
 
+type RefreshResponse = {
+  success: boolean;
+  data?: {
+    accessToken: string;
+  };
+  message?: string;
+};
+
 // Logging utility for debugging
-const logApiCall = (type: 'REQUEST' | 'RESPONSE' | 'ERROR', data: any) => {
+const logApiCall = (type: 'REQUEST' | 'RESPONSE' | 'ERROR', data: unknown) => {
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   const timestamp = new Date().toISOString();
+
+  const extraData = typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
 
   const logData = {
     timestamp,
@@ -18,7 +28,7 @@ const logApiCall = (type: 'REQUEST' | 'RESPONSE' | 'ERROR', data: any) => {
     device: isMobile ? 'MOBILE' : 'DESKTOP',
     userAgent: navigator.userAgent,
     online: navigator.onLine,
-    ...data
+    ...extraData
   };
 
   // Always log to console for debugging
@@ -99,7 +109,7 @@ export const api = ky.create({
 
           try {
             // Try to refresh token - cookie is sent automatically
-            const refreshResponse = await ky.post(`${BASE_URL}/auth/refresh`).json<any>();
+            const refreshResponse = await ky.post(`${BASE_URL}/auth/refresh`).json<RefreshResponse>();
 
             if (refreshResponse.success && refreshResponse.data) {
               const { accessToken: newAccessToken } = refreshResponse.data;
@@ -114,7 +124,7 @@ export const api = ky.create({
               request.headers.set('Authorization', `Bearer ${newAccessToken}`);
               return ky(request);
             }
-          } catch (error) {
+          } catch {
             // Refresh failed, clear tokens and redirect
             localStorage.clear();
             window.location.href = '/login';
@@ -142,7 +152,7 @@ export const api = ky.create({
         const { response, request } = error;
 
         // Log error details
-        const errorLog: any = {
+        const errorLog: Record<string, unknown> = {
           url: request?.url || 'unknown',
           method: request?.method || 'unknown',
           errorName: error.name,
@@ -168,12 +178,14 @@ export const api = ky.create({
               error.message = backendMessage;
             }
 
+            const enhancedError = error as Error & { code?: string; errors?: unknown };
+
             if (body.error?.code) {
-              (error as any).code = body.error.code;
+              enhancedError.code = body.error.code;
             }
 
             if (body.errors) {
-              (error as any).errors = body.errors;
+              enhancedError.errors = body.errors;
             }
           } catch {
             // Response body is not JSON
@@ -199,11 +211,11 @@ export const api = ky.create({
   },
 });
 
-export const apiGet = async <T>(url: string, options: any = {}) => {
+export const apiGet = async <T>(url: string, options: Options = {}) => {
   return api.get(url, options).json<T>();
 };
 
-export const apiPost = async <T>(url: string, data?: any, options: any = {}) => {
+export const apiPost = async <T>(url: string, data?: unknown, options: Options = {}) => {
   const isForm = data instanceof FormData;
 
   return api
@@ -214,7 +226,7 @@ export const apiPost = async <T>(url: string, data?: any, options: any = {}) => 
     .json<T>();
 };
 
-export const apiPut = async <T>(url: string, data?: any, options: any = {}) => {
+export const apiPut = async <T>(url: string, data?: unknown, options: Options = {}) => {
   const isForm = data instanceof FormData;
 
   return api
@@ -225,7 +237,7 @@ export const apiPut = async <T>(url: string, data?: any, options: any = {}) => {
     .json<T>();
 };
 
-export const apiPatch = async <T>(url: string, data?: any, options: any = {}) => {
+export const apiPatch = async <T>(url: string, data?: unknown, options: Options = {}) => {
   const isForm = data instanceof FormData;
 
   return api
@@ -236,11 +248,11 @@ export const apiPatch = async <T>(url: string, data?: any, options: any = {}) =>
     .json<T>();
 };
 
-export const apiDelete = async <T>(url: string, options: any = {}) => {
+export const apiDelete = async <T>(url: string, options: Options = {}) => {
   return api.delete(url, options).json<T>();
 };
 
-export const apiUpload = async <T>(url: string, formData: FormData, options: any = {}) => {
+export const apiUpload = async <T>(url: string, formData: FormData, options: Options = {}) => {
   return api
     .post(url, {
       ...options,

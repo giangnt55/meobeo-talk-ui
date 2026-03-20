@@ -11,7 +11,7 @@ interface BackendNotification {
         avatar_url?: string;
         initials?: string;
     };
-    payload: any;
+    payload: unknown;
     created_at: string;
     is_read: boolean;
 }

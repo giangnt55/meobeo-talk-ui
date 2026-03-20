@@ -72,7 +72,8 @@ export const LoginPage: React.FC = () => {
       setTimeout(() => {
         navigate("/home");
       }, 300);
-    } catch (err: any) {
+    } catch (errorUnknown) {
+      const err = errorUnknown as { code?: string; message?: string };
       if (err.code === 'INVALID_CREDENTIALS') {
         error("Meo meo, sai gòi nè!", "Nhập lại xíu xiu nghen, email hoặc mật khẩu bị trật nhịp rồi đó");
       } else {

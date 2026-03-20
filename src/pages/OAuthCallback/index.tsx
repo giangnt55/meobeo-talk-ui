@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { userApi } from '@/api/services/userApi';
+import { authApi } from '@/api/services/authApi';
 
 /**
  * OAuthCallbackPage
  *
- * This page is the landing point after Google OAuth redirect from the backend.
- * The backend redirects here with:
- *   /auth/callback?access_token=<JWT>
+ * This page is the landing point after Google OAuth redirect.
+ * Google redirects here with:
+ *   /auth/callback?code=...&state=...
  *
- * We read the token, store it, fetch the user profile, then redirect to /home.
+ * We read the code, send it to the backend to exchange for tokens, 
+ * then store the session and redirect to /home.
  */
 export const OAuthCallbackPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +22,9 @@ export const OAuthCallbackPage: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       const params = new URLSearchParams(window.location.search);
-      const accessToken = params.get('access_token');
+      const code = params.get('code');
+      const state = params.get('state') || '';
+      const accessTokenParam = params.get('access_token');
       const error = params.get('error');
 
       if (error) {
@@ -31,39 +34,51 @@ export const OAuthCallbackPage: React.FC = () => {
         return;
       }
 
-      if (!accessToken) {
-        setErrorMsg('Không tìm thấy token xác thực. Vui lòng thử lại.');
-        setStatus('error');
-        setTimeout(() => navigate('/login'), 3000);
-        return;
-      }
-
       try {
-        // Store access token first so subsequent API calls work
-        localStorage.setItem('accessToken', accessToken);
+        let user;
+        let accessToken = accessTokenParam;
 
-        // Fetch full profile from server
-        const profile = await userApi.getProfile();
+        if (accessToken) {
+          // Case 1: Token passed directly from backend redirect (e.g. local 8080 flow)
+          localStorage.setItem('accessToken', accessToken);
+          const profile = await authApi.getCurrentUser();
+          const profileData = profile as { onboarding_completed?: boolean; onboardingCompleted?: boolean };
+          user = {
+             ...profile,
+             onboardingCompleted: profileData.onboarding_completed ?? profileData.onboardingCompleted ?? false,
+          };
+        } else if (code) {
+          // Case 2: Code passed from Google redirect (Frontend-first flow)
+          const authData = await authApi.googleExchange(code, state);
+          user = authData.user;
+          accessToken = authData.accessToken;
+        } else {
+          setErrorMsg('Không tìm thấy thông tin xác thực. Vui lòng thử lại.');
+          setStatus('error');
+          setTimeout(() => navigate('/login'), 3000);
+          return;
+        }
 
         // Store user in localStorage + auth context
-        // Cast to base User from auth types since userApi returns a partial User
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fullUser = profile as any;
-        localStorage.setItem('user', JSON.stringify(fullUser));
-        setAuth(fullUser, accessToken);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        setAuth(user, accessToken);
 
         // Navigate based on onboarding status
-        if (fullUser.onboardingCompleted) {
+        if (user.onboardingCompleted) {
           navigate('/home', { replace: true });
         } else {
           navigate('/onboarding/profile', { replace: true });
         }
-      } catch (err) {
+      } catch (errorUnknown) {
+        const err = errorUnknown as Error;
         console.error('OAuth callback error:', err);
         // Clean up on error
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
-        setErrorMsg('Đăng nhập thất bại. Vui lòng thử lại.');
+        
+        const message = err.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
+        setErrorMsg(message);
         setStatus('error');
         setTimeout(() => navigate('/login'), 3000);
       }

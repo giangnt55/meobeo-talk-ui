@@ -31,15 +31,22 @@ export const getNextOnboardingStep = (currentStep: number): string => {
   }
 };
 
-export const validateOnboardingStep = (step: number, data: any): string | null => {
+type OnboardingData = {
+  displayName?: string;
+  interests?: string[];
+  [key: string]: unknown;
+};
+
+export const validateOnboardingStep = (step: number, data: OnboardingData): string | null => {
+  const safeData: OnboardingData = data ?? {};
   switch (step) {
     case 1:
-      if (!data.displayName?.trim()) {
+      if (!safeData.displayName || !safeData.displayName.trim()) {
         return 'Display name is required';
       }
       break;
     case 2:
-      if (!data.interests || data.interests.length < 5) {
+      if (!safeData.interests || safeData.interests.length < 5) {
         return 'Please select at least 5 interests';
       }
       break;

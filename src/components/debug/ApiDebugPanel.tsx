@@ -7,7 +7,7 @@ interface ApiLog {
     device: 'MOBILE' | 'DESKTOP';
     userAgent: string;
     online: boolean;
-    [key: string]: any;
+    details?: unknown;
 }
 
 export const ApiDebugPanel = () => {
@@ -15,22 +15,29 @@ export const ApiDebugPanel = () => {
     const [logs, setLogs] = useState<ApiLog[]>([]);
     const [filter, setFilter] = useState<'ALL' | 'REQUEST' | 'RESPONSE' | 'ERROR'>('ALL');
 
-    useEffect(() => {
-        if (isOpen) {
-            loadLogs();
-            const interval = setInterval(loadLogs, 1000); // Refresh every second
-            return () => clearInterval(interval);
-        }
-    }, [isOpen]);
-
     const loadLogs = () => {
         try {
             const storedLogs = JSON.parse(sessionStorage.getItem('api_logs') || '[]');
-            setLogs(storedLogs.reverse()); // Show newest first
+            setLogs(Array.isArray(storedLogs) ? storedLogs.reverse() : []); // Show newest first
         } catch (e) {
             console.error('Failed to load logs:', e);
+            setLogs([]);
         }
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            const rafId = window.requestAnimationFrame(loadLogs);
+            const interval = setInterval(() => {
+                window.requestAnimationFrame(loadLogs);
+            }, 1000); // Refresh every second
+            return () => {
+                window.cancelAnimationFrame(rafId);
+                clearInterval(interval);
+            };
+        }
+        return;
+    }, [isOpen]);
 
     const clearLogs = () => {
         sessionStorage.removeItem('api_logs');

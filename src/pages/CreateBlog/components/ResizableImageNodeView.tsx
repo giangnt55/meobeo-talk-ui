@@ -94,7 +94,7 @@ export default function ResizableImageNodeView({
         justifyContent:
             align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center',
         float: display === 'wrap-left' ? 'left' : display === 'wrap-right' ? 'right' : 'none',
-        margin: display === 'wrap-left' ? '0 1rem 1rem 0' : display === 'wrap-right' ? '0 0 1rem 1rem' : 'auto',
+        margin: display === 'wrap-left' ? '0.5rem 1.5rem 1rem 0' : display === 'wrap-right' ? '0.5rem 0 1rem 1.5rem' : '1.5rem auto',
         width: display === 'full-width' ? '100%' : 'max-content',
         maxWidth: '100%',
         clear: display === 'wrap-left' || display === 'wrap-right' || display === 'inline' ? 'none' : 'both',

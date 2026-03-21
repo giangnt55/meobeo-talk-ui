@@ -31,7 +31,7 @@ const BlogDetailPage: React.FC = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             if (!id) {
-                setError('Blog ID not found');
+                setError('Hổng tìm thấy bài viết này rồi');
                 setLoading(false);
                 return;
             }
@@ -46,7 +46,7 @@ const BlogDetailPage: React.FC = () => {
                 // Fetch comments
                 fetchComments(data.id);
             } catch (err) {
-                setError('Failed to load blog. Please try again later.');
+                setError('Hổng tải được bài viết. Bạn ráng đợi xíu thử lại nha.');
                 console.error('Error fetching blog:', err);
             } finally {
                 setLoading(false);
@@ -215,9 +215,9 @@ const BlogDetailPage: React.FC = () => {
         const now = new Date();
         const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-        if (diffInSeconds < 60) return 'Just now';
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 60) return 'Vừa xong luôn';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} phút trước`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} giờ trước`;
         return formatDate(dateString);
     };
 
@@ -235,12 +235,12 @@ const BlogDetailPage: React.FC = () => {
         return (
             <main className="blog-detail-container">
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <p className="text-red-500 text-lg">{error || 'Blog not found'}</p>
+                    <p className="text-red-500 text-lg">{error || 'Hổng tìm thấy bài viết'}</p>
                     <button
                         onClick={() => window.location.reload()}
                         className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                     >
-                        Retry
+                        Thử lại nè
                     </button>
                 </div>
             </main>
@@ -343,14 +343,14 @@ const BlogDetailPage: React.FC = () => {
                                 </button>
                             </div>
                             <div className="text-sm text-stone-400 font-sans">
-                                Last updated {formatTimeAgo(blog.updated_at)}
+                                Cập nhật lần cuối {formatTimeAgo(blog.updated_at)}
                             </div>
                         </div>
                     </div>
                 </article>
 
                 <section className="w-full max-w-[720px] mx-auto mt-24 pb-16">
-                    <h3 className="font-display text-2xl font-bold mb-10 text-stone-800 dark:text-stone-100">Conversations</h3>
+                    <h3 className="font-display text-2xl font-bold mb-10 text-stone-800 dark:text-stone-100">Trò chuyện cùng nhau</h3>
 
                     <div className="bg-white dark:bg-stone-900/50 rounded-2xl p-6 mb-16 shadow-sm border border-stone-100 dark:border-stone-800">
                         {isAuthenticated ? (
@@ -394,14 +394,14 @@ const BlogDetailPage: React.FC = () => {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center text-center py-2">
-                                <h4 className="text-lg font-bold text-stone-800 dark:text-stone-100 mb-2">Join the conversation</h4>
-                                <p className="text-stone-500 dark:text-stone-400 mb-8">Sign in to share your thoughts.</p>
+                                <h4 className="text-lg font-bold text-stone-800 dark:text-stone-100 mb-2">Tham gia góp vui nè</h4>
+                                <p className="text-stone-500 dark:text-stone-400 mb-8">Đăng nhập để kể chuyện của bạn nha.</p>
                                 <div className="flex flex-col sm:flex-row items-center gap-4">
                                     <Link to="/login" className="w-full sm:w-auto px-8 py-2.5 bg-[#ee7c2b] hover:bg-[#d96b1e] text-white rounded-full text-sm font-bold transition-all shadow-sm">
-                                        Sign In
+                                        Đăng nhập
                                     </Link>
                                     <Link to="/signup" className="w-full sm:w-auto px-8 py-2.5 bg-transparent border border-stone-400 text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-full text-sm font-bold transition-all">
-                                        Create Account
+                                        Tạo tài khoản
                                     </Link>
                                 </div>
                             </div>
@@ -451,11 +451,11 @@ const BlogDetailPage: React.FC = () => {
                                                             }}
                                                             className="text-stone-500 dark:text-stone-400 hover:opacity-80 text-xs font-sans font-medium transition-opacity"
                                                         >
-                                                            Reply
+                                                            Trả lời
                                                         </button>
                                                     </>
                                                 ) : (
-                                                    <span className="text-stone-400 text-xs font-medium italic">Sign in to reply</span>
+                                                    <span className="text-stone-400 text-xs font-medium italic">Đăng nhập để trả lời nhen</span>
                                                 )}
                                             </div>
 
@@ -547,16 +547,16 @@ const BlogDetailPage: React.FC = () => {
                                             onClick={handleLoadMore}
                                             className="px-6 py-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-full text-sm font-bold transition-colors"
                                         >
-                                            Load More Comments
+                                            Tải thêm bình luận
                                         </button>
                                     </div>
                                 )}
 
                                 {!isAuthenticated && comments.length > 3 && (
                                     <div className="text-center pt-8 border-t border-stone-200 dark:border-stone-800 mt-6">
-                                        <p className="text-stone-500 mb-4 dark:text-stone-400">Join the community to see regular updates and all conversations.</p>
+                                        <p className="text-stone-500 mb-4 dark:text-stone-400">Vào nhà chung để xem thêm nhiều chuyện hay ho nha.</p>
                                         <Link to="/login" className="text-primary font-bold hover:underline">
-                                            Sign In to View All
+                                            Đăng nhập để xem hết
                                         </Link>
                                     </div>
                                 )}
@@ -567,7 +567,7 @@ const BlogDetailPage: React.FC = () => {
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                                 </div>
                             ) : (
-                                <p className="text-center text-stone-500 italic">No thoughts shared yet. Be the first!</p>
+                                <p className="text-center text-stone-500 italic">Chưa có ai nói gì hết trơn. Bắt chuyện trước đi bạn!</p>
                             )
                         )}
                     </div>

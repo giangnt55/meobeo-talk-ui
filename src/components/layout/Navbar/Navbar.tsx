@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
 
   const toRecord = useCallback((value: unknown): RecordData =>
     typeof value === 'object' && value !== null ? (value as RecordData) : {},
-  []);
+    []);
 
   const mapBackendToFrontend = useCallback((n: unknown): Notification => {
     const incoming = toRecord(n);
@@ -47,20 +47,26 @@ export const Navbar: React.FC = () => {
 
     const actorAvatar = (actorCandidate.avatar_url as string) || (actorCandidate.avatar as string) || '';
 
-    const rawPayload = sourceRecord.payload ?? sourceRecord.data ?? {};
-    const payloadRecord = toRecord(rawPayload);
+    const rawPayload: unknown = sourceRecord.payload ?? sourceRecord.data ?? {};
+    let actualPayload: unknown = rawPayload;
 
-    const parsedPayload:
-      | RecordData
-      | string =
-      typeof rawPayload === 'string'
+    // Handle sql.NullString representation from backend API
+    const rawPayloadRecord = toRecord(rawPayload);
+    if (typeof rawPayload === 'object' && rawPayload !== null && 'String' in rawPayloadRecord && 'Valid' in rawPayloadRecord) {
+      actualPayload = rawPayloadRecord.String;
+    }
+
+    const payloadRecord = toRecord(actualPayload);
+
+    const parsedPayload: RecordData =
+      typeof actualPayload === 'string'
         ? (() => {
-            try {
-              return JSON.parse(rawPayload);
-            } catch {
-              return {};
-            }
-          })()
+          try {
+            return JSON.parse(actualPayload);
+          } catch {
+            return {};
+          }
+        })()
         : payloadRecord;
 
     const content = {
@@ -223,7 +229,7 @@ export const Navbar: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/explore" className="nav-link">Explore</Link>
+                    <Link to="/explore" className="nav-link">Khám Phá</Link>
                     {/* <Link to="/memories" className="nav-link">Ký Ức</Link> */}
                     <Link to="/about" className="nav-link">Về Tụi Mình</Link>
                   </>

@@ -249,7 +249,17 @@ export const blogApi = {
         }).json<ApiResponse<Comment[]> & { meta: { page: number; page_size: number; total_items: number; total_pages: number } }>();
 
         if (response.success) {
-            const commentsData = (response.data ?? []) as unknown[];
+            let rawData = response.data;
+            let commentsData: any[] = [];
+            
+            if (Array.isArray(rawData)) {
+                commentsData = rawData;
+            } else if (rawData && typeof rawData === 'object') {
+                const dataObj = rawData as any;
+                commentsData = Array.isArray(dataObj.comments) ? dataObj.comments 
+                             : Array.isArray(dataObj.items) ? dataObj.items 
+                             : Array.isArray(dataObj.posts) ? dataObj.posts : [];
+            }
 
             const commentsResult = commentsData.map(comment => {
                 const c = comment as Record<string, unknown>;
@@ -276,13 +286,16 @@ export const blogApi = {
                 };
             });
 
+            // Fallback meta extraction if it's inside data
+            const rawMeta = response.meta || (rawData as any)?.meta || {};
+
             return {
                 comments: commentsResult,
                 meta: {
-                    page: Number(response.meta.page),
-                    limit: Number(response.meta.page_size),
-                    total: Number(response.meta.total_items),
-                    total_pages: Number(response.meta.total_pages),
+                    page: Number(rawMeta.page || page),
+                    limit: Number(rawMeta.page_size || limit),
+                    total: Number(rawMeta.total_items || commentsResult.length),
+                    total_pages: Number(rawMeta.total_pages || 1),
                 },
             };
         }

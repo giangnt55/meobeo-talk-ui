@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import { useAuth } from '@/hooks/useAuth';
 // import { authApi } from '@/api/services/authApi'; // Removed unused import
+import { AUTH_ERRORS, HTTP_STATUS } from '@/constants/errorCodes';
 import './Login.css';
 
 // Google Icon Component
@@ -59,7 +60,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
 
     if (!formData.emailOrUsername || !formData.password) {
-      error('Validation Error', 'Please fill in all fields');
+      error('Chưa điền đủ kìa', 'Bạn nhớ điền đầy đủ thông tin nghen');
       return;
     }
 
@@ -67,14 +68,20 @@ export const LoginPage: React.FC = () => {
 
     try {
       await login(formData.emailOrUsername, formData.password);
-      success("Welcome back!", "Login successful");
+      success("Mừng bạn về nhà!", "Đăng nhập thành công rực rỡ");
 
       setTimeout(() => {
         navigate("/home");
       }, 300);
     } catch (errorUnknown) {
-      const err = errorUnknown as { code?: string; message?: string };
-      if (err.code === 'INVALID_CREDENTIALS') {
+      const err = errorUnknown as { code?: string; message?: string; name?: string; response?: Response };
+
+      if (err.code === AUTH_ERRORS.TOO_MANY_REQUESTS || (err.response && err.response.status === HTTP_STATUS.TOO_MANY_REQUESTS)) {
+        error(
+          "Chậm lại xíu nè!",
+          "Bạn 'gõ cửa' nhà MeoBeo hăng hái quá rồi. Đợi một lát cho hệ thống nghỉ xíu rồi hãy quay lại nha!"
+        );
+      } else if (err.code === AUTH_ERRORS.INVALID_CREDENTIALS) {
         error("Meo meo, sai gòi nè!", "Nhập lại xíu xiu nghen, email hoặc mật khẩu bị trật nhịp rồi đó");
       } else {
         error("Trùi ui, lỗi gòi!", err.message || "Tự nhiên bị lỗi ngang, ráng thử lại nha!");

@@ -48,10 +48,9 @@ const BlogPage: React.FC = () => {
                 setBlogs(prev => [...prev, ...response.posts]);
             }
 
-            // Check if we have more pages
             setHasMore(pageNum < response.meta.total_pages);
         } catch (err) {
-            setError('Failed to load blogs. Please try again later.');
+            setError('Hổng tải được bài viết rồi. Bạn ráng đợi xíu thử lại nha.');
             console.error('Error fetching blogs:', err);
         } finally {
             setLoading(false);
@@ -107,8 +106,8 @@ const BlogPage: React.FC = () => {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-divider dark:border-[#3e322a]">
                     <div className="flex flex-col gap-1">
-                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-deep-espresso dark:text-white">Blog Feed</h1>
-                        <p className="text-warm-taupe text-base">A digital sanctuary for your thoughts and stories.</p>
+                        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-deep-espresso dark:text-white">Chuyện trò đây đó</h1>
+                        <p className="text-warm-taupe text-base">Góc nhỏ bình yên rải đầy suy tư và chuyện kể của chúng mình.</p>
                     </div>
                     <div className="flex gap-6">
                         <button
@@ -116,7 +115,7 @@ const BlogPage: React.FC = () => {
                             className="relative flex flex-col items-center pb-2 transition-colors group"
                         >
                             <span className={`text-base ${activeTab === 'Blog Của Tôi' ? 'font-bold text-deep-espresso dark:text-white' : 'font-semibold text-warm-taupe hover:text-primary'}`}>
-                                My Blogs
+                                Blog Của Tôi
                             </span>
                             {activeTab === 'Blog Của Tôi' && (
                                 <span className="absolute bottom-0 h-[3px] w-full bg-primary rounded-full"></span>
@@ -127,7 +126,7 @@ const BlogPage: React.FC = () => {
                             className="relative flex flex-col items-center pb-2 transition-colors group"
                         >
                             <span className={`text-base ${activeTab === 'Khám phá' ? 'font-bold text-deep-espresso dark:text-white' : 'font-semibold text-warm-taupe hover:text-primary'}`}>
-                                Discover
+                                Khám phá
                             </span>
                             {activeTab === 'Khám phá' && (
                                 <span className="absolute bottom-0 h-[3px] w-full bg-primary rounded-full"></span>
@@ -167,7 +166,7 @@ const BlogPage: React.FC = () => {
                             onClick={() => window.location.reload()}
                             className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
                         >
-                            Retry
+                            Thử lại nè
                         </button>
                     </div>
                 )}
@@ -175,7 +174,7 @@ const BlogPage: React.FC = () => {
                 {/* Empty State */}
                 {!loading && !error && filteredPosts.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-20 gap-4">
-                        <p className="text-warm-taupe text-lg">No stories found in this category.</p>
+                        <p className="text-warm-taupe text-lg">Đang chờ mấy câu chuyện mới rơi vào đây nè.</p>
                     </div>
                 )}
 
@@ -198,11 +197,11 @@ const BlogPage: React.FC = () => {
                                             <span className="size-1 bg-warm-taupe/30 rounded-full"></span>
                                             <span>{formatDate(post.created_at)}</span>
                                             <span className="size-1 bg-warm-taupe/30 rounded-full"></span>
-                                            <span>{post.read_time_minutes} min read</span>
+                                            <span>{post.read_time_minutes} phút đọc</span>
                                         </div>
                                     </div>
                                     <p className="text-warm-taupe text-base leading-relaxed line-clamp-3">
-                                        {post.content_preview || getContentPreview(post.content_html, 200) || 'No preview available'}
+                                        {post.content_preview || getContentPreview(post.content_html, 200) || 'Chưa có nội dung nhá hàng'}
                                     </p>
                                     <div className="flex items-center gap-6 mt-2">
                                         <div className="flex items-center gap-1.5 text-warm-taupe/60">
@@ -243,10 +242,10 @@ const BlogPage: React.FC = () => {
                             {loadingMore ? (
                                 <>
                                     <div className="size-4 rounded-full border-2 border-current border-t-transparent animate-spin"></div>
-                                    Loading...
+                                    Đợi xíu xíu nha...
                                 </>
                             ) : (
-                                'Load older stories'
+                                'Đọc thêm mấy chuyện cũ nhen'
                             )}
                         </button>
                     </div>

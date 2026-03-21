@@ -78,7 +78,7 @@ export const VerifyEmailPage: React.FC = () => {
 
         const otpCode = otp.join('');
         if (otpCode.length !== 6) {
-            error('Invalid Code', 'Please enter all 6 digits');
+            error('Mã chưa đủ', 'Bạn ráng điền đủ 6 số nghen');
             return;
         }
 
@@ -91,7 +91,7 @@ export const VerifyEmailPage: React.FC = () => {
             // Auto-login user with returned tokens
             setAuth(authResponse.user, authResponse.accessToken, authResponse.refreshToken);
 
-            success('Verified!', 'Email verified successfully');
+            success('Thành công rồi!', 'Xác thực email ngon lành cành đào');
 
             setTimeout(() => {
                 // Navigate based on onboarding status
@@ -103,7 +103,7 @@ export const VerifyEmailPage: React.FC = () => {
             }, 1000);
         } catch (errorUnknown) {
             const err = errorUnknown as Error;
-            error('Verification Failed', err.message || 'Invalid or expired code');
+            error('Xác thực thất bại', err.message || 'Mã số bị sai hoặc hết hạn mất tiêu');
         } finally {
             setIsLoading(false);
         }
@@ -116,14 +116,14 @@ export const VerifyEmailPage: React.FC = () => {
             const { authApi } = await import('@/api/services/authApi');
             await authApi.resendVerificationCode(email);
 
-            success('Code Sent', 'A new verification code has been sent to your email');
+            success('Đã gửi lại mã', 'Mã xác nhận mới keng đã bay tới email của bạn');
             setResendTimer(59);
             // Clear current OTP
             setOtp(['', '', '', '', '', '']);
             inputRefs.current[0]?.focus();
         } catch (errorUnknown) {
             const err = errorUnknown as Error;
-            error('Resend Failed', err.message || 'Failed to resend code');
+            error('Gửi lại thất bại', err.message || 'Không gửi lại thêm mã được rồi');
         }
     };
 

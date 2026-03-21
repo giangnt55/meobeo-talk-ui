@@ -96,7 +96,7 @@ const NewHeroSection: React.FC = () => {
                         <img
                             alt="Group of friends laughing at sunset"
                             className="w-full h-full object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAciMarNAA-Kox-Zkr-IeSSHaUAQxwGsXErL21q_22-sSSf4oY-lNJ5As9bHlRtVzSUoMLXjsmC2SJs3Tv6YSq4qJaGa-SNmFd4vEkF-EV-lqr0D8XpzTw7Z7u5uz-5jBevBns443EuY5spD2XrfaX_Pso1VoRriMzR1UpL8EaAMA1yJ_IvHllpXPFWdA7AeGaMyuq7PJen1I8LDSuh_lQ28a-7NsvCgOoHiTPys0dsDb0HT90PS-uXiEVpAopua4H6SdWpgt-5Dyk"
+                            src="https://meobeo-r2.giangntse150747.workers.dev/posts/post-1/images/1774096367_IMG_20260314_161148.jpg"
                         />
                     </div>
 
@@ -105,7 +105,7 @@ const NewHeroSection: React.FC = () => {
                         <img
                             alt="Camera and coffee on a wooden table"
                             className="w-full h-full object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY_FPw9vQv42ggEKvQGolp8lrXD97UgOcRly-Bl1atqfiImPf_ev2AW4NDwjkJrck3RZkgWmesrseOn2tfyg077JXN4cDmgwJXjWZMAknY0RX0hFxn53J5QVqeKNYJv2QVPDHMX9_-k9NpLxdB_Jd6gOyIQs_JLjIlcRdOwgQt3cICn6dENJ5LabqXA286cCWwOqjcWS7oKLXqRSQosSoI5CMCD7kGWPVt_-OiXlE8XJAEMyTIyn5E4Ejuc4mUDCiM6_sgevMXra8"
+                            src="https://meobeo-r2.giangntse150747.workers.dev/posts/post-1/images/1774096180_IMG_20251031_160813.jpg"
                         />
                     </div>
 

@@ -90,9 +90,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
       },
 
-      // Blog
       { path: 'blog', element: <BlogPage /> },
-      { path: 'blog/:id', element: <BlogDetailPage /> },
       {
         path: 'blog/create',
         element: (
@@ -109,6 +107,8 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: 'blog/:id', element: <BlogDetailPage /> },
+
 
       // Memories
       { path: 'memories', element: <MemoriesPage /> },

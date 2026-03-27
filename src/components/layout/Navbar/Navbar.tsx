@@ -315,18 +315,18 @@ export const Navbar: React.FC = () => {
                         aria-label="User menu"
                         aria-expanded={activeDropdown === 'user'}
                       >
-                        {user?.avatar || user?.avatar_url ? (
-                          <img src={user.avatar || user.avatar_url} alt={user.displayName || user.display_name || user.username} className="avatar-image" />
+                        {user?.avatar_url ? (
+                          <img src={user.avatar_url} alt={user.display_name || user.username} className="avatar-image" />
                         ) : (
                           <div className="avatar-placeholder">
-                            {(user?.displayName || user?.display_name || user?.username || 'U').charAt(0).toUpperCase()}
+                            {(user?.display_name || user?.username || 'U').charAt(0).toUpperCase()}
                           </div>
                         )}
                       </button>
                       {activeDropdown === 'user' && (
                         <div className="user-dropdown">
                           <div className="dropdown-header">
-                            <p className="user-name">{user?.displayName || user?.display_name || user?.username}</p>
+                            <p className="user-name">{user?.display_name || user?.username}</p>
                             <p className="user-email">@{user?.username}</p>
                           </div>
                           <div className="dropdown-divider"></div>

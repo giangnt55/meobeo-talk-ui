@@ -55,19 +55,19 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                     {isAuthenticated && user && (
                         <div className="mobile-user-info">
                             <div className="mobile-avatar">
-                                {user.avatar || user.avatar_url ? (
+                                {user.avatar_url ? (
                                     <img
-                                        src={user.avatar || user.avatar_url}
-                                        alt={user.displayName || user.display_name || user.username}
+                                        src={user.avatar_url}
+                                        alt={user.display_name || user.username}
                                     />
                                 ) : (
                                     <div className="avatar-placeholder">
-                                        {(user.displayName || user.display_name || user.username || 'U').charAt(0).toUpperCase()}
+                                        {(user.display_name || user.username || 'U').charAt(0).toUpperCase()}
                                     </div>
                                 )}
                             </div>
                             <div className="mobile-user-details">
-                                <p className="user-name">{user.displayName || user.display_name || user.username}</p>
+                                <p className="user-name">{user.display_name || user.username}</p>
                                 <p className="user-email">@{user.username}</p>
                             </div>
                         </div>

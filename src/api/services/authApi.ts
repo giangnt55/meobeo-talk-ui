@@ -2,7 +2,6 @@ import { api } from '@/lib/ky-client';
 import type { ApiResponse } from '@/types/api';
 import type { User, LoginCredentials, SignupData, AuthResponse } from '@/types/auth';
 
-// API response interface (snake_case from backend)
 interface LoginApiResponse {
   user_id: string;
   email: string;
@@ -25,6 +24,37 @@ interface LoginApiResponse {
   following_count?: number;
 }
 
+function mapLoginApiResponse(apiData: LoginApiResponse): AuthResponse {
+  const now = new Date().toISOString();
+  const user: User = {
+    id: apiData.user_id,
+    email: apiData.email,
+    username: apiData.username,
+    display_name: apiData.display_name,
+    avatar_url: apiData.avatar_url,
+    bio: apiData.bio,
+    interests: apiData.interests ?? [],
+    following: apiData.following ?? [],
+    followers: apiData.followers ?? [],
+    created_at: apiData.created_at ?? now,
+    updated_at: apiData.updated_at ?? now,
+    is_active: apiData.is_active ?? true,
+    email_verified: apiData.email_verified ?? false,
+    post_count: apiData.post_count ?? 0,
+    follower_count: apiData.follower_count ?? (apiData.followers?.length ?? 0),
+    following_count: apiData.following_count ?? (apiData.following?.length ?? 0),
+    onboardingCompleted: apiData.onboarding_completed,
+  };
+
+  return {
+    user,
+    accessToken: apiData.access_token,
+    refreshToken: apiData.refresh_token,
+  };
+}
+
+// ─── authApi ──────────────────────────────────────────────────────────────────
+
 export const authApi = {
   /**
    * Login
@@ -37,37 +67,8 @@ export const authApi = {
       },
     }).json<ApiResponse<LoginApiResponse>>();
 
-    // Map snake_case API response to camelCase
     if (response.success && response.data) {
-      const apiData = response.data;
-
-      const authResponse: AuthResponse = {
-        user: {
-          id: apiData.user_id,
-          email: apiData.email,
-          username: apiData.username,
-          displayName: apiData.display_name,
-          avatar: apiData.avatar_url,
-          bio: apiData.bio,
-          interests: apiData.interests || [],
-          following: apiData.following || [],
-          followers: apiData.followers || [],
-          createdAt: apiData.created_at || new Date().toISOString(),
-          created_at: apiData.created_at || new Date().toISOString(),
-          updated_at: apiData.updated_at || new Date().toISOString(),
-          is_active: apiData.is_active ?? true,
-          email_verified: apiData.email_verified ?? false,
-          post_count: apiData.post_count ?? 0,
-          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
-          following_count: apiData.following_count ?? (apiData.following?.length || 0),
-          onboardingCompleted: apiData.onboarding_completed,
-        },
-        accessToken: apiData.access_token,
-        refreshToken: apiData.refresh_token,
-      };
-
-      // Return mapped response - localStorage handled by AuthContext
-      return authResponse;
+      return mapLoginApiResponse(response.data);
     }
 
     const errorMsg = response.error?.message || response.message || 'Login failed';
@@ -87,35 +88,7 @@ export const authApi = {
     }).json<ApiResponse<LoginApiResponse>>();
 
     if (response.success && response.data) {
-      const apiData = response.data;
-
-      const authResponse: AuthResponse = {
-        user: {
-          id: apiData.user_id,
-          email: apiData.email,
-          username: apiData.username,
-          displayName: apiData.display_name,
-          avatar: apiData.avatar_url,
-          bio: apiData.bio,
-          interests: apiData.interests || [],
-          following: apiData.following || [],
-          followers: apiData.followers || [],
-          createdAt: apiData.created_at || new Date().toISOString(),
-          created_at: apiData.created_at || new Date().toISOString(),
-          updated_at: apiData.updated_at || new Date().toISOString(),
-          is_active: apiData.is_active ?? true,
-          email_verified: apiData.email_verified ?? false,
-          post_count: apiData.post_count ?? 0,
-          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
-          following_count: apiData.following_count ?? (apiData.following?.length || 0),
-          onboardingCompleted: apiData.onboarding_completed,
-        },
-        accessToken: apiData.access_token,
-        refreshToken: apiData.refresh_token,
-      };
-
-      // Return response - AuthContext will handle storage if needed
-      return authResponse;
+      return mapLoginApiResponse(response.data);
     }
 
     throw new Error(response.message || 'Signup failed');
@@ -132,36 +105,8 @@ export const authApi = {
       },
     }).json<ApiResponse<LoginApiResponse>>();
 
-    // Map snake_case API response to camelCase
     if (response.success && response.data) {
-      const apiData = response.data;
-
-      const authResponse: AuthResponse = {
-        user: {
-          id: apiData.user_id,
-          email: apiData.email,
-          username: apiData.username,
-          displayName: apiData.display_name,
-          avatar: apiData.avatar_url,
-          bio: apiData.bio,
-          interests: apiData.interests || [],
-          following: apiData.following || [],
-          followers: apiData.followers || [],
-          createdAt: apiData.created_at || new Date().toISOString(),
-          created_at: apiData.created_at || new Date().toISOString(),
-          updated_at: apiData.updated_at || new Date().toISOString(),
-          is_active: apiData.is_active ?? true,
-          email_verified: apiData.email_verified ?? false,
-          post_count: apiData.post_count ?? 0,
-          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
-          following_count: apiData.following_count ?? (apiData.following?.length || 0),
-          onboardingCompleted: apiData.onboarding_completed,
-        },
-        accessToken: apiData.access_token,
-        refreshToken: apiData.refresh_token,
-      };
-
-      return authResponse;
+      return mapLoginApiResponse(response.data);
     }
 
     throw new Error(response.message || 'Verify email failed');
@@ -269,35 +214,7 @@ export const authApi = {
     const response = await api.post('auth/refresh').json<ApiResponse<LoginApiResponse>>();
 
     if (response.success && response.data) {
-      const apiData = response.data;
-
-      const authResponse: AuthResponse = {
-        user: {
-          id: apiData.user_id,
-          email: apiData.email,
-          username: apiData.username,
-          displayName: apiData.display_name,
-          avatar: apiData.avatar_url,
-          bio: apiData.bio,
-          interests: apiData.interests || [],
-          following: apiData.following || [],
-          followers: apiData.followers || [],
-          createdAt: apiData.created_at || new Date().toISOString(),
-          created_at: apiData.created_at || new Date().toISOString(),
-          updated_at: apiData.updated_at || new Date().toISOString(),
-          is_active: apiData.is_active ?? true,
-          email_verified: apiData.email_verified ?? false,
-          post_count: apiData.post_count ?? 0,
-          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
-          following_count: apiData.following_count ?? (apiData.following?.length || 0),
-          onboardingCompleted: apiData.onboarding_completed,
-        },
-        accessToken: apiData.access_token,
-        refreshToken: apiData.refresh_token,
-      };
-
-      // Return mapped response - localStorage handled by calling context
-      return authResponse;
+      return mapLoginApiResponse(response.data);
     }
 
     throw new Error(response.message || 'Failed to refresh token');
@@ -312,34 +229,7 @@ export const authApi = {
     }).json<ApiResponse<LoginApiResponse>>();
 
     if (response.success && response.data) {
-      const apiData = response.data;
-
-      const authResponse: AuthResponse = {
-        user: {
-          id: apiData.user_id,
-          email: apiData.email,
-          username: apiData.username,
-          displayName: apiData.display_name,
-          avatar: apiData.avatar_url,
-          bio: apiData.bio,
-          interests: apiData.interests || [],
-          following: apiData.following || [],
-          followers: apiData.followers || [],
-          createdAt: apiData.created_at || new Date().toISOString(),
-          created_at: apiData.created_at || new Date().toISOString(),
-          updated_at: apiData.updated_at || new Date().toISOString(),
-          is_active: apiData.is_active ?? true,
-          email_verified: apiData.email_verified ?? false,
-          post_count: apiData.post_count ?? 0,
-          follower_count: apiData.follower_count ?? (apiData.followers?.length || 0),
-          following_count: apiData.following_count ?? (apiData.following?.length || 0),
-          onboardingCompleted: apiData.onboarding_completed,
-        },
-        accessToken: apiData.access_token,
-        refreshToken: apiData.refresh_token,
-      };
-
-      return authResponse;
+      return mapLoginApiResponse(response.data);
     }
 
     throw new Error(response.message || 'Google exchange failed');

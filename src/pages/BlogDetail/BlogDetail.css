@@ -275,7 +275,7 @@
     padding-left: 1.5rem;
     color: var(--text-secondary);
     font-size: 1.125rem;
-    display: flow-root;
+    overflow: visible;
 }
 
 .article-body ul {
@@ -289,11 +289,12 @@
 .article-body li {
     margin-bottom: 0.5rem;
     padding-left: 0.5rem;
+    display: flow-root;
 }
 
 .article-body li p {
     margin-bottom: 0;
-    display: inline-block;
+    display: inline;
 }
 
 /* Code Blocks */
@@ -358,7 +359,8 @@
 }
 
 /* Images within content */
-.article-body img {
+.article-body img,
+.article-body .editor-image {
     max-width: 100%;
     height: auto;
     border-radius: var(--radius-lg);
@@ -367,43 +369,51 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Custom Image Extensions */
-.article-body img[data-display="inline"] {
+/* Custom Image Extensions & Tiptap Classes */
+.article-body img[data-display="inline"],
+.article-body .editor-image[data-display="inline"] {
     display: inline-block;
     margin: 0.5rem;
 }
 
-.article-body img[data-display="block"] {
+.article-body img[data-display="block"],
+.article-body .editor-image[data-display="block"] {
     display: block;
 }
 
-.article-body img[data-display="wrap-left"] {
+.article-body img[data-display="wrap-left"],
+.article-body .editor-image[data-display="wrap-left"] {
     float: left;
     margin: 0.5rem 1.5rem 1rem 0;
 }
 
-.article-body img[data-display="wrap-right"] {
+.article-body img[data-display="wrap-right"],
+.article-body .editor-image[data-display="wrap-right"] {
     float: right;
     margin: 0.5rem 0 1rem 1.5rem;
 }
 
-.article-body img[data-display="full-width"] {
+.article-body img[data-display="full-width"],
+.article-body .editor-image[data-display="full-width"] {
     width: 100% !important;
     display: block;
     margin: 2.5rem 0;
 }
 
-.article-body img[data-align="left"] {
+.article-body img[data-align="left"],
+.article-body .editor-image[data-align="left"] {
     margin-left: 0;
     margin-right: auto;
 }
 
-.article-body img[data-align="center"] {
+.article-body img[data-align="center"],
+.article-body .editor-image[data-align="center"] {
     margin-left: auto;
     margin-right: auto;
 }
 
-.article-body img[data-align="right"] {
+.article-body img[data-align="right"],
+.article-body .editor-image[data-align="right"] {
     margin-left: auto;
     margin-right: 0;
 }

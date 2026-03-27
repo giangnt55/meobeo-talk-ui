@@ -347,7 +347,7 @@ const CreateBlog: React.FC = () => {
                     <div className="author-info">
                         <div className="author-avatar">
                             <img
-                                src={user?.avatar || user?.avatar_url || 'https://via.placeholder.com/40'}
+                                src={user?.avatar_url || 'https://via.placeholder.com/40'}
                                 alt="Author"
                             />
                         </div>

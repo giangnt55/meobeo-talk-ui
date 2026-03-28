@@ -3,6 +3,7 @@ import type { Comment } from '@/api/services/blogApi';
 import { blogApi } from '@/api/services/blogApi';
 import { Link } from 'react-router-dom';
 import type { User } from '@/types/auth';
+import { UserAvatar } from '@/components/common/UserAvatar/UserAvatar';
 
 // ─── Helpers (local) ──────────────────────────────────────────────────────────
 
@@ -37,13 +38,11 @@ const ReplyInput: React.FC<ReplyInputProps> = ({
 }) => (
     <div className="mt-4 animate-fade-in">
         <div className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-stone-200 dark:bg-stone-800 flex-shrink-0 overflow-hidden">
-                <img
-                    alt={user?.display_name || user?.username}
-                    className="w-full h-full object-cover"
-                    src={user?.avatar_url || 'https://via.placeholder.com/32'}
-                />
-            </div>
+            <UserAvatar
+                avatarUrl={user?.avatar_url}
+                name={user?.display_name || user?.username}
+                size={2}
+            />
             <div className="flex-1">
                 <div className="relative">
                     <textarea
@@ -102,13 +101,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
     onReplySubmit,
 }) => (
     <div className="flex gap-4 animate-fade-in">
-        <div className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-700 flex-shrink-0 overflow-hidden">
-            <img
-                alt={comment.user.display_name || comment.user.username}
-                className="w-full h-full object-cover"
-                src={comment.user.avatar_url || 'https://via.placeholder.com/32'}
-            />
-        </div>
+        <UserAvatar
+            avatarUrl={comment.user.avatar_url}
+            name={comment.user.display_name || comment.user.username}
+            size={2}
+        />
         <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
                 <span className="text-sm font-bold font-sans text-stone-800 dark:text-stone-100">
@@ -161,9 +158,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <div className="mt-8 pl-4 border-l border-stone-200 dark:border-stone-800 space-y-8">
                     {comment.replies.map((reply: Comment) => (
                         <div key={reply.id} className="flex gap-4">
-                            <div className="w-8 h-8 rounded-full bg-stone-300 dark:bg-stone-700 flex-shrink-0 overflow-hidden">
-                                <img alt={reply.user.username} className="w-full h-full object-cover" src={reply.user.avatar_url || 'https://via.placeholder.com/32'} />
-                            </div>
+                            <UserAvatar
+                                avatarUrl={reply.user.avatar_url}
+                                name={reply.user.display_name || reply.user.username}
+                                size={2}
+                            />
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <span className="text-sm font-bold font-sans text-stone-800 dark:text-stone-100">
@@ -318,13 +317,11 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             <div className="bg-white dark:bg-stone-900/50 rounded-2xl p-6 mb-16 shadow-sm border border-stone-100 dark:border-stone-800">
                 {isAuthenticated ? (
                     <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-stone-200 dark:bg-stone-800 flex-shrink-0 overflow-hidden">
-                            <img
-                                alt={currentUser?.display_name || currentUser?.username}
-                                className="w-full h-full object-cover"
-                                src={currentUser?.avatar_url || 'https://via.placeholder.com/40'}
-                            />
-                        </div>
+                        <UserAvatar
+                            avatarUrl={currentUser?.avatar_url}
+                            name={currentUser?.display_name || currentUser?.username}
+                            size={2.5}
+                        />
                         <div className="flex-1">
                             <textarea
                                 className="w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 resize-none min-h-[80px] text-sm leading-relaxed placeholder-stone-400"

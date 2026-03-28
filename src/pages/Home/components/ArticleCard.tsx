@@ -124,19 +124,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
                         <span>{formatCount(blog.comment_count)}</span>
                     </div>
 
-                    <div className="stream-footer-stat stream-save-count">
-                        <span className="material-symbols-outlined">bookmark_border</span>
-                        <span>{formatCount(blog.save_count)}</span>
-                    </div>
-
                     <button
-                        className={`stream-bookmark-btn${blog.is_saved ? ' active' : ''}`}
+                        className={`stream-footer-stat stream-save-btn${blog.is_saved ? ' active' : ''}`}
                         onClick={(e) => { e.stopPropagation(); onSaveToggle(blog.id); }}
                         aria-label={blog.is_saved ? 'Bỏ lưu' : 'Lưu bài'}
                     >
                         <span className="material-symbols-outlined">
-                            {blog.is_saved ? 'bookmark' : 'bookmark_add'}
+                            {blog.is_saved ? 'bookmark' : 'bookmark_border'}
                         </span>
+                        <span>{formatCount(blog.save_count)}</span>
                     </button>
                 </div>
             </div>

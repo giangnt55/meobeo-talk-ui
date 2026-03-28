@@ -31,6 +31,7 @@ const BlogDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isLiked, setIsLiked] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -45,6 +46,7 @@ const BlogDetailPage: React.FC = () => {
             .then((data) => {
                 setBlog(data);
                 setIsLiked(data.is_liked || false);
+                setIsSaved(data.is_saved || false);
             })
             .catch(() => setError('Hổng tải được bài viết. Bạn ráng đợi xíu thử lại nha.'))
             .finally(() => setLoading(false));
@@ -61,6 +63,19 @@ const BlogDetailPage: React.FC = () => {
             setBlog((b) => b ? { ...b, reaction_count: result.count } : null);
         } catch {
             setIsLiked(prev);
+        }
+    };
+
+    const handleBlogSave = async () => {
+        if (!blog || !isAuthenticated) return;
+        const prev = isSaved;
+        setIsSaved(!prev);
+        setBlog((b) => b ? { ...b, save_count: prev ? b.save_count - 1 : b.save_count + 1 } : null);
+        try {
+            const result = await blogApi.toggleSaveBlog(blog.id);
+            setIsSaved(result.saved);
+        } catch {
+            setIsSaved(prev);
         }
     };
 
@@ -124,19 +139,53 @@ const BlogDetailPage: React.FC = () => {
 
                         <div className="article-actions">
                             {/* bookmark / share / more buttons */}
-                            {[
-                                <path key="bm" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />,
-                                null,
-                                null,
-                            ].map((_, i) => (
-                                <button key={i} className="article-action-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        {i === 0 && <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />}
-                                        {i === 1 && <><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></>}
-                                        {i === 2 && <><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></>}
-                                    </svg>
-                                </button>
-                            ))}
+                            <button
+                                className={`article-action-btn ${isSaved ? 'text-primary' : ''}`}
+                                onClick={handleBlogSave}
+                                aria-label={isSaved ? "Bỏ lưu" : "Lưu bài viết"}
+                                title={isSaved ? "Bỏ lưu" : "Lưu bài viết"}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                                </svg>
+                            </button>
+                            <button
+                                className="article-action-btn"
+                                onClick={() => {
+                                    if (navigator.share) {
+                                        navigator.share({
+                                            title: blog.title,
+                                            text: blog.content_preview || '',
+                                            url: window.location.href,
+                                        }).catch(console.error);
+                                    } else {
+                                        navigator.clipboard.writeText(window.location.href);
+                                        alert('Đã chép liên kết bài viết vào khay nhớ tạm!');
+                                    }
+                                }}
+                                aria-label="Chia sẻ bài viết"
+                                title="Chia sẻ"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="18" cy="5" r="3" />
+                                    <circle cx="6" cy="12" r="3" />
+                                    <circle cx="18" cy="19" r="3" />
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                </svg>
+                            </button>
+                            <button
+                                className="article-action-btn"
+                                onClick={() => alert('Chức năng tùy chọn khác đang được phát triển!')}
+                                aria-label="Thêm tùy chọn"
+                                title="Thêm..."
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="1" />
+                                    <circle cx="19" cy="12" r="1" />
+                                    <circle cx="5" cy="12" r="1" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
@@ -151,7 +200,7 @@ const BlogDetailPage: React.FC = () => {
                     {blog.tags && blog.tags.length > 0 && (
                         <div className="article-tags">
                             {blog.tags.map((tag: string, i: number) => (
-                                <span key={i} className="tag-pill">{tag}</span>
+                                <span key={i} className="tag-pill">#{tag}</span>
                             ))}
                         </div>
                     )}

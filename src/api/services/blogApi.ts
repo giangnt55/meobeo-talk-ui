@@ -256,8 +256,10 @@ export const blogApi = {
                 commentsData = rawData;
             } else if (rawData && typeof rawData === 'object') {
                 const dataObj = rawData as any;
-                commentsData = Array.isArray(dataObj.comments) ? dataObj.comments 
-                             : Array.isArray(dataObj.items) ? dataObj.items 
+                // API may wrap list in: data.data | data.comments | data.items | data.posts
+                commentsData = Array.isArray(dataObj.data) ? dataObj.data
+                             : Array.isArray(dataObj.comments) ? dataObj.comments
+                             : Array.isArray(dataObj.items) ? dataObj.items
                              : Array.isArray(dataObj.posts) ? dataObj.posts : [];
             }
 
@@ -286,8 +288,8 @@ export const blogApi = {
                 };
             });
 
-            // Fallback meta extraction if it's inside data
-            const rawMeta = response.meta || (rawData as any)?.meta || {};
+            const nestedMeta = (rawData as any)?.meta;
+            const rawMeta = nestedMeta || response.meta || {};
 
             return {
                 comments: commentsResult,

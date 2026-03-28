@@ -143,10 +143,14 @@ export const authApi = {
    * Get current user
    */
   getCurrentUser: async (): Promise<User> => {
-    const response = await api.get('users/me').json<ApiResponse<User>>();
+    const response = await api.get('users/me').json<ApiResponse<Record<string, unknown>>>();
 
     if (response.success && response.data) {
-      return response.data;
+      const raw = response.data;
+      return {
+        ...raw,
+        display_name: (raw.display_name as string | undefined) || (raw.full_name as string | undefined),
+      } as unknown as User;
     }
 
     throw new Error(response.message || 'Failed to get user');

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { User, AuthContextType } from '@/types/auth';
 import { authApi } from '@/api/services/authApi';
 import { userApi } from '@/api/services/userApi';
@@ -62,13 +62,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return res;
   };
 
-  const setAuth = (user: User, accessToken: string) => {
+  const handleSetAuth = useCallback((user: User, accessToken: string) => {
     setUser(user);
     setAccessToken(accessToken);
 
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('accessToken', accessToken);
-  };
+  }, []);
 
 
   const logout = async () => {
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     logout,
     updateUser,
     refreshProfile,
-    setAuth: (user, token) => setAuth(user, token),
+    setAuth: handleSetAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

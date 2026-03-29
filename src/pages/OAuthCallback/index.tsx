@@ -18,7 +18,7 @@ export const OAuthCallbackPage: React.FC = () => {
   const { setAuth } = useAuth();
   const [status, setStatus] = useState<'loading' | 'error'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
-  const hasAttemptedRef = import.meta.env.DEV ? useRef(false) : { current: false };
+  const hasAttemptedRef = useRef(false);
 
   useEffect(() => {
     // Prevent double execution in React 18 StrictMode

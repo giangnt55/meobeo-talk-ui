@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { authApi } from '@/api/services/authApi';
@@ -18,8 +18,13 @@ export const OAuthCallbackPage: React.FC = () => {
   const { setAuth } = useAuth();
   const [status, setStatus] = useState<'loading' | 'error'>('loading');
   const [errorMsg, setErrorMsg] = useState('');
+  const hasAttemptedRef = import.meta.env.DEV ? useRef(false) : { current: false };
 
   useEffect(() => {
+    // Prevent double execution in React 18 StrictMode
+    if (hasAttemptedRef.current) return;
+    hasAttemptedRef.current = true;
+
     const handleCallback = async () => {
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
@@ -50,6 +55,9 @@ export const OAuthCallbackPage: React.FC = () => {
         } else if (code) {
           // Case 2: Code passed from Google redirect (Frontend-first flow)
           const redirectUri = window.location.origin + window.location.pathname;
+          // Clean URL so it doesn't get retried on manual refresh
+          window.history.replaceState({}, document.title, window.location.pathname);
+          
           const authData = await authApi.googleExchange(code, state, redirectUri);
           user = authData.user;
           accessToken = authData.accessToken;

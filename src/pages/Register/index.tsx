@@ -25,6 +25,7 @@ export const RegisterPage: React.FC = () => {
 
   const [formData, setFormData] = useState({
     email: '',
+    username: '',
     name: '',
     password: '',
     confirmPassword: '',
@@ -35,6 +36,7 @@ export const RegisterPage: React.FC = () => {
 
   const [errors, setErrors] = useState({
     email: '',
+    username: '',
     name: '',
     password: '',
     confirmPassword: '',
@@ -43,6 +45,7 @@ export const RegisterPage: React.FC = () => {
   const validateForm = () => {
     const newErrors = {
       email: '',
+      username: '',
       name: '',
       password: '',
       confirmPassword: '',
@@ -66,6 +69,19 @@ export const RegisterPage: React.FC = () => {
       isValid = false;
     } else if (formData.name.trim().length < 3) {
       newErrors.name = 'Tên gì ngắn quá dạ, ráng 3 ký tự nhen';
+      isValid = false;
+    }
+
+    // Validate username
+    const usernameRegex = /^[a-zA-Z0-9_.]+$/;
+    if (!formData.username.trim()) {
+      newErrors.username = 'Cậu chưa nhập ID/Tên đăng nhập nè';
+      isValid = false;
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'ID ngắn quá dạ, ráng 3 ký tự nhen';
+      isValid = false;
+    } else if (!usernameRegex.test(formData.username)) {
+      newErrors.username = 'ID chỉ được dùng chữ cái, số, dấu chấm và gạch dưới nha';
       isValid = false;
     }
 
@@ -118,6 +134,7 @@ export const RegisterPage: React.FC = () => {
     // Prepare payload matching backend format
     const payload = {
       name: formData.name,
+      username: formData.username,
       email: formData.email,
       password: formData.password,
     };
@@ -140,6 +157,24 @@ export const RegisterPage: React.FC = () => {
             ...prev,
             ...serverErrors,
           }));
+        } else {
+          const errObj = err as Error;
+          const errMsg = errObj?.message || '';
+          if (errMsg.toLowerCase().includes('username') && errMsg.toLowerCase().includes('exist')) {
+            setErrors((prev) => ({
+              ...prev,
+              username: 'Tên đăng nhập này đã có người dùng mất rồi',
+            }));
+            error('Lỗi rồi', 'Tên đăng nhập đã tồn tại');
+          } else if (errMsg.toLowerCase().includes('email') && errMsg.toLowerCase().includes('exist')) {
+            setErrors((prev) => ({
+              ...prev,
+              email: 'Email này đã được dùng rồi',
+            }));
+            error('Lỗi rồi', 'Email đã được dùng');
+          } else {
+            error('Lỗi gòi', errMsg || 'Đã có lỗi xảy ra á, thử lại nha');
+          }
         }
       },
     });
@@ -219,6 +254,21 @@ export const RegisterPage: React.FC = () => {
                   value={formData.name}
                   onChange={handleChange}
                   error={errors.name}
+                  disabled={isPending}
+                  fullWidth
+                />
+              </div>
+
+              <div className="form-group">
+                <Input
+                  id="username"
+                  name="username"
+                  label="Tên đăng nhập (ID)"
+                  type="text"
+                  placeholder="Ví dụ: meow.muc"
+                  value={formData.username}
+                  onChange={handleChange}
+                  error={errors.username}
                   disabled={isPending}
                   fullWidth
                 />

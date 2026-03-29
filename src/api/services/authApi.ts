@@ -227,9 +227,13 @@ export const authApi = {
   /**
    * Google OAuth Code Exchange
    */
-  googleExchange: async (code: string, state: string): Promise<AuthResponse> => {
+  googleExchange: async (code: string, state: string, redirectUri?: string): Promise<AuthResponse> => {
+    const payload: Record<string, string> = { code, state };
+    if (redirectUri) {
+      payload.redirect_uri = redirectUri;
+    }
     const response = await api.post('auth/google/exchange', {
-      json: { code, state },
+      json: payload,
     }).json<ApiResponse<LoginApiResponse>>();
 
     if (response.success && response.data) {

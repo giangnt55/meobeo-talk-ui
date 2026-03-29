@@ -10,7 +10,6 @@
 .register-container {
   width: 100%;
   max-width: 75rem;
-  /* 1200px */
   display: grid;
   grid-template-columns: 1fr;
   border-radius: var(--radius-xl);
@@ -110,12 +109,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: var(--spacing-8);
+  padding: var(--spacing-6);
 }
 
 @media (min-width: 640px) {
   .register-right {
-    padding: var(--spacing-12);
+    padding: var(--spacing-8);
   }
 }
 
@@ -123,7 +122,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-8);
+  margin-bottom: var(--spacing-4);
 }
 
 .register-logo {
@@ -157,12 +156,11 @@
 
 .register-main h1 {
   color: var(--text-primary);
-  font-size: 2rem;
-  /* 32px */
+  font-size: 1.75rem;
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
 }
 
 /* Social Buttons */
@@ -170,7 +168,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
+  margin-bottom: 0;
 }
 
 .social-btn {
@@ -203,7 +201,7 @@
 .divider {
   position: relative;
   text-align: center;
-  margin: var(--spacing-6) 0;
+  margin: var(--spacing-4) 0;
 }
 
 .divider::before,
@@ -236,7 +234,7 @@
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
+  gap: var(--spacing-3);
 }
 
 .register-form .form-group {
@@ -251,7 +249,7 @@
 .submit-btn {
   width: 100%;
   height: 3rem;
-  margin-top: var(--spacing-2);
+  margin-top: 0;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
 }

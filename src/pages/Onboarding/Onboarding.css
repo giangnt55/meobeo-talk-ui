@@ -181,30 +181,30 @@
   gap: 1.5rem;
 }
 
-.form-group {
+.onboarding-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.textarea-header {
+.onboarding-form .textarea-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.form-label {
+.onboarding-form .form-label {
   font-size: 1rem;
   font-weight: 600;
   color: #1e293b;
 }
 
-.char-count {
+.onboarding-form .char-count {
   font-size: 0.75rem;
   color: #94a3b8;
 }
 
-.form-textarea {
+.onboarding-form .form-textarea {
   width: 100%;
   min-height: 8rem;
   padding: 0.75rem 1rem;
@@ -216,7 +216,7 @@
   transition: border-color 0.2s;
 }
 
-.form-textarea:focus {
+.onboarding-form .form-textarea:focus {
   outline: none;
   border-color: #ad2bee;
   box-shadow: 0 0 0 3px rgba(173, 43, 238, 0.1);

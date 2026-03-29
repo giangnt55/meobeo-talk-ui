@@ -49,7 +49,8 @@ export const OAuthCallbackPage: React.FC = () => {
           };
         } else if (code) {
           // Case 2: Code passed from Google redirect (Frontend-first flow)
-          const authData = await authApi.googleExchange(code, state);
+          const redirectUri = window.location.origin + window.location.pathname;
+          const authData = await authApi.googleExchange(code, state, redirectUri);
           user = authData.user;
           accessToken = authData.accessToken;
         } else {

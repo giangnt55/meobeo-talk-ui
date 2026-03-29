@@ -75,7 +75,7 @@ export const profileApi = {
         formData.append('avatar', file);
 
         const response = await api
-            .post('users/me/avatar', { body: formData })
+            .put('users/me/avatar', { body: formData })
             .json<ApiResponse<{ avatar_url: string }>>();
 
         if (response.success && response.data) {

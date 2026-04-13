@@ -112,8 +112,8 @@ export const feedApi = {
             .get('feed/following', { searchParams })
             .json<ApiResponse<Blog[]> & { meta: FeedResponse['meta'] }>();
 
-        if (res.success && res.data) {
-            return { posts: res.data, meta: res.meta! };
+        if (res.success) {
+            return { posts: res.data || [], meta: res.meta! };
         }
         throw new Error(res.message || 'Failed to load following feed');
     },
@@ -139,8 +139,8 @@ export const feedApi = {
             .get('feed/trending', { searchParams })
             .json<ApiResponse<TrendingPost[]> & { meta: TrendingFeedResponse['meta']; window: TrendingWindow }>();
 
-        if (res.success && res.data) {
-            return { posts: res.data, meta: res.meta!, window: res.window ?? 'week' };
+        if (res.success) {
+            return { posts: res.data || [], meta: res.meta!, window: res.window ?? 'week' };
         }
         throw new Error(res.message || 'Failed to load trending feed');
     },
@@ -161,8 +161,8 @@ export const feedApi = {
             .get('feed/collections', { searchParams })
             .json<ApiResponse<Collection[]> & { meta: CollectionsFeedResponse['meta'] }>();
 
-        if (res.success && res.data) {
-            return { collections: res.data, meta: res.meta! };
+        if (res.success) {
+            return { collections: res.data || [], meta: res.meta! };
         }
         throw new Error(res.message || 'Failed to load collections');
     },
@@ -182,8 +182,8 @@ export const feedApi = {
             .get('search', { searchParams })
             .json<ApiResponse<SearchPost[]> & { meta: SearchResponse['meta']; query: string }>();
 
-        if (res.success && res.data) {
-            return { posts: res.data, meta: res.meta!, query: res.query };
+        if (res.success) {
+            return { posts: res.data || [], meta: res.meta!, query: res.query };
         }
         throw new Error(res.message || 'Failed to search posts');
     },

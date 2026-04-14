@@ -172,7 +172,7 @@ export const ProfilePage: React.FC = () => {
         return <ProfileNotFound message={profileError || 'Không tìm thấy hồ sơ.'} onHome={() => navigate('/')} />;
 
     const displayName = profileUser.display_name || profileUser.full_name || profileUser.username;
-    const avatar = profileUser.avatar;
+    const avatar = profileUser.avatar_url;
 
     return (
         <div className="relative flex min-h-screen flex-col bg-[#f8f7f6] dark:bg-[#221810] text-slate-900 dark:text-slate-100 font-display">

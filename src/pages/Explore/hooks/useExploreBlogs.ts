@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Blog } from '@/api/services/blogApi';
 import { exploreApi } from '@/api/services/exploreApi';
 
-export type ExploreTab = 'Trending' | 'Recent' | 'Editors’ Choice';
+export type ExploreTab = 'Trending' | 'Recent' | "Editors' Choice";
 
 interface UseExploreBlogsReturn {
     blogs: Blog[];
@@ -18,7 +18,7 @@ interface UseExploreBlogsReturn {
 }
 
 export const useExploreBlogs = (): UseExploreBlogsReturn => {
-    const tabs: ExploreTab[] = ['Trending', 'Recent', 'Editors’ Choice'];
+    const tabs: ExploreTab[] = ['Trending', 'Recent', "Editors' Choice"];
     const [activeTab, setActiveTab] = useState<ExploreTab>('Trending');
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [loading, setLoading] = useState(true);

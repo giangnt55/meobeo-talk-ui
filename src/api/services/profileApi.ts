@@ -7,7 +7,7 @@ export interface UserProfile {
     email: string;
     full_name: string;
     display_name?: string;
-    avatar?: string;
+    avatar_url?: string;
     bio?: string;
     post_count: number;
     follower_count: number;

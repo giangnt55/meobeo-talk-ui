@@ -18,7 +18,7 @@ export const exploreApi = {
      * Gets a combined feed of Blogs and Memories from the backend Explore endpoint.
      */
     getExploreFeed: async (
-        tab: 'Trending' | 'Recent' | 'Editors’ Choice',
+        tab: 'Trending' | 'Recent' | "Editors' Choice",
         page: number,
         limit: number
     ): Promise<ExploreFeedResponse> => {

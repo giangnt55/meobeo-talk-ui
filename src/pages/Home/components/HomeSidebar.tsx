@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaHome, FaCompass, FaBell, FaEnvelope, FaBookmark, FaUser } from 'react-icons/fa';
-import { IoChatbubble } from 'react-icons/io5';
+
 import './HomeSidebar.css';
 
 const HomeSidebar: React.FC = () => {
@@ -10,8 +10,7 @@ const HomeSidebar: React.FC = () => {
                 <div className="sidebar-top">
                     {/* Logo and Brand */}
                     <div className="sidebar-brand">
-                        <IoChatbubble className="brand-icon" />
-                        <h1 className="brand-title">Meobeo Talk</h1>
+                        <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="brand-icon" />
                     </div>
 
                     <div className="sidebar-nav-section">

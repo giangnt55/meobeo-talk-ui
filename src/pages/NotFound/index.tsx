@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button } from '@/components/common/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import './NotFound.css';
 
 export const NotFoundPage: React.FC = () => {
+    useDocumentTitle('Trang không tồn tại');
     const navigate = useNavigate();
 
     return (

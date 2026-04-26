@@ -30,8 +30,9 @@
 }
 
 .brand-icon {
-    color: var(--primary);
-    font-size: var(--font-size-3xl);
+    width: 8.5rem;
+    height: 3rem;
+    object-fit: contain;
 }
 
 .brand-title {

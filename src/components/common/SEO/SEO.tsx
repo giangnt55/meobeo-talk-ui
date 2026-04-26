@@ -11,11 +11,14 @@ interface SEOProps {
     modifiedTime?: string;
 }
 
+const SITE_NAME = 'MeowMuc';
+const SITE_URL = 'https://meowmuc.com';
+
 const DEFAULT_SEO = {
-    title: 'MeowMuc',
+    title: `${SITE_NAME} – Viết blog, lưu kỷ niệm, tạo hành trình ký ức`,
     description: 'Không phải chuyện gì cũng nhớ, nên phải viết ra. MeowMuc giúp bạn viết blog, lưu kỷ niệm và tạo hành trình ký ức để mai này đọc lại còn cười.',
-    image: 'https://meobeo-talk-ui.pages.dev/logo/img-totuong.jpg',
-    url: 'https://meobeo-talk-ui.pages.dev/',
+    image: `${SITE_URL}/logo/img-totuong.jpg`,
+    url: SITE_URL,
     type: 'website' as const,
 };
 
@@ -30,7 +33,7 @@ export const SEO: React.FC<SEOProps> = ({
     modifiedTime,
 }) => {
     const seo = {
-        title: title ? `${title} | MeowMuc` : DEFAULT_SEO.title,
+        title: title ? `${title} | ${SITE_NAME}` : DEFAULT_SEO.title,
         description: description || DEFAULT_SEO.description,
         image: image || DEFAULT_SEO.image,
         url: url || DEFAULT_SEO.url,
@@ -45,6 +48,8 @@ export const SEO: React.FC<SEOProps> = ({
             <link rel="canonical" href={seo.url} />
 
             {/* Open Graph Meta Tags */}
+            <meta property="og:site_name" content={SITE_NAME} />
+            <meta property="og:locale" content="vi_VN" />
             <meta property="og:url" content={seo.url} />
             <meta property="og:type" content={seo.type} />
             <meta property="og:title" content={seo.title} />
@@ -69,7 +74,7 @@ export const SEO: React.FC<SEOProps> = ({
 
             {/* Twitter Meta Tags */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta property="twitter:domain" content="meobeo-talk-ui.pages.dev" />
+            <meta property="twitter:domain" content="meowmuc.com" />
             <meta property="twitter:url" content={seo.url} />
             <meta name="twitter:title" content={seo.title} />
             <meta name="twitter:description" content={seo.description} />

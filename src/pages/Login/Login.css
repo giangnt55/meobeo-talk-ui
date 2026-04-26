@@ -6,32 +6,52 @@
   overflow-x: hidden;
 }
 
-.login-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-dropdown);
-  padding: var(--spacing-5);
+/* Logo Header (inside form section, matching register pattern) */
+.login-form-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
 }
 
 .login-brand {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
-  color: var(--text-primary);
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
 }
 
-.brand-icon {
-  width: var(--spacing-6);
-  height: var(--spacing-6);
+.login-brand:hover {
+  opacity: 0.8;
+}
+
+.login-logo-img {
+  width: 8.5rem;
+  height: 3rem;
+  object-fit: contain;
+}
+
+.login-signup-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.login-signup-link span {
+  color: var(--text-secondary);
+}
+
+.login-signup-link a {
   color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
-.brand-name {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin: 0;
+.login-signup-link a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
 }
 
 .login-main {
@@ -95,7 +115,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: var(--spacing-8) var(--spacing-12);
+  padding: var(--spacing-6) var(--spacing-6);
 }
 
 .login-form-header {
@@ -267,6 +287,16 @@
 
   .social-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .login-signup-link {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  .login-signup-link span {
+    display: none;
   }
 }
 

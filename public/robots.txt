@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /auth/callback
+Disallow: /onboarding/
+Disallow: /settings/
+Disallow: /verify-email
+Disallow: /welcome
+
+Sitemap: https://meowmuc.com/sitemap.xml

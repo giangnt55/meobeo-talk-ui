@@ -49,16 +49,15 @@
 }
 
 .navbar-logo {
-  width: 2.25rem;
-  /* size-9 */
-  height: 2.25rem;
-  color: var(--primary);
+  width: 8.5rem;
+  height: 3rem;
   flex-shrink: 0;
 }
 
-.navbar-logo svg {
+.navbar-logo img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .navbar-title {

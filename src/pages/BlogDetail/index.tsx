@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SEO } from '@/components/common/SEO/SEO';
 import { blogApi, getContentPreview, type Blog } from '@/api/services/blogApi';
+import DOMPurify from 'dompurify';
 import { useAuth } from '@/hooks/useAuth';
 import { CommentSection } from './components/CommentSection';
 import './BlogDetail.css';
@@ -195,7 +196,7 @@ const BlogDetailPage: React.FC = () => {
                         </div>
                     )}
 
-                    <div className="article-body" dangerouslySetInnerHTML={{ __html: blog.content_html }} />
+                    <div className="article-body" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content_html) }} />
 
                     {blog.tags && blog.tags.length > 0 && (
                         <div className="article-tags">

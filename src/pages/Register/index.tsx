@@ -6,6 +6,7 @@ import { Input } from '@/components/common/Input/Input';
 import { getFormErrors } from '@/utils/apiErrorHandler';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import './Register.css';
 
 // Google Icon Component
@@ -19,6 +20,7 @@ const GoogleIcon = () => (
 );
 
 export const RegisterPage: React.FC = () => {
+  useDocumentTitle('Đăng ký');
   const navigate = useNavigate();
   const { mutate: signup, isPending } = useSignup();
   const { toasts, success, error, removeToast } = useToast();
@@ -215,7 +217,9 @@ export const RegisterPage: React.FC = () => {
         {/* Right side - Form */}
         <div className="register-right">
           <header className="register-header">
-            <h2 className="register-logo">Meobeo Talk</h2>
+            <div className="register-logo">
+              <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="register-logo-img" />
+            </div>
             <div className="register-login-link">
               <span>Có tài khoản rồi à?</span>
               <Link to="/login">Vào nhà thôi</Link>

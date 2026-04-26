@@ -127,9 +127,18 @@
 }
 
 .verify-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
+}
+
+.verify-logo-img {
+    width: 8.5rem;
+    height: 3rem;
+    object-fit: contain;
 }
 
 .verify-main h1 {

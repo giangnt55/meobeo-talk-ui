@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button/Button';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import './About.css';
 
 export const AboutPage: React.FC = () => {
+    useDocumentTitle('Về Tụi Mình');
     const navigate = useNavigate();
 
     return (

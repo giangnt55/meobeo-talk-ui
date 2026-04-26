@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { blogApi, getContentPreview, type Blog } from '@/api/services/blogApi';
 import { BLOG_CATEGORIES } from '@/constants/blog';
 import { useAuth } from '@/hooks/useAuth';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const BlogPage: React.FC = () => {
+    useDocumentTitle('Blog');
     const navigate = useNavigate();
     const { user } = useAuth();
     const [activeCategory, setActiveCategory] = useState('Tất cả');

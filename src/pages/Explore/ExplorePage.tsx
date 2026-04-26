@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getContentPreview } from '@/api/services/blogApi';
 import { useExploreBlogs } from './hooks/useExploreBlogs';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const ExplorePage: React.FC = () => {
+    useDocumentTitle('Khám Phá');
     const navigate = useNavigate();
     const [showSignupPopup] = useState(true);
 

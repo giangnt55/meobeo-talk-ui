@@ -4,9 +4,11 @@ import { Button } from '@/components/common/Button/Button';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/common/ToastContainer/ToastContainer';
 import { useAuth } from '@/hooks/useAuth';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import './VerifyEmail.css';
 
 export const VerifyEmailPage: React.FC = () => {
+    useDocumentTitle('Xác thực Email');
     const navigate = useNavigate();
     const location = useLocation();
     const { toasts, success, error, removeToast } = useToast();
@@ -171,7 +173,9 @@ export const VerifyEmailPage: React.FC = () => {
                 {/* Right side - OTP Form */}
                 <div className="verify-right">
                     <header className="verify-header">
-                        <h2 className="verify-logo">Meobeo Talk</h2>
+                        <div className="verify-logo">
+                            <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="verify-logo-img" />
+                        </div>
                         <Button
                             variant="outline"
                             onClick={handleBackToSignup}

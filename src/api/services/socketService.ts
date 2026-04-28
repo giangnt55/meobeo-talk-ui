@@ -6,10 +6,15 @@ type MessageHandler = (data: unknown) => void;
 class SocketService {
     private socket: WebSocket | null = null;
     private messageHandlers: MessageHandler[] = [];
-    private reconnectInterval: number = 5000;
     private shouldReconnect: boolean = false;
     private reconnectTimeoutId: number | null = null;
     private currentToken: string = '';
+
+    // Exponential backoff settings
+    private reconnectAttempts: number = 0;
+    private readonly baseReconnectInterval: number = 3000;  // 3s initial
+    private readonly maxReconnectInterval: number = 30000;  // 30s max
+    private readonly maxReconnectAttempts: number = 10;      // give up after 10 attempts
 
     connect(token: string) {
         if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
@@ -45,10 +50,19 @@ class SocketService {
         }
         
         console.log('Connecting to WebSocket:', wsUrl.replace(/token=[^&]+/, 'token=***'));
-        this.socket = new WebSocket(wsUrl);
+
+        try {
+            this.socket = new WebSocket(wsUrl);
+        } catch (err) {
+            console.warn('WebSocket construction failed:', err);
+            this.scheduleReconnect();
+            return;
+        }
 
         this.socket.onopen = () => {
             console.log('✅ WebSocket connected successfully');
+            // Reset backoff on successful connection
+            this.reconnectAttempts = 0;
         };
 
         this.socket.onmessage = (event) => {
@@ -68,19 +82,39 @@ class SocketService {
             
             // Only attempt to reconnect if shouldReconnect is true (unexpected disconnect)
             if (this.shouldReconnect) {
-                console.log(`Scheduling reconnection in ${this.reconnectInterval / 1000}s...`);
-                this.reconnectTimeoutId = window.setTimeout(() => {
-                    console.log('Attempting to reconnect...');
-                    this.connect(this.currentToken);
-                }, this.reconnectInterval);
+                this.scheduleReconnect();
             } else {
                 console.log('Reconnection disabled - not attempting to reconnect');
             }
         };
 
         this.socket.onerror = (error) => {
-            console.error('❌ WebSocket error', error);
+            // Only warn, don't error - the onclose handler will handle reconnection
+            console.warn('⚠️ WebSocket connection issue', error);
         };
+    }
+
+    private scheduleReconnect() {
+        if (!this.shouldReconnect) return;
+
+        if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            console.warn(`WebSocket: giving up after ${this.maxReconnectAttempts} attempts. Notifications will use REST API only.`);
+            this.shouldReconnect = false;
+            return;
+        }
+
+        // Exponential backoff: 3s, 6s, 12s, 24s, 30s, 30s, ...
+        const delay = Math.min(
+            this.baseReconnectInterval * Math.pow(2, this.reconnectAttempts),
+            this.maxReconnectInterval
+        );
+        this.reconnectAttempts++;
+
+        console.log(`Scheduling reconnection attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${delay / 1000}s...`);
+        this.reconnectTimeoutId = window.setTimeout(() => {
+            console.log(`Attempting to reconnect (attempt ${this.reconnectAttempts})...`);
+            this.connect(this.currentToken);
+        }, delay);
     }
 
     disconnect() {
@@ -88,6 +122,9 @@ class SocketService {
         
         // Disable automatic reconnection
         this.shouldReconnect = false;
+        
+        // Reset reconnect state
+        this.reconnectAttempts = 0;
         
         // Clear any pending reconnection timers
         if (this.reconnectTimeoutId !== null) {

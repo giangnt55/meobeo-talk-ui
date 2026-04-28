@@ -222,13 +222,12 @@ export const RegisterPage: React.FC = () => {
             </div>
             <div className="register-login-link">
               <span>Có tài khoản rồi à?</span>
-              <Link to="/login" className="login-link">Đăng Nhập Nè</Link>
+              <Link to="/login">Vào nhà thôi</Link>
             </div>
           </header>
 
           <main className="register-main">
             <h1>Tạo Tài Khoản Mới</h1>
-            <p className="form-subtitle">Tham gia và bắt đầu hành trình tuyệt vời cùng tụi mình nha</p>
 
             <div className="social-buttons">
               <Button
@@ -245,7 +244,7 @@ export const RegisterPage: React.FC = () => {
             </div>
 
             <div className="divider">
-              <span className="divider-text">hoặc đăng ký bằng email nha</span>
+              <span>HOẶC</span>
             </div>
 
             <form onSubmit={handleSubmit} className="register-form">
@@ -255,7 +254,7 @@ export const RegisterPage: React.FC = () => {
                   name="name"
                   label="Tên của bạn"
                   type="text"
-                  placeholder="Chọn một cái tên thật độc đáo nghen"
+                  placeholder="Nhập tên nè"
                   value={formData.name}
                   onChange={handleChange}
                   error={errors.name}
@@ -283,7 +282,7 @@ export const RegisterPage: React.FC = () => {
                 <Input
                   id="email"
                   name="email"
-                  label="Địa chỉ Email"
+                  label="Email"
                   type="email"
                   placeholder="Nhập email của bạn"
                   value={formData.email}
@@ -380,9 +379,9 @@ export const RegisterPage: React.FC = () => {
               </Button>
 
               <p className="terms-text">
-                <span className="checkbox-text">
-                  Tớ đồng ý với <a href="/terms">Điều Khoản Dịch Vụ</a> và <a href="/privacy">Chính Sách Bảo Mật</a> của Meowmuc nha
-                </span>
+                Tạo tài khoản là bạn đồng ý với{' '}
+                <Link to="/terms">Điều khoản</Link> và{' '}
+                <Link to="/privacy">Chính sách</Link> của tụi mình rồi nha.
               </p>
             </form>
           </main>

@@ -59,9 +59,10 @@ export const api = ky.create({
   timeout: 30000,
   credentials: 'include',
   retry: {
-    limit: 2,
+    limit: 3,
     methods: ['get', 'put', 'delete'],
     statusCodes: [408, 413, 429, 500, 502, 503, 504],
+    delay: (attemptCount) => Math.min(1000 * Math.pow(2, attemptCount - 1), 8000),
   },
   hooks: {
     beforeRequest: [

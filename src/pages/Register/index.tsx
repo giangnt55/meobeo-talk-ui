@@ -207,9 +207,9 @@ export const RegisterPage: React.FC = () => {
           </div>
 
           <div className="register-welcome">
-            <h1>Chào mừng đến với Meobeo Talk</h1>
+            <h1>Chào mừng cậu đến nhà chung Meowmuc!</h1>
             <p>
-              Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của bạn vang xa.
+              Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của cậu bay xa.
             </p>
           </div>
         </div>
@@ -218,16 +218,17 @@ export const RegisterPage: React.FC = () => {
         <div className="register-right">
           <header className="register-header">
             <div className="register-logo">
-              <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="register-logo-img" />
+              <img src="/logo/logo_meow.png" alt="Meowmuc" className="register-logo-img" />
             </div>
             <div className="register-login-link">
               <span>Có tài khoản rồi à?</span>
-              <Link to="/login">Vào nhà thôi</Link>
+              <Link to="/login" className="login-link">Đăng Nhập Nè</Link>
             </div>
           </header>
 
           <main className="register-main">
             <h1>Tạo Tài Khoản Mới</h1>
+            <p className="form-subtitle">Tham gia và bắt đầu hành trình tuyệt vời cùng tụi mình nha</p>
 
             <div className="social-buttons">
               <Button
@@ -244,7 +245,7 @@ export const RegisterPage: React.FC = () => {
             </div>
 
             <div className="divider">
-              <span>HOẶC</span>
+              <span className="divider-text">hoặc đăng ký bằng email nha</span>
             </div>
 
             <form onSubmit={handleSubmit} className="register-form">
@@ -254,7 +255,7 @@ export const RegisterPage: React.FC = () => {
                   name="name"
                   label="Tên của bạn"
                   type="text"
-                  placeholder="Nhập tên nè"
+                  placeholder="Chọn một cái tên thật độc đáo nghen"
                   value={formData.name}
                   onChange={handleChange}
                   error={errors.name}
@@ -282,7 +283,7 @@ export const RegisterPage: React.FC = () => {
                 <Input
                   id="email"
                   name="email"
-                  label="Email"
+                  label="Địa chỉ Email"
                   type="email"
                   placeholder="Nhập email của bạn"
                   value={formData.email}
@@ -379,9 +380,9 @@ export const RegisterPage: React.FC = () => {
               </Button>
 
               <p className="terms-text">
-                Tạo tài khoản là bạn đồng ý với{' '}
-                <Link to="/terms">Điều khoản</Link> và{' '}
-                <Link to="/privacy">Chính sách</Link> của tụi mình rồi nha.
+                <span className="checkbox-text">
+                  Tớ đồng ý với <a href="/terms">Điều Khoản Dịch Vụ</a> và <a href="/privacy">Chính Sách Bảo Mật</a> của Meowmuc nha
+                </span>
               </p>
             </form>
           </main>

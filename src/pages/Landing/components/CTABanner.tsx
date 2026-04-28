@@ -6,7 +6,7 @@ const CTABanner = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Thank you! We'll notify ${email} when the app launches.`);
+    alert(`Cảm ơn cậu nha! Tụi mình sẽ gửi email tới ${email} ngay khi ứng dụng ra mắt nè.`);
     setEmail("");
   };
 
@@ -15,24 +15,24 @@ const CTABanner = () => {
       <div className="cta-content">
 
         <div className="cta-text">
-          <p className="cta-label">EXCITING NEWS</p>
-          <h2 className="cta-title">Meobeo Mobile App</h2>
-          <p className="cta-subtitle">Coming Soon!</p>
+          <p className="cta-label">TIN VUI CHẤN ĐỘNG</p>
+          <h2 className="cta-title">App Meowmuc Bỏ Túi</h2>
+          <p className="cta-subtitle">Sắp Ra Mắt Rồi Đó!</p>
           <p className="cta-description">
-            Sign up to be the first to know when we launch!
+            Đăng ký ngay để nhận tin nhắn lúc tụi mình ra mắt nha!
           </p>
         </div>
 
         <form className="cta-form" onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Để lại email của cậu nè"
             className="email-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button className="btn-dark">Notify Me</button>
+          <button className="btn-dark">Báo Cho Tớ Nhé</button>
         </form>
 
       </div>

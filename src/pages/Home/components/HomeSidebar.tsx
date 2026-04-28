@@ -10,7 +10,7 @@ const HomeSidebar: React.FC = () => {
                 <div className="sidebar-top">
                     {/* Logo and Brand */}
                     <div className="sidebar-brand">
-                        <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="brand-icon" />
+                        <img src="/logo/logo_meow.png" alt="Meowmuc" className="brand-icon" />
                     </div>
 
                     <div className="sidebar-nav-section">

@@ -81,7 +81,7 @@ export const MemoryCreatePage: React.FC = () => {
   return (
     <>
       <SEO
-        title="New Memory - MeoBeo Talk"
+        title="Thêm Ký Ức Mới - Meowmuc"
         description="Create a new memory"
       />
       <main className="memory-create-container">

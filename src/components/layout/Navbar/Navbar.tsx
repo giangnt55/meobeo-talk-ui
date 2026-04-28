@@ -202,7 +202,7 @@ export const Navbar: React.FC = () => {
             {/* Logo */}
             <Link to="/" className="navbar-brand">
               <div className="navbar-logo">
-                <img src="/logo/logo_meow.png" alt="Meobeo Talk" />
+                <img src="/logo/logo_meow.png" alt="Meowmuc" />
               </div>
             </Link>
 

@@ -18,6 +18,11 @@ export interface User {
     last_seen_at?: string;
 }
 
+export interface CommunityStats {
+    total_users: number;
+    recent_avatars: string[];
+}
+
 export const userApi = {
     /**
      * Get current user's profile
@@ -43,5 +48,18 @@ export const userApi = {
         }
 
         throw new Error(response.message || 'Failed to fetch user');
+    },
+
+    /**
+     * Get community stats for landing page (public, no auth)
+     */
+    getCommunityStats: async (): Promise<CommunityStats> => {
+        const response = await api.get('stats/community').json<ApiResponse<CommunityStats>>();
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+
+        throw new Error(response.message || 'Failed to fetch community stats');
     },
 };

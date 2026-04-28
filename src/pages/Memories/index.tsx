@@ -122,7 +122,7 @@ export const MemoriesPage: React.FC = () => {
     return (
         <div className="memories-page">
             <SEO
-                title="Your Memories - MeoBeo Talk"
+                title="Ký Ức Của Cậu - Meowmuc"
                 description="Nơi lưu giữ những kỷ niệm đáng nhớ."
             />
 

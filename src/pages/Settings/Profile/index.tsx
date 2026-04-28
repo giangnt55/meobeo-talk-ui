@@ -11,7 +11,7 @@ export const ProfileSettingsPage: React.FC = () => {
             {/* Sidebar */}
             <aside className="w-64 flex-shrink-0 hidden md:block">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 px-4">
-                    Settings
+                    Cài Đặt
                 </h3>
                 <nav className="space-y-1">
                     <button
@@ -22,7 +22,7 @@ export const ProfileSettingsPage: React.FC = () => {
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">person</span>
-                        Profile Info
+                        Thông tin hồ sơ
                     </button>
                     <button
                         onClick={() => setActiveTab('account')}
@@ -32,7 +32,7 @@ export const ProfileSettingsPage: React.FC = () => {
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">manage_accounts</span>
-                        Account Settings
+                        Cài đặt tài khoản
                     </button>
                     <button
                         onClick={() => setActiveTab('privacy')}
@@ -42,7 +42,7 @@ export const ProfileSettingsPage: React.FC = () => {
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">lock</span>
-                        Privacy
+                        Quyền riêng tư
                     </button>
                     <button
                         onClick={() => setActiveTab('notifications')}
@@ -52,13 +52,13 @@ export const ProfileSettingsPage: React.FC = () => {
                             }`}
                     >
                         <span className="material-symbols-outlined text-xl">notifications</span>
-                        Notifications
+                        Thông báo
                     </button>
 
                     <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800">
                         <button className="flex w-full items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all text-left text-sm font-semibold">
                             <span className="material-symbols-outlined text-xl">logout</span>
-                            Sign Out
+                            Đăng xuất
                         </button>
                     </div>
                 </nav>
@@ -69,7 +69,7 @@ export const ProfileSettingsPage: React.FC = () => {
             {activeTab === 'account' && <AccountTab />}
             {(activeTab === 'privacy' || activeTab === 'notifications') && (
                 <div className="flex-1 max-w-3xl flex items-center justify-center text-slate-400">
-                    Coming Soon / In Development
+                    Tính năng này tụi mình đang xây nè
                 </div>
             )}
         </div>
@@ -95,7 +95,7 @@ const ProfileTab: React.FC = () => {
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                         <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-xl border border-white/30 transition-all font-semibold text-sm cursor-pointer">
                             <span className="material-symbols-outlined text-lg">photo_camera</span>
-                            Change Cover
+                            Đổi ảnh bìa
                         </button>
                     </div>
                 </div>
@@ -117,43 +117,43 @@ const ProfileTab: React.FC = () => {
                         </div>
                         <div className="pb-2">
                             <button className="text-sm font-bold text-primary hover:underline cursor-pointer bg-transparent border-none p-0">
-                                Change Avatar
+                                Đổi ảnh đại diện
                             </button>
-                            <p className="text-xs text-slate-400 mt-1">JPG, GIF or PNG. Max size of 800K</p>
+                            <p className="text-xs text-slate-400 mt-1">JPG, GIF hoặc PNG nhen. Tối đa 800K thui</p>
                         </div>
                     </div>
 
                     <div className="space-y-8">
                         <div className="space-y-2">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                                Display Name
+                                Tên hiển thị
                             </label>
                             <input
                                 className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100"
-                                placeholder="Enter your display name"
+                                placeholder="Nhập tên hiển thị của cậu"
                                 type="text"
-                                defaultValue="MeoBeo"
+                                defaultValue="Meowmuc"
                             />
                         </div>
 
                         <div className="space-y-2">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                                Poetic Bio
+                                Vài dòng giới thiệu
                             </label>
                             <textarea
                                 className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 focus:ring-primary focus:border-primary transition-all text-slate-900 dark:text-slate-100 resize-none italic"
-                                placeholder="Share a piece of your soul..."
+                                placeholder="Kể một chút về cậu đi..."
                                 rows={3}
-                                defaultValue={'"Collecting moments, one story at a time."'}
+                                defaultValue={'"Gom nhặt từng khoảnh khắc đáng yêu."'}
                             />
                             <p className="text-[10px] text-slate-400 text-right uppercase tracking-widest font-bold">
-                                42 / 160 characters
+                                42 / 160 ký tự
                             </p>
                         </div>
 
                         <div className="space-y-4">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                                Social Links
+                                Liên kết mạng xã hội
                             </label>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="relative">
@@ -162,9 +162,9 @@ const ProfileTab: React.FC = () => {
                                     </div>
                                     <input
                                         className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 focus:ring-primary focus:border-primary transition-all text-sm text-slate-900 dark:text-slate-100"
-                                        placeholder="Website URL"
+                                        placeholder="Link Website"
                                         type="text"
-                                        defaultValue="https://meobeo.talk/journal"
+                                        defaultValue="https://meowmuc.com/journal"
                                     />
                                 </div>
                                 <div className="relative">
@@ -175,9 +175,9 @@ const ProfileTab: React.FC = () => {
                                     </div>
                                     <input
                                         className="w-full bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 focus:ring-primary focus:border-primary transition-all text-sm text-slate-900 dark:text-slate-100"
-                                        placeholder="Instagram handle"
+                                        placeholder="Tên Instagram"
                                         type="text"
-                                        defaultValue="@meobeo_moments"
+                                        defaultValue="@meowmuc_moments"
                                     />
                                 </div>
                             </div>
@@ -185,10 +185,10 @@ const ProfileTab: React.FC = () => {
 
                         <div className="pt-6 flex items-center justify-end gap-4 border-t border-slate-100 dark:border-slate-800">
                             <button className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors bg-transparent border-none cursor-pointer">
-                                Cancel
+                                Hủy
                             </button>
                             <button className="px-8 py-2.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 border-none cursor-pointer">
-                                Save Changes
+                                Lưu Thay Đổi
                             </button>
                         </div>
                     </div>
@@ -205,23 +205,23 @@ const AccountTab: React.FC = () => {
     return (
         <div className="flex-1 max-w-2xl">
             <header className="mb-10">
-                <h1 className="text-3xl font-bold text-deep-espresso dark:text-white">Account Settings</h1>
-                <p className="text-slate-500 mt-2">Manage your account details and privacy preferences.</p>
+                <h1 className="text-3xl font-bold text-deep-espresso dark:text-white">Cài Đặt Tài Khoản</h1>
+                <p className="text-slate-500 mt-2">Chỉnh sửa thông tin tài khoản và quyền riêng tư của cậu nè.</p>
             </header>
 
             <div className="space-y-12">
                 {/* Email Address */}
                 <section>
-                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Email Address</h2>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Địa Chỉ Email</h2>
                     <div className="space-y-4">
                         <div className="relative">
                             <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                Current Email
+                                Email hiện tại
                             </label>
                             <input
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
                                 type="email"
-                                defaultValue="meobeo.talks@gmail.com"
+                                defaultValue="meowmuc@gmail.com"
                             />
                         </div>
                     </div>
@@ -229,11 +229,11 @@ const AccountTab: React.FC = () => {
 
                 {/* Password Change */}
                 <section>
-                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Password Change</h2>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Đổi Mật Khẩu</h2>
                     <div className="space-y-4">
                         <div className="relative">
                             <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                Current Password
+                                Mật khẩu hiện tại
                             </label>
                             <input
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
@@ -244,21 +244,21 @@ const AccountTab: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="relative">
                                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                    New Password
+                                    Mật khẩu mới
                                 </label>
                                 <input
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
-                                    placeholder="Enter new password"
+                                    placeholder="Nhập mật khẩu mới nha"
                                     type="password"
                                 />
                             </div>
                             <div className="relative">
                                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                                    Confirm Password
+                                    Xác nhận mật khẩu
                                 </label>
                                 <input
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary text-slate-900 dark:text-slate-100"
-                                    placeholder="Confirm new password"
+                                    placeholder="Nhập lại mật khẩu mới nha"
                                     type="password"
                                 />
                             </div>
@@ -269,11 +269,11 @@ const AccountTab: React.FC = () => {
                 {/* Language Preferences */}
                 <section>
                     <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">
-                        Language Preferences
+                        Ngôn Ngữ
                     </h2>
                     <div className="relative">
                         <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                            Display Language
+                            Ngôn ngữ hiển thị
                         </label>
                         <select className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm focus:ring-primary focus:border-primary appearance-none text-slate-900 dark:text-slate-100">
                             <option value="en">English (US)</option>
@@ -286,15 +286,15 @@ const AccountTab: React.FC = () => {
 
                 {/* Privacy */}
                 <section className="pt-8 border-t border-slate-200 dark:border-slate-800">
-                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Privacy</h2>
+                    <h2 className="text-lg font-bold text-deep-espresso dark:text-slate-200 mb-6">Quyền Riêng Tư</h2>
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
-                                    Private Account
+                                    Tài khoản riêng tư
                                 </h4>
                                 <p className="text-xs text-slate-500 mt-1 m-0">
-                                    Only followers can see your stories and memories.
+                                    Chỉ người theo dõi mới xem được bài viết của cậu.
                                 </p>
                             </div>
                             <input className="custom-toggle" type="checkbox" />
@@ -302,10 +302,10 @@ const AccountTab: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
-                                    Show Mood Tags on Profile
+                                    Hiện Nhãn Cảm Xúc Trên Hồ Sơ
                                 </h4>
                                 <p className="text-xs text-slate-500 mt-1 m-0">
-                                    Display your recent emotional journey markers.
+                                    Khoe những cung bậc cảm xúc gần đây của cậu.
                                 </p>
                             </div>
                             <input className="custom-toggle" type="checkbox" defaultChecked />
@@ -313,10 +313,10 @@ const AccountTab: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 m-0">
-                                    Allow Comments from Everyone
+                                    Ai Cũng Được Bình Luận
                                 </h4>
                                 <p className="text-xs text-slate-500 mt-1 m-0">
-                                    Enable interaction from the whole community.
+                                    Cả nhà chung đều có thể trò chuyện với cậu.
                                 </p>
                             </div>
                             <input className="custom-toggle" type="checkbox" defaultChecked />
@@ -328,7 +328,7 @@ const AccountTab: React.FC = () => {
                 <div className="pt-8 flex justify-end sticky bottom-6 z-10">
                     <button className="px-10 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-95 flex items-center gap-2 border-none cursor-pointer">
                         <span className="material-symbols-outlined text-xl">check_circle</span>
-                        Save Changes
+                        Lưu Thay Đổi
                     </button>
                 </div>
             </div>

@@ -151,7 +151,7 @@ export const CreateJourney: React.FC = () => {
     return (
         <>
             <SEO
-                title="Create New Journey - MeoBeo Talk"
+                title="Tạo Hành Trình Mới - Meowmuc"
                 description="Create a new memory journey"
             />
             <main className="create-journey-container">

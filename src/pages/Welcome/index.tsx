@@ -44,10 +44,9 @@ export const WelcomePage: React.FC = () => {
             </div>
 
             <div className="text-section">
-              <h1 className="welcome-heading">Welcome to Meobeo!</h1>
+              <h1 className="welcome-heading">Chào mừng cậu đến nhà Meowmuc!</h1>
               <p className="welcome-description">
-                You're all set! Join the conversation, share your story, and discover amazing content in our vibrant
-                community.
+                Cậu đã sẵn sàng rồi nè! Cùng bắt đầu trò chuyện, kể những câu chuyện thú vị và khám phá những điều tuyệt vời trong cộng đồng nhỏ ấm áp của tụi mình nha.
               </p>
             </div>
 

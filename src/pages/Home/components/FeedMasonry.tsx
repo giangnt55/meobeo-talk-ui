@@ -113,9 +113,9 @@ const FeedMasonry: React.FC = () => {
                                 <FaBullhorn className="announcement-icon" />
                                 <h3 className="announcement-label">Thông Báo Hệ Thống</h3>
                             </div>
-                            <h4 className="announcement-title">Chào mừng bạn đến với Meobeo Talk!</h4>
+                            <h4 className="announcement-title">Chào mừng cậu đến với tổ ấm Meowmuc!</h4>
                             <p className="announcement-description">
-                                Chia sẻ suy nghĩ, kỷ niệm và kết nối với mọi người nha.
+                                Cùng lấp đầy chiếc tổ này bằng những kỷ niệm lung linh và câu chuyện ngọt ngào của cậu nha!
                             </p>
                         </div>
                     </div>

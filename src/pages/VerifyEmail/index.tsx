@@ -163,9 +163,9 @@ export const VerifyEmailPage: React.FC = () => {
                     </div>
 
                     <div className="verify-welcome">
-                        <h1>Chào Mừng Đến Với Meobeo Talk</h1>
+                        <h1>Chào Mừng Cậu Đến Nhà Meowmuc!</h1>
                         <p>
-                            Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của bạn vang xa.
+                            Chia sẻ ý tưởng, kết nối cộng đồng, và để tiếng nói của cậu bay xa.
                         </p>
                     </div>
                 </div>
@@ -174,7 +174,7 @@ export const VerifyEmailPage: React.FC = () => {
                 <div className="verify-right">
                     <header className="verify-header">
                         <div className="verify-logo">
-                            <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="verify-logo-img" />
+                            <img src="/logo/logo_meow.png" alt="Meowmuc" className="verify-logo-img" />
                         </div>
                         <Button
                             variant="outline"
@@ -187,10 +187,10 @@ export const VerifyEmailPage: React.FC = () => {
                     </header>
 
                     <main className="verify-main">
-                        <h1>Xác Thực OTP</h1>
-                        <p className="verify-description">
-                            Mã xác thực 6 số đã được gửi tới{' '}
-                            <strong>{email}</strong>
+                        <h2>Xác Nhận Email Của Cậu Nha</h2>
+                        <p className="verify-subtitle">
+                            Tụi mình vừa gửi một mã số bí mật gồm 6 chữ số tới
+                            <strong>{email}</strong> đó
                         </p>
 
                         <form onSubmit={handleSubmit} className="verify-form">
@@ -223,7 +223,7 @@ export const VerifyEmailPage: React.FC = () => {
                                 className="verify-btn"
                                 rounded="lg"
                             >
-                                Xác Thực Ngay
+                                {isLoading ? 'Đang kiểm tra nè...' : 'Xác Nhận Ngay'}
                             </Button>
                         </form>
 

@@ -15,10 +15,9 @@ export const AboutPage: React.FC = () => {
                     {/* Hero Section */}
                     <section className="about-hero-section">
                         <div className="about-hero-content">
-                            <h1>Kết Nối Qua Từng Câu Chuyện</h1>
+                            <h1>Nối Nhịp Yêu Thương Qua Từng Trang Chuyện Nhỏ</h1>
                             <h2>
-                                Chúng mình tin vào sức mạnh của sự thể hiện chân thật. Meobeo Talk là không gian
-                                để chia sẻ, khám phá và kết nối với cộng đồng sáng tạo đầy sôi động và nhiệt huyết!
+                                Tụi mình tin rằng những lời tâm tình chân thật luôn có sức mạnh diệu kỳ. Meowmuc ở đây để tạo ra một góc nhỏ bình yên, nơi cậu có thể thoải mái chia sẻ, khám phá và làm quen với những tâm hồn đầy màu sắc và đáng yêu vô cùng!
                             </h2>
                         </div>
                     </section>
@@ -27,11 +26,11 @@ export const AboutPage: React.FC = () => {
                     <div className="about-content-grid">
                         {/* Our Mission */}
                         <div className="about-mission-section">
-                            <h2>Sứ Mệnh Của Chúng Mình</h2>
+                            <h2>Điều Tụi Mình ấp Ủ</h2>
                             <p>
-                                Tạo nên một không gian sôi động và hỗ trợ tuyệt vời, nơi mọi người có thể chia sẻ
-                                giọng nói độc đáo của riêng mình, kết nối với nhau qua những câu chuyện chân thành,
-                                và xây dựng cộng đồng dựa trên sự sáng tạo và tôn trọng lẫn nhau.
+                                Tụi mình mong muốn tạo ra một không gian ấm áp và tràn ngập niềm vui, nơi mỗi người đều có thể cất lên
+                                tiếng nói mộc mạc của riêng mình, xích lại gần nhau hơn qua những lời thủ thỉ chân thành,
+                                và cùng nhau đắp xây một ngôi nhà chung ngập tràn sự sáng tạo và yêu thương.
                             </p>
                         </div>
 
@@ -53,10 +52,10 @@ export const AboutPage: React.FC = () => {
                             <div className="about-value-icon">
                                 <span className="material-symbols-outlined">lightbulb</span>
                             </div>
-                            <h3>Sáng Tạo</h3>
+                            <h3>Sáng Tạo Chút Nè</h3>
                             <p>
-                                Chúng mình ủng hộ mọi hình thức thể hiện sáng tạo, cung cấp công cụ để cộng đồng
-                                biến ý tưởng thành hiện thực một cách tuyệt vời nhất!
+                                Tụi mình luôn vỗ tay hoan hô mọi ý tưởng hay ho của cậu, chuẩn bị sẵn đồ nghề để cậu thoả sức
+                                vẽ nên thế giới nhỏ của riêng mình một cách lung linh nhất!
                             </p>
                         </div>
 
@@ -64,10 +63,10 @@ export const AboutPage: React.FC = () => {
                             <div className="about-value-icon">
                                 <span className="material-symbols-outlined">groups</span>
                             </div>
-                            <h3>Cộng Đồng</h3>
+                            <h3>Nhà Chung Ấm Áp</h3>
                             <p>
-                                Chúng mình xây dựng môi trường hỗ trợ và cởi mở, nơi những kết nối ý nghĩa
-                                có thể phát triển và lan tỏa mạnh mẽ.
+                                Nơi tụi mình có thể dựa vào nhau, cùng lắng nghe và san sẻ, để những tình bạn đẹp
+                                nảy mầm và đơm hoa kết trái mỗi ngày.
                             </p>
                         </div>
 
@@ -75,17 +74,17 @@ export const AboutPage: React.FC = () => {
                             <div className="about-value-icon">
                                 <span className="material-symbols-outlined">fingerprint</span>
                             </div>
-                            <h3>Chân Thật</h3>
+                            <h3>Thật Là Mình</h3>
                             <p>
-                                Chúng mình khuyến khích những giọng nói và câu chuyện chân thành, tôn vinh
-                                góc nhìn độc đáo của từng cá nhân trong cộng đồng.
+                                Chẳng cần phải hoàn hảo, cứ là chính cậu thôi. Tụi mình yêu những câu chuyện mộc mạc,
+                                và trân trọng những nét đáng yêu rực rỡ riêng biệt của từng người.
                             </p>
                         </div>
 
                         {/* Meet The Team */}
                         <div className="about-team-header">
-                            <h2>Gặp Gỡ Đội Ngũ</h2>
-                            <p>Những con người đầy nhiệt huyết đằng sau Meobeo Talk.</p>
+                            <h2>Gặp Gỡ Những Người Xây Tổ</h2>
+                            <p>Những chú ong chăm chỉ đằng sau chiếc tổ nhỏ Meowmuc nha</p>
                         </div>
 
                         {/* Team Member Cards */}
@@ -96,8 +95,8 @@ export const AboutPage: React.FC = () => {
                                 className="about-team-avatar"
                             />
                             <h4>Trường Giang</h4>
-                            <p className="about-team-role">Nhà Sáng Lập &amp; CEO</p>
-                            <p className="about-team-bio">Người lãnh đạo đầy tầm nhìn với niềm đam mê xây dựng cộng đồng.</p>
+                            <p className="about-team-role">Trưởng Làng &amp; Nhạc Trưởng</p>
+                            <p className="about-team-bio">Người mở đường mộng mơ với tình yêu to bự dành cho cộng đồng nhỏ của tụi mình.</p>
                         </div>
 
                         <div className="about-team-card">
@@ -107,9 +106,9 @@ export const AboutPage: React.FC = () => {
                                 className="about-team-avatar"
                             />
                             <h4>Giang Nguyễn</h4>
-                            <p className="about-team-role">Nhà Phát Triển</p>
+                            <p className="about-team-role">Thợ Xây Mẫn Cán</p>
                             <p className="about-team-bio">
-                                Kiến trúc sư của nền tảng, tận tâm mang đến trải nghiệm người dùng mượt mà nhất.
+                                Người ngày đêm cặm cụi xếp từng viên gạch để góc nhỏ của tụi mình luôn vững chãi và mượt mà.
                             </p>
                         </div>
 
@@ -120,22 +119,21 @@ export const AboutPage: React.FC = () => {
                                 className="about-team-avatar"
                             />
                             <h4>Giang & Embe Huyền</h4>
-                            <p className="about-team-role">Phát triển ý tưởng</p>
+                            <p className="about-team-role">Trạm Sạc Yêu Thương</p>
                             <p className="about-team-bio">
-                                Trái tim của cộng đồng, đảm bảo mọi người đều cảm thấy được chào đón.
+                                Nơi nảy mầm những niềm vui lấp lánh, đảm bảo ai bước vào cũng thấy ấm áp như về nhà.
                             </p>
                         </div>
                     </div>
 
                     {/* CTA Section */}
                     <section className="about-cta-section">
-                        <h2>Sẵn Sàng Chia Sẻ Câu Chuyện Của Bạn?</h2>
+                        <h2>Cậu Đã Sẵn Sàng Kể Chuyện Cùng Tụi Mình Chưa?</h2>
                         <p>
-                            Tham gia cộng đồng đang phát triển mạnh mẽ với các nhà văn, người sáng tạo và những
-                            tư tưởng gia. Bắt đầu blog của bạn ngay hôm nay và để tiếng nói của bạn được lan tỏa!
+                            Dọn vào chung nhà với tụi mình và những người bạn dễ thương khác nha. Bắt đầu viết những dòng nhật ký đầu tiên và để tiếng lòng của cậu cất cánh bay thật xa nào!
                         </p>
                         <Button variant="primary" onClick={() => navigate('/signup')} className="about-cta-button">
-                            Tham Gia Ngay
+                            Gia Nhập Nhà Meowmuc Ngay
                         </Button>
                     </section>
                 </div>

@@ -81,7 +81,7 @@ export const LoginPage: React.FC = () => {
       if (err.code === AUTH_ERRORS.TOO_MANY_REQUESTS || (err.response && err.response.status === HTTP_STATUS.TOO_MANY_REQUESTS)) {
         error(
           "Chậm lại xíu nè!",
-          "Bạn 'gõ cửa' nhà MeoBeo hăng hái quá rồi. Đợi một lát cho hệ thống nghỉ xíu rồi hãy quay lại nha!"
+          "Cậu 'gõ cửa' nhà Meowmuc hăng hái quá rồi nè. Đợi một xíu xiu cho hệ thống thở cái rồi quay lại nha!"
         );
       } else if (err.code === AUTH_ERRORS.INVALID_CREDENTIALS) {
         error("Meo meo, sai gòi nè!", "Nhập lại xíu xiu nghen, email hoặc mật khẩu bị trật nhịp rồi đó");
@@ -120,7 +120,7 @@ export const LoginPage: React.FC = () => {
             <div className="login-form-section">
               <header className="login-form-top">
                 <Link to="/" className="login-brand">
-                  <img src="/logo/logo_meow.png" alt="Meobeo Talk" className="login-logo-img" />
+                  <img src="/logo/logo_meow.png" alt="Meowmuc" className="login-logo-img" />
                 </Link>
                 <div className="login-signup-link">
                   <span>Chưa có tài khoản?</span>

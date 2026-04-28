@@ -83,7 +83,7 @@ export const JourneyDetailPage: React.FC = () => {
     return (
         <div className="journey-detail-page">
             <SEO
-                title="Câu Chuyện Hành Trình - MeoBeo Talk"
+                title="Câu Chuyện Hành Trình - Meowmuc"
                 description="Hành trình Mùa Hè Phiêu Lưu Của Tụi Mình"
             />
 

@@ -244,7 +244,7 @@ const CreateBlog: React.FC = () => {
 
     return (
         <>
-            <SEO title="Tạo Blog - MeoBeo Talk" />
+            <SEO title="Viết Blog Mới - Meowmuc" />
 
             {/* Modals */}
             <ConfirmModal

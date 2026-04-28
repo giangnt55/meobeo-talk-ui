@@ -7,7 +7,7 @@ const Home: React.FC = () => {
         <>
             <SEO
                 title="Trang Chủ"
-                description="Khám phá những câu chuyện, kỷ niệm và hành trình tuyệt vời từ cộng đồng Meobeo Talk."
+                description="Khám phá những câu chuyện, kỷ niệm dễ thương và hành trình diệu kỳ từ gia đình Meowmuc nha."
             />
             <StreamFeed />
         </>

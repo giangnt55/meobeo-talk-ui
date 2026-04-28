@@ -92,7 +92,7 @@ export const FollowUsersPage: React.FC = () => {
       // Complete onboarding
       await onboardingApi.complete();
 
-      success('Setup Complete!', 'Welcome to Meobeo Talk');
+      success('Hoàn Tất Rồi Nè!', 'Chào mừng cậu đến với nhà chung Meowmuc!');
       setTimeout(() => navigate('/welcome'), 1000);
     } catch (err) {
       console.error('Failed to complete onboarding:', err);

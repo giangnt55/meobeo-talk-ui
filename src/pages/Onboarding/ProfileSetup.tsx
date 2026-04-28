@@ -106,7 +106,7 @@ export const ProfileSetupPage: React.FC = () => {
 
             <div className="onboarding-header">
               <h1 className="onboarding-title">
-                Tạo Hồ Sơ Meobeo Talk Của Bạn
+                Tạo Hồ Sơ Meowmuc Của Cậu Nè
               </h1>
               <p className="onboarding-subtitle">
                 Trang trí không gian riêng của bạn. Bạn có thể thay đổi sau nhen.

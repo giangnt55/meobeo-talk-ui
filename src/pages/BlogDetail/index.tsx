@@ -108,7 +108,7 @@ const BlogDetailPage: React.FC = () => {
 
     return (
         <>
-            <SEO title={`${blog.title} - MeoBeo Talk`} />
+            <SEO title={`${blog.title} - Meowmuc`} />
 
             <main className="blog-detail-container">
                 <article className="blog-detail-article">

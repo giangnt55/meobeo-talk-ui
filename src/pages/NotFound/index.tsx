@@ -87,7 +87,7 @@ export const NotFoundPage: React.FC = () => {
                                     <span className="material-symbols-outlined text-4xl">photo_library</span>
                                 </div>
                                 <h3 className="card-title">Memory Journeys</h3>
-                                <p className="card-desc">Explore cherished moments and visual diaries shared by Meobeo users.</p>
+                                <p className="card-desc">Khám phá những khoảnh khắc ấm áp và nhật ký xinh xẻo từ cư dân Meowmuc nha.</p>
                             </div>
                             <div className="card-arrow">
                                 <span className="material-symbols-outlined">arrow_forward</span>

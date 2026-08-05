@@ -148,9 +148,14 @@ export const ProfilePage: React.FC = () => {
                 blogApi.getUserBlogs(profileUser.id),
                 api.get(`users/${profileUser.id}/journeys`).json<{ success: boolean; data: Post[] }>(),
             ]);
-            if (blogsRes.status === 'fulfilled') setBlogPosts(blogsRes.value.posts || []);
-            if (journeysRes.status === 'fulfilled' && journeysRes.value.success)
-                setJourneys(journeysRes.value.data || []);
+            if (blogsRes.status === 'fulfilled') {
+                const posts = blogsRes.value?.posts;
+                setBlogPosts(Array.isArray(posts) ? posts : []);
+            }
+            if (journeysRes.status === 'fulfilled' && journeysRes.value?.success) {
+                const data = journeysRes.value?.data;
+                setJourneys(Array.isArray(data) ? data : []);
+            }
         } finally {
             setContentLoading(false);
         }
@@ -158,9 +163,12 @@ export const ProfilePage: React.FC = () => {
 
     useEffect(() => { fetchContent(); }, [fetchContent]);
 
+    const safeBlogPosts = Array.isArray(blogPosts) ? blogPosts : [];
+    const safeJourneys = Array.isArray(journeys) ? journeys : [];
+
     const allFeed: FeedItem[] = [
-        ...blogPosts.map((b): FeedItem => ({ kind: 'blog', data: b })),
-        ...journeys.map((j): FeedItem => ({ kind: 'journey', data: j })),
+        ...safeBlogPosts.map((b): FeedItem => ({ kind: 'blog', data: b })),
+        ...safeJourneys.map((j): FeedItem => ({ kind: 'journey', data: j })),
     ].sort((a, b) => {
         const da = a.kind === 'blog' ? a.data.created_at : (a.data as Post).created_at;
         const db = b.kind === 'blog' ? b.data.created_at : (b.data as Post).created_at;
@@ -273,15 +281,15 @@ export const ProfilePage: React.FC = () => {
                                     )
                             )}
                             {activeTab === 'blogs' && (
-                                blogPosts.length === 0
+                                safeBlogPosts.length === 0
                                     ? <EmptyState icon="article" text="Chưa có bài blog nào." />
-                                    : blogPosts.map((b) => <BlogCard key={b.id} blog={b} />)
+                                    : safeBlogPosts.map((b) => <BlogCard key={b.id} blog={b} />)
                             )}
                             {activeTab === 'memories' && <EmptyState icon="auto_awesome" text="Chưa có ký ức nào." />}
                             {activeTab === 'journeys' && (
-                                journeys.length === 0
+                                safeJourneys.length === 0
                                     ? <EmptyState icon="explore" text="Chưa có hành trình nào." />
-                                    : journeys.map((j) => <JourneyCard key={j.id} journey={j} />)
+                                    : safeJourneys.map((j) => <JourneyCard key={j.id} journey={j} />)
                             )}
                         </>
                     )}

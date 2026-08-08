@@ -246,6 +246,11 @@
   gap: var(--spacing-3);
 }
 
+.register-form input {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
 .register-form .form-group {
   display: flex;
   flex-direction: column;

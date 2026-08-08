@@ -140,6 +140,11 @@
   gap: var(--spacing-6);
 }
 
+.login-form input {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
 .password-field {
   display: flex;
   flex-direction: column;

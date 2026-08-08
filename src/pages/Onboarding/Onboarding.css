@@ -21,6 +21,15 @@
   color: #ad2bee;
 }
 
+.onboarding-form input {
+  color: #000000 !important;
+  background-color: #ffffff;
+}
+
+.onboarding-form label {
+  color: #000000 !important;
+}
+
 .nav-brand .brand-icon {
   width: 2rem;
   height: 2rem;
@@ -185,6 +194,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.form-textarea {
+  color: #000000 !important;
+  background-color: #ffffff;
 }
 
 .onboarding-form .textarea-header {

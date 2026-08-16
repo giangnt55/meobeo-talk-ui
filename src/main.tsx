@@ -8,6 +8,8 @@ import { queryClient } from '@/lib/react-query';
 import { router } from '@/router';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { Provider } from 'react-redux';
+import store from '@/store/store';
 // import { ApiDebugPanel } from '@/components/debug/ApiDebugPanel';
 // import '@/utils/debugUtils';
 // import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -17,6 +19,7 @@ import '@/styles/transitions.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <Provider store={store}>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         {/* <ThemeProvider> */}
@@ -53,5 +56,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         {/* <ApiDebugPanel /> */}
       </QueryClientProvider>
     </HelmetProvider>
+    </Provider>
   </React.StrictMode>
 );

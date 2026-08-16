@@ -38,6 +38,9 @@ import { CreateJourney } from '@/pages/CreateJourney';
 import { ProfilePage } from '@/pages/Profile';
 import { ProfileSettingsPage } from '@/pages/Settings/Profile';
 
+// Chat
+import ChatPage from '@/pages/Chat';
+
 export const router = createBrowserRouter([
   // --- Auth Routes ---
   { path: '/login', element: <LoginPage /> },
@@ -140,6 +143,16 @@ export const router = createBrowserRouter([
           <ProtectedRoute>
             <ProfileSettingsPage />
           </ProtectedRoute>
+      },
+
+      // Chat
+      {
+        path: 'chat',
+        element: (
+          <ProtectedRoute>
+            <ChatPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

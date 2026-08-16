@@ -8,6 +8,8 @@ import { Notification } from '@/types/notification';
 import { socketService } from '@/api/services/socketService';
 import { notificationApi } from '@/api/services/notificationApi';
 import { NavbarSearch } from './NavbarSearch';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/store/store';
 import './Navbar.css';
 
 type DropdownType = 'create' | 'notifications' | 'user' | 'mobile' | null;
@@ -133,10 +135,10 @@ export const Navbar: React.FC = () => {
       // 2. Fetch initial notifications
       const rafId = window.requestAnimationFrame(() => fetchNotifications());
 
-      // 3. Listen for new notifications
+      // 3. Listen for new notifications (skip chat_message — handled by useChat)
       const unsubscribe = socketService.onMessage((data: unknown) => {
         const wsData = data as { type?: string };
-        if (wsData.type) {
+        if (wsData.type && wsData.type !== 'chat_message') {
           handleNewNotification(data);
         }
       });
@@ -231,6 +233,8 @@ export const Navbar: React.FC = () => {
               <div className="navbar-actions">
                 {isAuthenticated ? (
                   <>
+                    {/* Chat */}
+                    <ChatNavButton />
                     {/* Create+ Dropdown */}
                     <div className="create-dropdown-wrapper navbar-dropdown-container">
                       <button
@@ -382,3 +386,28 @@ export const Navbar: React.FC = () => {
   );
 };
 
+// ── Chat Nav Button ────────────────────────────────────────────────────────────
+
+const ChatNavButton: React.FC = () => {
+  const navigate = useNavigate();
+  const unreadCount = useSelector((s: RootState) => s.chat.unreadCount);
+  const totalUnread = Object.values(unreadCount).reduce((sum, n) => sum + n, 0);
+
+  return (
+    <div className="relative">
+      <button
+        className="notification-btn"
+        aria-label="Tin nhắn"
+        onClick={() => navigate('/chat')}
+      >
+        <span className="material-symbols-outlined">chat</span>
+        {totalUnread > 0 && (
+          <span className="absolute top-2.5 right-2.5 flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-white"></span>
+          </span>
+        )}
+      </button>
+    </div>
+  );
+};

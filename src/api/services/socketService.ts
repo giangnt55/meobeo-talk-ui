@@ -143,6 +143,24 @@ class SocketService {
         this.currentToken = '';
     }
 
+    /**
+     * Send a raw string payload over the WebSocket.
+     * Returns false if the socket is not open.
+     */
+    send(payload: string): boolean {
+        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            console.warn('WebSocket not open, message not sent:', payload);
+            return false;
+        }
+        this.socket.send(payload);
+        return true;
+    }
+
+    /** Returns true if the WebSocket is currently connected */
+    isConnected(): boolean {
+        return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+    }
+
     onMessage(handler: MessageHandler) {
         this.messageHandlers.push(handler);
         return () => {
